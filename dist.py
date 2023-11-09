@@ -79,7 +79,6 @@ st.set_option('deprecation.showPyplotGlobalUse', False)
 
 
 # Gráficos ()
-# st.subheader('Distribuição' + ' ' + opcoes_dist)
 
 if opcoes_dist =='Binomial':
     st.subheader('Distribuição' + ' ' + opcoes_dist)
