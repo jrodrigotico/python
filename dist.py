@@ -83,7 +83,7 @@ st.set_option('deprecation.showPyplotGlobalUse', False)
 
 if opcoes_dist =='Binomial':
     st.subheader('Distribuição' + ' ' + opcoes_dist)
-    if all(x is not None for x in parametros):
+    if all(x is not None for x in parametros): # se cada parametro x de 'parametros' estiver preenchido, a condicao entra e o grafico é plotado
         distribuicao = np.random.binomial(parametros[0],parametros[1],parametros[2])
         plt.hist(distribuicao, bins=parametros[3])
         st.pyplot()
