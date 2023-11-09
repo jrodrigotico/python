@@ -151,10 +151,6 @@ elif opcoes_dist =='f':
         
 
 
-# verificacao de campos vazios em 'parâmetros'
-# if None in parametros:
-#     st.write('Há parâmetros vazios !!!!')
-
 
 # exemplo sem usar o matplot lib
 # elif opcoes_dist =='f':
