@@ -79,45 +79,76 @@ st.set_option('deprecation.showPyplotGlobalUse', False)
 
 
 # Gráficos ()
-st.subheader('Distribuição' + ' ' + opcoes_dist)
+# st.subheader('Distribuição' + ' ' + opcoes_dist)
 
 if opcoes_dist =='Binomial':
-    distribuicao = np.random.binomial(parametros[0],parametros[1],parametros[2])
-    plt.hist(distribuicao, bins=parametros[3])
-    st.pyplot()
+    st.subheader('Distribuição' + ' ' + opcoes_dist)
+    if all(x is not None for x in parametros):
+        distribuicao = np.random.binomial(parametros[0],parametros[1],parametros[2])
+        plt.hist(distribuicao, bins=parametros[3])
+        st.pyplot()
+    else:
+        st.warning('Preencher todos os paramêtros!')
+    
 
 elif opcoes_dist =='Binomial Negativa':
-    distribuicao = np.random.negative_binomial(parametros[0], parametros[1],parametros[2])
-    plt.hist(distribuicao, bins=parametros[3])
-    st.pyplot()
+    st.subheader('Distribuição' + ' ' + opcoes_dist)
+    if all(x is not None for x in parametros):
+        distribuicao = np.random.negative_binomial(parametros[0], parametros[1],parametros[2])
+        plt.hist(distribuicao, bins=parametros[3])
+        st.pyplot()
+    else:
+        st.warning('Preencher todos os paramêtros!')
 
 elif opcoes_dist =='Poisson':
-    distribuicao = np.random.poisson(parametros[0],parametros[2])
-    plt.hist(distribuicao, bins=parametros[3])
-    st.pyplot()
+    st.subheader('Distribuição' + ' ' + opcoes_dist)
+    if all(x is not None for x in parametros):
+        distribuicao = np.random.poisson(parametros[0],parametros[2])
+        plt.hist(distribuicao, bins=parametros[3])
+        st.pyplot()  
+    else:
+        st.warning('Preencher todos os paramêtros!')  
+    
 
 elif opcoes_dist =='Normal':
-    distribuicao = np.random.normal(parametros[0],parametros[1],parametros[2])
-    plt.hist(distribuicao, bins=parametros[3])
-    st.pyplot()
+    st.subheader('Distribuição' + ' ' + opcoes_dist)
+    if all(x is not None for x in parametros):
+        distribuicao = np.random.normal(parametros[0],parametros[1],parametros[2])
+        plt.hist(distribuicao, bins=parametros[3])
+        st.pyplot()
+    else:
+        st.warning('Preencher todos os paramêtros!')  
+        
 
 elif opcoes_dist =='Qui²':
-    distribuicao = np.random.chisquare(parametros[0],parametros[1])
-    plt.hist(distribuicao, bins=parametros[2])
-    st.pyplot()
+    st.subheader('Distribuição' + ' ' + opcoes_dist)
+    if all(x is not None for x in parametros):
+        distribuicao = np.random.chisquare(parametros[0],parametros[1])
+        plt.hist(distribuicao, bins=parametros[2])
+        st.pyplot()
+    else:
+        st.warning('Preencher todos os paramêtros!')  
+        
 
 elif opcoes_dist =='t':
-    distribuicao = np.random.standard_t(parametros[0],parametros[1])
-    plt.hist(distribuicao, bins=parametros[2])
-    st.pyplot()
+    st.subheader('Distribuição' + ' ' + opcoes_dist)
+    if all(x is not None for x in parametros):
+        distribuicao = np.random.standard_t(parametros[0],parametros[1])
+        plt.hist(distribuicao, bins=parametros[2])
+        st.pyplot()
+    else:
+        st.warning('Preencher todos os paramêtros!')  
+        
 
 elif opcoes_dist =='f':
-    distribuicao = np.random.f(parametros[0],parametros[1], parametros[2])
-    plt.hist(distribuicao, bins=parametros[3])
-    st.pyplot()
-
-
-
+    st.subheader('Distribuição' + ' ' + opcoes_dist)
+    if all(x is not None for x in parametros):
+        distribuicao = np.random.f(parametros[0],parametros[1], parametros[2])
+        plt.hist(distribuicao, bins=parametros[3])
+        st.pyplot()
+    else:
+        st.warning('Preencher todos os paramêtros!')  
+        
 
 
 # verificacao de campos vazios em 'parâmetros'
