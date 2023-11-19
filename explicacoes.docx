@@ -1,0 +1,21 @@
+# explicação homocedasticidade
+# teste de homocedasticidade usando Goldfeld-Quandt, p-valor < 0.05 indica que os dados não são homocedásticos
+# homocedasticidade = variação dos resíduos é constante
+
+###############
+# O resultado do teste de Goldfeld-Quandt que você obteve é o seguinte: (0.4761528626243073, 0.9999999999999999, 'increasing'). Vamos interpretar cada um desses valores:
+
+# O primeiro valor, 0.4761528626243073, é o valor estatístico calculado pelo teste de Goldfeld-Quandt. 
+Esse valor é usado para avaliar a presença de heteroscedasticidade nos resíduos do modelo de regressão.
+
+# Em geral, se o valor estiver próximo de 1, isso sugere que não há evidência significativa de heteroscedasticidade nos resíduos. 
+No seu caso, o valor obtido é menor que 1, o que indica que há indícios de heteroscedasticidade nos resíduos do modelo.
+
+# O segundo valor, 0.9999999999999999, é o valor p (p-value) associado ao valor estatístico. 
+O valor p é usado para determinar se o valor estatístico é estatisticamente significativo. Nesse caso, o valor p é muito próximo de 1, 
+o que sugere que não há evidência significativa para rejeitar a hipótese nula de ausência de heteroscedasticidade. Em outras palavras, não há evidência estatística para afirmar que a heteroscedasticidade está presente nos resíduos.
+
+# O terceiro valor, 'increasing', indica o padrão observado na heteroscedasticidade. O termo "increasing" significa que a 
+variância dos resíduos aumenta conforme os valores previstos (variável independente) do modelo aumentam. 
+Isso implica que a dispersão dos erros é maior à medida que os valores previstos aumentam.
+###############
