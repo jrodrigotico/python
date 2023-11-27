@@ -15,6 +15,7 @@ import os
 yf.pdr_override() #corrige problemas da bibliotece do pandas_datareader
 
 # tickers acoes existentes (o ideal seria fazer um web scrapping na B3 ou consumir uma api da B3, pq com um arquivo fica muito travado)
+# https://www.dadosdemercado.com.br/bolsa/acoes , att: Cotações atualizadas no fechamento de 24/11/2023.
 acoes = pd.read_excel(os.path.join('C:/Users/Computadores Gamer/OneDrive/Área de Trabalho/python/acoes_listas.xlsx'))['Código']
 
 
@@ -29,31 +30,20 @@ selecionar_acoes = st.sidebar.multiselect('Selecione ações', sorted(acoes + '.
 
 
 # parametros de data
-st.sidebar.date_input('Data inicial', format='YYYY-MM-DD', value=None)
-st.sidebar.date_input('Data final',  format='YYYY-MM-DD', value=None)
-
-# data_i = '2020-01-01'
-# data_f = '2023-01-01'
-
+data_i = st.sidebar.date_input('Data inicial', format='YYYY-MM-DD', value=None)
+data_f = st.sidebar.date_input('Data final',  format='YYYY-MM-DD', value=None)
 
 
 # definicao das datas e das acoes
 # encontrar forma de deixar dinamico o numero de acoes e a peridiocidade do resample
-# mudar o tipo de grafico de seaborn pq o streamlit nao aceita
-# ibov = ['^BOVSP']
-# acao_1 = ['ITUB3.SA']
-# acao_2 = ['CSNA3.SA']
-# acao_3 = ['VALE3.SA']
-# acao_4 = ['PETR3.SA']
-# st.set_option('deprecation.showPyplotGlobalUse', False)
-# acoes = [acao_1, acao_2,acao_3, acao_4]
+st.set_option('deprecation.showPyplotGlobalUse', False)
 
-# tabela = pd.DataFrame()
-# for i in acoes:
-#     tabela[f'{i[0][:5]}'] = round(yf.download((i), start = data_i, end=data_f)['Adj Close'].resample('M').last(),4)
-#     # print(tabela.head(5))
+tabela = pd.DataFrame()
+for i in selecionar_acoes:
+    tabela_acao = yf.download(i, start=data_i, end=data_f)['Adj Close'].resample('M').last()
+    tabela = pd.concat([tabela, tabela_acao], axis=1) # por coluna
 
-# mplt.figure(figsize=(10,10))
-# mplt.plot(tabela)
-# mplt.show()
-# st.pyplot()
+mplt.figure(figsize=(10,10))
+mplt.plot(tabela)
+mplt.show()
+st.pyplot()
