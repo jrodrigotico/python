@@ -10,10 +10,19 @@ import streamlit as st
 # streamlit run markowitz_streamlit.py
 yf.pdr_override() #corrige problemas da bibliotece do pandas_datareader
 
+# tickers acoes existentes
+yf.Ticker()
+
+
+
 # pagina
 st.set_page_config(page_title='Markowitz', layout='centered')
 st.header('Risco de carteira de ações - Teoria de Carteira de Markowitz')
+
+
+# pagina lateral
 st.sidebar.header('Parâmetros')
+selecionar_acoes = st.sidebar.multiselect('Selecione ações', ('ITUB3.SA', 'CSNA3.SA'))
 
 
 # definicao das datas e das acoes
@@ -26,7 +35,7 @@ acao_1 = ['ITUB3.SA']
 acao_2 = ['CSNA3.SA']
 acao_3 = ['VALE3.SA']
 acao_4 = ['PETR3.SA']
-
+st.set_option('deprecation.showPyplotGlobalUse', False)
 acoes = [acao_1, acao_2,acao_3, acao_4]
 
 tabela = pd.DataFrame()
@@ -34,7 +43,7 @@ for i in acoes:
     tabela[f'{i[0][:5]}'] = round(yf.download((i), start = data_i, end=data_f)['Adj Close'].resample('M').last(),4)
     # print(tabela.head(5))
 
-mplt.figure(figsize=(8,8))
+mplt.figure(figsize=(10,10))
 mplt.plot(tabela)
 mplt.show()
 st.pyplot()
