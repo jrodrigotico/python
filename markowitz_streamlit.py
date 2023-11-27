@@ -47,7 +47,7 @@ for i in selecionar_acoes:
 
 mplt.figure(figsize=(10,10))
 grafico = px.line(tabela, title = 'Preço ao longo do tempo')
-# mplt.plot(tabela)
+mplt.plot(tabela)
 grafico.show()
 # st.pyplot()
-plotly_chart(grafico)
+# plotly_chart(grafico)
