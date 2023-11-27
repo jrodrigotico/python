@@ -7,6 +7,8 @@ import seaborn as sn
 import datetime
 import streamlit as st
 import os
+import plotly.express as px
+import plotly.colors as pcolors
 
 # diretorio
 
