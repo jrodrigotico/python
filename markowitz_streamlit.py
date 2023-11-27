@@ -8,12 +8,13 @@ import datetime
 import streamlit as st
 
 # streamlit run markowitz_streamlit.py
+yf.pdr_override() #corrige problemas da bibliotece do pandas_datareader
 
 # pagina
 st.set_page_config(page_title='Markowitz', layout='centered')
 st.header('Risco de carteira de ações - Teoria de Carteira de Markowitz')
+st.sidebar.header('Parâmetros')
 
-yf.pdr_override() #corrige problemas da bibliotece do pandas_datareader
 
 # definicao das datas e das acoes
 # encontrar forma de deixar dinamico o numero de acoes e a peridiocidade do resample
