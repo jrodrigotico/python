@@ -46,6 +46,8 @@ for i in selecionar_acoes:
     tabela = pd.concat([tabela, tabela_acao], axis=1) # por coluna
 
 mplt.figure(figsize=(10,10))
-mplt.plot(tabela)
-mplt.show()
-st.pyplot()
+grafico = px.line(tabela, title = 'Preço ao longo do tempo')
+# mplt.plot(tabela)
+grafico.show()
+# st.pyplot()
+plotly_chart(grafico)
