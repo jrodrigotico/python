@@ -60,7 +60,7 @@ st.plotly_chart(grafico)
 st.subheader('Preço das ações normalizado')
 tabela_norm = pd.DataFrame()
 for i in tabela.columns:
-    tabela_norm[f'{i}_normal'] = round(tabela[i] / tabela[i].iloc[0],2)
+    tabela_norm[f'{i}_normal'] = round(tabela[i] / tabela[i].iloc[0],2) # pega dado da tabela anterior
 st.write(tabela_norm.head())
     
 grafico2 = px.line(tabela_norm)
