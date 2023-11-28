@@ -4,7 +4,7 @@ import pandas_datareader as pdr
 import numpy as np
 import matplotlib.pyplot as mplt
 import seaborn as sn
-import datetime
+import datetime as dt
 import streamlit as st
 import os
 import plotly.express as px
@@ -15,10 +15,12 @@ import math
 # ---------------- Anotações ---------------- # 
 # arrumar datas nas tabelas
 # ver se consegue tirar o 'empty' da tabela
-# streamlit run markowitz_streamlit.py
+# streamlit run mark_st.py
+# https://www.youtube.com/watch?v=Y1E73SQPD1U
+# https://www.youtube.com/watch?v=BchQuTJvRAs
 
 
-
+# ---------------- Arquivos ---------------- # 
 # tickers acoes existentes (o ideal seria fazer um web scrapping na B3 ou consumir uma api da B3, pq com um arquivo fica muito travado)
 # https://www.dadosdemercado.com.br/bolsa/acoes , att: Cotações atualizadas no fechamento de 24/11/2023.
 yf.pdr_override() #corrige problemas da bibliotece do pandas_datareader
@@ -68,15 +70,13 @@ grafico2.update_layout(width=800, height=300)
 st.plotly_chart(grafico2)
 
 
-# ---------------- Retornos Contínuos ---------------- #
+# ---------------- Retornos Contínuos e Matriz de Covariância ---------------- #
 # ln(retorno_t / retorno_t-1)
-st.subheader('Retorno Contínuo dos preços')
-tabela_retorno = pd.DataFrame()
-for i in tabela.columns:
-    for z in range(len(tabela)):
-        tabela_retorno[f'{i}_retorn'][z] = math.log(tabela[i][z] / tabela[i][z-1])
-
-st.write(tabela_retorno.head())
+tabela_retorn = tabela_norm.pct_change().dropna()
+media_retor = tabela_retorn.mean()
+media_retor.columns = ['Média dos retornos contínuos']
+cov_retor = tabela_retorn.corr() # fazer um heatmap. para o modelo de markowitz é bom ter acoes com alta correlação negativa ! ver video: https://www.youtube.com/watch?v=Y1E73SQPD1U
+st.write(media_retor, cov_retor)
 
 # grafico3 = px.line(tabela_norm)
 # grafico3.update_layout(width=800, height=300)
