@@ -9,8 +9,12 @@ import streamlit as st
 import os
 import plotly.express as px
 import plotly.colors as pcolors
+import plotly.graph_objects as go
 
-# diretorio
+# anotações
+# arrumar datas nas tabelas
+# ver se consegue tirar o 'empty' da tabela
+
 
 
 # streamlit run markowitz_streamlit.py
@@ -21,33 +25,45 @@ yf.pdr_override() #corrige problemas da bibliotece do pandas_datareader
 acoes = pd.read_excel(os.path.join('C:/Users/Computadores Gamer/OneDrive/Área de Trabalho/python/acoes_listas.xlsx'))['Código']
 
 
-# pagina
+# ---------------- Inicial ---------------- # 
 st.set_page_config(page_title='Markowitz', layout='centered')
-st.header('Risco de carteira de ações - Teoria de Carteira de Markowitz')
+st.header('Teoria Moderna de Portfólio - Markowitz')
+st.write('---')
 
 
-#### barra lateral
-st.sidebar.header('Parâmetros')
-selecionar_acoes = st.sidebar.multiselect('Selecione ações', sorted(acoes + '.SA'))
-
-
+# ---------------- Barra lateral ---------------- # 
 # parametros de data
+st.sidebar.header('Parâmetros')
 data_i = st.sidebar.date_input('Data inicial', format='YYYY-MM-DD', value=None)
 data_f = st.sidebar.date_input('Data final',  format='YYYY-MM-DD', value=None)
 
+# seleção de ações
+selecionar_acoes = st.sidebar.multiselect('Selecione ações', sorted(acoes + '.SA'))
 
-# definicao das datas e das acoes
-# encontrar forma de deixar dinamico o numero de acoes e a peridiocidade do resample
+
+# ---------------- Gráficos e tabelas de preços ---------------- # 
+# grafico e tabela de 'Preço das ações'
 st.set_option('deprecation.showPyplotGlobalUse', False)
 
+st.subheader('Preço das ações')
 tabela = pd.DataFrame()
 for i in selecionar_acoes:
-    tabela_acao = yf.download(i, start=data_i, end=data_f)['Adj Close'].resample('M').last()
-    tabela = pd.concat([tabela, tabela_acao], axis=1) # por coluna
+    tabela[f'{i}'] = round(yf.download(i, start=data_i, end=data_f)['Adj Close'].resample('M').last(),2)
+st.write(tabela.head())
 
-mplt.figure(figsize=(10,10))
-grafico = px.line(tabela, title = 'Preço ao longo do tempo')
-mplt.plot(tabela)
-grafico.show()
-st.pyplot()
-# plotly_chart(grafico)
+grafico = px.line(tabela)
+grafico.update_layout(width=800, height=500)
+st.plotly_chart(grafico)
+
+
+# grafico e tabela de 'Preço das ações normalizado' 
+st.subheader('Preço das ações normalizado')
+tabela_norm = pd.DataFrame()
+for i in tabela.columns:
+    tabela_norm[f'{i}_normal'] = round(tabela[i] / tabela[i].iloc[0],2)
+st.write(tabela_norm.head())
+    
+grafico2 = px.line(tabela_norm)
+grafico2.update_layout(width=800, height=500)
+st.plotly_chart(grafico2)
+
