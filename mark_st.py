@@ -76,7 +76,10 @@ tabela_retorn = tabela_norm.pct_change().dropna()
 media_retor = tabela_retorn.mean()
 media_retor.columns = ['Média dos retornos contínuos']
 cov_retor = tabela_retorn.corr() # fazer um heatmap. para o modelo de markowitz é bom ter acoes com alta correlação negativa ! ver video: https://www.youtube.com/watch?v=Y1E73SQPD1U
-st.write(media_retor, cov_retor)
+st.write(media_retor)
+
+heatmap_retorn = px.imshow(cov_retor, text_auto=True)
+st.plotly_chart(heatmap_retorn)
 
 # grafico3 = px.line(tabela_norm)
 # grafico3.update_layout(width=800, height=300)
