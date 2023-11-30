@@ -4,13 +4,13 @@ import pandas_datareader as pdr
 import numpy as np
 import matplotlib.pyplot as mplt
 import seaborn as sn
-import datetime as dt
+import datetime
 import streamlit as st
 import os
 import plotly.express as px
 import plotly.colors as pcolors
 import plotly.graph_objects as go
-import math
+from scipy.optimize import minimize
 
 # ---------------- Anotações ---------------- # 
 # arrumar datas nas tabelas
@@ -18,7 +18,8 @@ import math
 # streamlit run mark_st.py
 # https://www.youtube.com/watch?v=Y1E73SQPD1U
 # https://www.youtube.com/watch?v=BchQuTJvRAs
-
+# https://www.linkedin.com/pulse/modern-portfolio-theory-python-building-optimal-web-app-phuaphan-oyhhc/
+# https://modern-portfolio-theory.streamlit.app
 
 # ---------------- Arquivos ---------------- # 
 # tickers acoes existentes (o ideal seria fazer um web scrapping na B3 ou consumir uma api da B3, pq com um arquivo fica muito travado)
@@ -48,9 +49,9 @@ selecionar_acoes = st.sidebar.multiselect('Selecione ações', sorted(acoes + '.
 st.set_option('deprecation.showPyplotGlobalUse', False)
 
 st.subheader('Preço das ações')
-tabela = pd.DataFrame()
-for i in selecionar_acoes:
-    tabela[f'{i}'] = round(yf.download(i, start=data_i, end=data_f)['Adj Close'].resample('M').last(),2)
+# tabela = pd.DataFrame()
+# for i in selecionar_acoes:
+#     tabela[f'{i}'] = round(yf.download(i, start=data_i, end=data_f)['Adj Close'].resample('M').last(),2)
 # st.write(tabela.head())
 
 grafico = px.line(tabela)
@@ -75,7 +76,7 @@ st.plotly_chart(grafico2)
 tabela_retorn = tabela_norm.pct_change().dropna()
 media_retor = tabela_retorn.mean()
 media_retor.columns = ['Média dos retornos contínuos']
-cov_retor = tabela_retorn.corr() # fazer um heatmap. para o modelo de markowitz é bom ter acoes com alta correlação negativa ! ver video: https://www.youtube.com/watch?v=Y1E73SQPD1U
+cov_retor = tabela_retorn.cov() # para o modelo de markowitz é bom ter acoes com alta correlação negativa ! ver video: https://www.youtube.com/watch?v=Y1E73SQPD1U
 st.write(media_retor)
 
 heatmap_retorn = px.imshow(cov_retor, text_auto=True)
@@ -84,6 +85,16 @@ st.plotly_chart(heatmap_retorn)
 # grafico3 = px.line(tabela_norm)
 # grafico3.update_layout(width=800, height=300)
 # st.plotly_chart(grafico3)
+
+
+
+# ---------------- Simulação ---------------- #
+numero_portfolios = 1000
+tabela_retorn_esperados = np.zeros(numero_portfolios)
+
+
+
+
 
 
 
