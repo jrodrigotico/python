@@ -91,7 +91,8 @@ st.plotly_chart(heatmap_retorn)
 # ---------------- Simulação ---------------- #
 numero_portfolios = 1000
 tabela_retorn_esperados = np.zeros(numero_portfolios)
-
+tabela_volatilidades_esperadas = np.zeros(numero_portfolios)
+tabela_sharpe = np.zeros(numero_portfolios)
 
 
 
