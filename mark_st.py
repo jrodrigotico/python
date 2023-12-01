@@ -42,21 +42,22 @@ data_f = st.sidebar.date_input('Data final',  format='YYYY-MM-DD', value=None)
 
 # seleção de ações
 selecionar_acoes = st.sidebar.multiselect('Selecione ações', sorted(acoes + '.SA'))
+# st.write(selecionar_acoes)
 
 
 # ---------------- Gráficos e tabelas de preços ---------------- # 
 # grafico e tabela de 'Preço das ações'
 st.set_option('deprecation.showPyplotGlobalUse', False)
 
-st.subheader('Preço das ações')
+# st.subheader('Preço das ações')
 tabela = pd.DataFrame()
 for i in selecionar_acoes:
     tabela[f'{i}'] = round(yf.download(i, start=data_i, end=data_f)['Adj Close'].resample('M').last(),2)
 # st.write(tabela.head())
 
-grafico = px.line(tabela)
-grafico.update_layout(width=800, height=300)
-st.plotly_chart(grafico)
+# grafico = px.line(tabela)
+# grafico.update_layout(width=800, height=300)
+# st.plotly_chart(grafico)
 
 
 # grafico e tabela de 'Preço das ações normalizado' 
@@ -67,7 +68,7 @@ for i in tabela.columns:
 # st.write(tabela_norm.head())
     
 grafico2 = px.line(tabela_norm)
-grafico2.update_layout(width=800, height=300)
+grafico2.update_layout(width=800, height=800)
 st.plotly_chart(grafico2)
 
 
@@ -76,10 +77,10 @@ st.plotly_chart(grafico2)
 tabela_retorn = tabela_norm.pct_change().dropna()
 media_retor = tabela_retorn.mean()
 media_retor.columns = ['Média dos retornos contínuos']
-cov_retor = tabela_retorn.cov() # para o modelo de markowitz é bom ter acoes com alta correlação negativa ! ver video: https://www.youtube.com/watch?v=Y1E73SQPD1U
+matriz_cov = tabela_retorn.cov() # para o modelo de markowitz é bom ter acoes com alta correlação negativa ! ver video: https://www.youtube.com/watch?v=Y1E73SQPD1U
 st.write(media_retor)
 
-heatmap_retorn = px.imshow(cov_retor, text_auto=True)
+heatmap_retorn = px.imshow(matriz_cov, text_auto=True)
 st.plotly_chart(heatmap_retorn)
 
 # grafico3 = px.line(tabela_norm)
@@ -87,15 +88,50 @@ st.plotly_chart(heatmap_retorn)
 # st.plotly_chart(grafico3)
 
 
-
 # ---------------- Simulação ---------------- #
-numero_portfolios = 1000
-tabela_retorn_esperados = np.zeros(numero_portfolios)
-tabela_volatilidades_esperadas = np.zeros(numero_portfolios)
-tabela_sharpe = np.zeros(numero_portfolios)
+numero_portfolios = st.sidebar.number_input('Insira o número de portfolios')
+
+def parametros_portofolio (numero_portfolios):
+    
+    tabela_retorn_esperados = np.zeros(numero_portfolios)
+    tabela_volatilidades_esperadas = np.zeros(numero_portfolios)
+    tabela_sharpe = np.zeros(numero_portfolios)
+    tabela_pesos = np.zeros((numero_portfolios, len(selecionar_acoes)))
+    
+    for i in range(numero_portfolios):
+        pesos_random = np.random.random(len(selecionar_acoes))
+        pesos_random /= np.sum(pesos_random)
+        tabela_pesos[i,:] = pesos_random
+        tabela_retorn_esperados[i] = np.sum(media_retor * pesos_random * 252)
+        tabela_volatilidades_esperadas[i] =  np.sqrt(np.dot(pesos_random.T, np.dot(matriz_cov * 252, pesos_random)))
+        tabela_sharpe[i] = tabela_retorn_esperados[i] / tabela_volatilidades_esperadas[i]
+        
+    indice_sharpe_max = tabela_sharpe.argmax()
+    carteira_max_retorno = tabela_pesos[indice_sharpe_max]
+    st.write(carteira_max_retorno)
+ 
+
+
+if st.sidebar.button('Run'):
+    parametros_portofolio (int(numero_portfolios))
+
+
+
+# ---------------- Restrições e fronteira eficiente ---------------- #
+
+
+    
 
 
 
 
 
 
+
+# if st.sidebar.button('Gerar gráfico'):
+#     fig, ax = mplt.subplots()
+#     ax.scatter(tabela_volatilidades_esperadas, tabela_retorn_esperados, c=tabela_sharpe)
+#     ax.scatter(tabela_volatilidades_esperadas[indice_sharpe_max], tabela_retorn_esperados[indice_sharpe_max], c = 'red')
+#     ax.plot(eixo_x_fronteira, fronteira_eficiente_y)
+
+#     mplt.show()
