@@ -61,14 +61,14 @@ for i in selecionar_acoes:
 
 
 # grafico e tabela de 'Preço das ações normalizado' 
-st.subheader('Preço das ações normalizado')
+st.subheader('Preço das ações (normalizado)')
 tabela_norm = pd.DataFrame()
 for i in tabela.columns:
-    tabela_norm[f'{i}_normal'] = round(tabela[i] / tabela[i].iloc[0],2) # pega dado da tabela anterior
+    tabela_norm[f'{i[:5]}'] = round(tabela[i] / tabela[i].iloc[0],2) # pega dado da tabela anterior
 # st.write(tabela_norm.head())
     
 grafico2 = px.line(tabela_norm)
-grafico2.update_layout(width=800, height=800)
+grafico2.update_layout(width=800, height=500)
 st.plotly_chart(grafico2)
 
 
@@ -91,7 +91,10 @@ st.plotly_chart(heatmap_retorn)
 # ---------------- Simulação ---------------- #
 numero_portfolios = st.sidebar.number_input('Insira o número de portfolios')
 
+
 def parametros_portofolio (numero_portfolios):
+    
+    # fronteira_eficiente_y = np.linspace(tabela_retorn_esperados.min(), tabela_retorn_esperados.max(), 50 )   # defino range do meu eixo
     
     tabela_retorn_esperados = np.zeros(numero_portfolios)
     tabela_volatilidades_esperadas = np.zeros(numero_portfolios)
@@ -109,7 +112,19 @@ def parametros_portofolio (numero_portfolios):
     indice_sharpe_max = tabela_sharpe.argmax()
     carteira_max_retorno = tabela_pesos[indice_sharpe_max]
     st.write(carteira_max_retorno)
- 
+    
+    
+    fig = go.Figure()
+    fig.add_scatter(tabela_volatilidades_esperadas, tabela_retorn_esperados)
+    fig.add_scatter(tabela_volatilidades_esperadas[indice_sharpe_max], tabela_retorn_esperados[indice_sharpe_max])
+    # fig.show(config = dict(displayModeBar=True))
+    st.pyplot(fig)
+    
+    # fig, ax = mplt.subplots()
+    # ax.scatter(tabela_volatilidades_esperadas, tabela_retorn_esperados, c=tabela_sharpe)
+    # ax.scatter(tabela_volatilidades_esperadas[indice_sharpe_max], tabela_retorn_esperados[indice_sharpe_max], c = 'red')
+    # # ax.plot(eixo_x_fronteira, fronteira_eficiente_y)
+    # st.pyplot(fig)
 
 
 if st.sidebar.button('Run'):
