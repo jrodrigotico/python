@@ -74,12 +74,14 @@ st.plotly_chart(grafico2)
 
 # ---------------- Retornos Contínuos e Matriz de Covariância ---------------- #
 # ln(retorno_t / retorno_t-1)
+st.header('Médias dos retornos de cada ação:')
 tabela_retorn = tabela_norm.pct_change().dropna()
 media_retor = tabela_retorn.mean()
-media_retor.columns = ['Média dos retornos contínuos']
-matriz_cov = tabela_retorn.cov() # para o modelo de markowitz é bom ter acoes com alta correlação negativa ! ver video: https://www.youtube.com/watch?v=Y1E73SQPD1U
-st.write(media_retor)
+for i in range(len(media_retor)):
+    st.write(selecionar_acoes[i], round(media_retor[i],4))
 
+matriz_cov = tabela_retorn.cov() # para o modelo de markowitz é bom ter acoes com alta correlação negativa ! ver video: https://www.youtube.com/watch?v=Y1E73SQPD1U
+st.header('Matriz de covariância:')
 heatmap_retorn = px.imshow(matriz_cov, text_auto=True)
 st.plotly_chart(heatmap_retorn)
 
@@ -111,20 +113,20 @@ def parametros_portofolio (numero_portfolios):
         
     indice_sharpe_max = tabela_sharpe.argmax()
     carteira_max_retorno = tabela_pesos[indice_sharpe_max]
-    st.write(carteira_max_retorno)
     
     
-    fig = go.Figure()
-    fig.add_scatter(tabela_volatilidades_esperadas, tabela_retorn_esperados)
-    fig.add_scatter(tabela_volatilidades_esperadas[indice_sharpe_max], tabela_retorn_esperados[indice_sharpe_max])
-    # fig.show(config = dict(displayModeBar=True))
+    st.header('Pesos da carteira de máximo retorno:')
+    for z in range(len(selecionar_acoes)):
+        st.write(selecionar_acoes[z], round(carteira_max_retorno[z],4))
+
+    # eixo_x_fronteira = []
+    
+    st.header(f'Gráfico com a simulação de {numero_portfolios} carteiras: ')   
+    fig, ax = mplt.subplots()
+    ax.scatter(tabela_volatilidades_esperadas, tabela_retorn_esperados, c=tabela_sharpe)
+    ax.scatter(tabela_volatilidades_esperadas[indice_sharpe_max], tabela_retorn_esperados[indice_sharpe_max], c = 'red')
+    # ax.plot(eixo_x_fronteira, fronteira_eficiente_y)
     st.pyplot(fig)
-    
-    # fig, ax = mplt.subplots()
-    # ax.scatter(tabela_volatilidades_esperadas, tabela_retorn_esperados, c=tabela_sharpe)
-    # ax.scatter(tabela_volatilidades_esperadas[indice_sharpe_max], tabela_retorn_esperados[indice_sharpe_max], c = 'red')
-    # # ax.plot(eixo_x_fronteira, fronteira_eficiente_y)
-    # st.pyplot(fig)
 
 
 if st.sidebar.button('Run'):
@@ -135,7 +137,7 @@ if st.sidebar.button('Run'):
 # ---------------- Restrições e fronteira eficiente ---------------- #
 
 
-    
+
 
 
 
