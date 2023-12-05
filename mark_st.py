@@ -93,11 +93,8 @@ st.plotly_chart(heatmap_retorn)
 # ---------------- Simulação ---------------- #
 numero_portfolios = st.sidebar.number_input('Insira o número de portfolios')
 
-
 def parametros_portofolio (numero_portfolios):
-    
-    # fronteira_eficiente_y = np.linspace(tabela_retorn_esperados.min(), tabela_retorn_esperados.max(), 50 )   # defino range do meu eixo
-    
+        
     tabela_retorn_esperados = np.zeros(numero_portfolios)
     tabela_volatilidades_esperadas = np.zeros(numero_portfolios)
     tabela_sharpe = np.zeros(numero_portfolios)
@@ -113,13 +110,19 @@ def parametros_portofolio (numero_portfolios):
         
     indice_sharpe_max = tabela_sharpe.argmax()
     carteira_max_retorno = tabela_pesos[indice_sharpe_max]
-    
-    
+        
     st.header('Pesos da carteira de máximo retorno:')
     for z in range(len(selecionar_acoes)):
         st.write(selecionar_acoes[z], round(carteira_max_retorno[z],4))
 
     # eixo_x_fronteira = []
+    # restrições para o PPL
+    peso_inicial = [1/len(lista_acoes)] * len(lista_acoes)  # pesos iguais para todas as acoes
+    limites = tuple([(0,1) for i in lista_acoes])   # aqui nenhuma acao pode ter mais que 100%
+    
+    
+    
+    
     
     st.header(f'Gráfico com a simulação de {numero_portfolios} carteiras: ')   
     fig, ax = mplt.subplots()
@@ -134,7 +137,7 @@ if st.sidebar.button('Run'):
 
 
 
-# ---------------- Restrições e fronteira eficiente ---------------- #
+
 
 
 
