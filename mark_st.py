@@ -93,6 +93,10 @@ st.plotly_chart(heatmap_retorn)
 # ---------------- Simulação ---------------- #
 numero_portfolios = st.sidebar.number_input('Insira o número de portfolios')
 
+# # restrições para o PPL
+# peso_inicial = [1/len(selecionar_acoes)] * len(selecionar_acoes)  # pesos iguais para todas as acoes
+# limites = tuple([(0,1) for i in selecionar_acoes])   # aqui nenhuma acao pode ter mais que 100%
+
 def parametros_portofolio (numero_portfolios):
         
     tabela_retorn_esperados = np.zeros(numero_portfolios)
@@ -116,13 +120,7 @@ def parametros_portofolio (numero_portfolios):
         st.write(selecionar_acoes[z], round(carteira_max_retorno[z],4))
 
     # eixo_x_fronteira = []
-    # restrições para o PPL
-    peso_inicial = [1/len(lista_acoes)] * len(lista_acoes)  # pesos iguais para todas as acoes
-    limites = tuple([(0,1) for i in lista_acoes])   # aqui nenhuma acao pode ter mais que 100%
-    
-    
-    
-    
+
     
     st.header(f'Gráfico com a simulação de {numero_portfolios} carteiras: ')   
     fig, ax = mplt.subplots()
