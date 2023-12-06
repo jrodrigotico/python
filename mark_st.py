@@ -25,7 +25,7 @@ from scipy.optimize import minimize
 # tickers acoes existentes (o ideal seria fazer um web scrapping na B3 ou consumir uma api da B3, pq com um arquivo fica muito travado)
 # https://www.dadosdemercado.com.br/bolsa/acoes , att: Cotações atualizadas no fechamento de 24/11/2023.
 yf.pdr_override() #corrige problemas da bibliotece do pandas_datareader
-acoes = pd.read_excel(os.path.join('C:/Users/Computadores Gamer/OneDrive/Área de Trabalho/python/acoes_listas.xlsx'))['Código']
+acoes = pd.read_csv('https://raw.githubusercontent.com/jrodrigotico/python/projeto_acoes/tickers_acoes.csv', sep=';')['Código']
 
 
 # ---------------- Inicial ---------------- # 
