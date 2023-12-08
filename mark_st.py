@@ -164,8 +164,8 @@ def parametros_portofolio (numero_portfolios):
     layout = go.Layout(xaxis= dict(title='Risco esperado'), yaxis= dict(title='Retorno esperado'))
 
     # data = [carteiras_simulacao, carteira_max_retorno, linha_eficiencia]
-    data = [carteiras_simulacao, carteira_max_retorno]
-    fig = go.Figure(data=data, layout=layout)
+    pontos_dispersao = [carteiras_simulacao, carteira_max_retorno]
+    fig = go.Figure(data=pontos_dispersao, layout=layout)
     st.plotly_chart(fig)
 
 
