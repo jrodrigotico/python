@@ -117,7 +117,7 @@ def parametros_portofolio (numero_portfolios):
     for z in range(len(selecionar_acoes)):
         st.write(selecionar_acoes[z], round(carteira_max_retorno[z],4))
         
-    # restrições PPL
+    # restrições PPL para curva de fronteira eficiente
     def pegando_retorno (peso_teste):
         peso_teste = np.array(peso_teste)
         retorno = np.sum(media_retor * peso_teste) * 252
