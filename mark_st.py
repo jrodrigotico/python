@@ -93,41 +93,80 @@ st.plotly_chart(heatmap_retorn)
 # ---------------- Simulação ---------------- #
 numero_portfolios = st.sidebar.number_input('Insira o número de portfolios')
 
-# # restrições para o PPL
-# peso_inicial = [1/len(selecionar_acoes)] * len(selecionar_acoes)  # pesos iguais para todas as acoes
-# limites = tuple([(0,1) for i in selecionar_acoes])   # aqui nenhuma acao pode ter mais que 100%
-
 def parametros_portofolio (numero_portfolios):
         
     tabela_retorn_esperados = np.zeros(numero_portfolios)
     tabela_volatilidades_esperadas = np.zeros(numero_portfolios)
     tabela_sharpe = np.zeros(numero_portfolios)
     tabela_pesos = np.zeros((numero_portfolios, len(selecionar_acoes)))
+    tabela_retorn_esperados_aritm = np.zeros(numero_portfolios)
     
     for i in range(numero_portfolios):
         pesos_random = np.random.random(len(selecionar_acoes))
         pesos_random /= np.sum(pesos_random)
         tabela_pesos[i,:] = pesos_random
         tabela_retorn_esperados[i] = np.sum(media_retor * pesos_random * 252)
+        tabela_retorn_esperados_aritm[i] = np.exp(tabela_retorn_esperados[i])-1
         tabela_volatilidades_esperadas[i] =  np.sqrt(np.dot(pesos_random.T, np.dot(matriz_cov * 252, pesos_random)))
         tabela_sharpe[i] = tabela_retorn_esperados[i] / tabela_volatilidades_esperadas[i]
         
     indice_sharpe_max = tabela_sharpe.argmax()
     carteira_max_retorno = tabela_pesos[indice_sharpe_max]
         
-    st.header('Pesos da carteira de máximo retorno:')
+    st.header('Pesos da carteira ideal:')
     for z in range(len(selecionar_acoes)):
         st.write(selecionar_acoes[z], round(carteira_max_retorno[z],4))
-
-    # eixo_x_fronteira = []
-
+        
+    # restrições PPL
+    def pegando_retorno (peso_teste):
+        peso_teste = np.array(peso_teste)
+        retorno = np.sum(media_retor * peso_teste) * 252
+        retorno = np.exp(retorno) - 1 # aqui estou passando os retornos para aritmeticos
+        return retorno
     
+    def checando_soma_pesos(peso_teste):
+        return np.sum(peso_teste)-1
+    
+    def pegando_vol(peso_teste):
+        peso_teste = np.array(peso_teste)
+        vol = np.sqrt(np.dot(peso_teste.T, np.dot(matriz_cov * 252, peso_teste)))
+        return vol
+    
+    peso_inicial = [1/len(selecionar_acoes)] * len(selecionar_acoes)  # pesos iguais para todas as acoes
+    limites = tuple([(0,1) for i in selecionar_acoes])   # aqui nenhuma acao pode ter mais que 100%
+    
+    eixo_x_fronteira_eficiente = []
+    fronteira_eficiente_y = np.linspace(tabela_retorn_esperados_aritm.min(), tabela_retorn_esperados_aritm.max(), 50 ) 
+
+    # fronteira eficiente com as restrições
+    for retorno_possivel in fronteira_eficiente_y:
+        restricoes = ({'type':'eq', 'fun':checando_soma_pesos}, {'type':'eq', 'fun' : lambda weight: pegando_retorno(weight) - retorno_possivel}) # é um dicionario de restricoes, quando a igualdade ('eq') for zero é pq a restricao fo satisfeita
+        
+        result = minimize(pegando_vol, peso_inicial, method='SLSQP', bounds = limites, constraints = restricoes)
+        eixo_x_fronteira_eficiente.append(result['fun'])
+
     st.header(f'Gráfico com a simulação de {numero_portfolios} carteiras: ')   
-    fig, ax = mplt.subplots()
-    ax.scatter(tabela_volatilidades_esperadas, tabela_retorn_esperados, c=tabela_sharpe)
-    ax.scatter(tabela_volatilidades_esperadas[indice_sharpe_max], tabela_retorn_esperados[indice_sharpe_max], c = 'red')
-    # ax.plot(eixo_x_fronteira, fronteira_eficiente_y)
-    st.pyplot(fig)
+    # fig, ax = mplt.subplots()
+    # ax.scatter(tabela_volatilidades_esperadas, tabela_retorn_esperados_aritm, c=tabela_sharpe)
+    # ax.scatter(tabela_volatilidades_esperadas[indice_sharpe_max], tabela_retorn_esperados_aritm[indice_sharpe_max], c = 'red')
+    # ax.plot(eixo_x_fronteira_eficiente, fronteira_eficiente_y)
+    # st.pyplot(fig)
+    
+    # grafico interativo com a fronteira eficiente
+    carteiras_simulacao = go.Scatter(x=tabela_volatilidades_esperadas,y=tabela_retorn_esperados_aritm,mode='markers',
+        marker=dict(size=8, color=tabela_sharpe, colorscale='Viridis'), name = 'Carteiras simuladas')
+
+    carteira_max_retorno = go.Scatter(x=[tabela_volatilidades_esperadas[indice_sharpe_max]], y=[tabela_retorn_esperados_aritm[indice_sharpe_max]],
+        mode='markers', marker= dict(size=12, color='red'), name = 'Carteira com o melhor Índice de Sharpe')
+
+    # linha_eficiencia = go.Scatter(x=eixo_x_fronteira_eficiente, y=fronteira_eficiente_y, mode='lines', name = 'Fronteira eficiente')
+
+    layout = go.Layout(xaxis= dict(title='Risco esperado'), yaxis= dict(title='Retorno esperado'))
+
+    # data = [carteiras_simulacao, carteira_max_retorno, linha_eficiencia]
+    data = [carteiras_simulacao, carteira_max_retorno]
+    fig = go.Figure(data=data, layout=layout)
+    st.plotly_chart(fig)
 
 
 if st.sidebar.button('Run'):
@@ -153,3 +192,4 @@ if st.sidebar.button('Run'):
 #     ax.plot(eixo_x_fronteira, fronteira_eficiente_y)
 
 #     mplt.show()
+
