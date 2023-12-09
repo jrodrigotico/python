@@ -25,7 +25,9 @@ from scipy.optimize import minimize
 # tickers acoes existentes (o ideal seria fazer um web scrapping na B3 ou consumir uma api da B3, pq com um arquivo fica muito travado)
 # https://www.dadosdemercado.com.br/bolsa/acoes , att: Cotações atualizadas no fechamento de 24/11/2023.
 yf.pdr_override() #corrige problemas da bibliotece do pandas_datareader
-acoes = pd.read_csv('https://raw.githubusercontent.com/jrodrigotico/python/projeto_acoes/tickers_acoes.csv', sep=';')['Código']
+acoes = pd.read_csv('https://raw.githubusercontent.com/jrodrigotico/python/projeto_acoes/tickers_segmentos.csv', sep=';')
+acoes = acoes.loc[(acoes['LISTAGEM'] != 'CÓDIGO') & (acoes['LISTAGEM'].notna())].iloc[:,range(0,2)]
+
 
 
 # ---------------- Inicial ---------------- # 
@@ -39,6 +41,9 @@ st.write('---')
 st.sidebar.header('Parâmetros')
 data_i = st.sidebar.date_input('Data inicial', format='YYYY-MM-DD', value=None)
 data_f = st.sidebar.date_input('Data final',  format='YYYY-MM-DD', value=None)
+
+# seleção de segmento da empresa
+
 
 # seleção de ações
 selecionar_acoes = st.sidebar.multiselect('Selecione ações', sorted(acoes + '.SA'))
