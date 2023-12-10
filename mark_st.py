@@ -29,7 +29,6 @@ acoes = pd.read_csv('https://raw.githubusercontent.com/jrodrigotico/python/proje
 acoes = acoes.loc[(acoes['LISTAGEM'] != 'CÓDIGO') & (acoes['LISTAGEM'].notna())].iloc[:,range(0,2)]
 
 
-
 # ---------------- Inicial ---------------- # 
 st.set_page_config(page_title='Markowitz', layout='centered')
 st.header('Teoria Moderna de Portfólio - Markowitz')
@@ -43,10 +42,12 @@ data_i = st.sidebar.date_input('Data inicial', format='YYYY-MM-DD', value=None)
 data_f = st.sidebar.date_input('Data final',  format='YYYY-MM-DD', value=None)
 
 # seleção de segmento da empresa
-
+segmento = st.sidebar.multiselect('Selecione o segmento', sorted(acoes['SEGMENTO'].unique()))
 
 # seleção de ações
-selecionar_acoes = st.sidebar.multiselect('Selecione ações', sorted(acoes + '.SA'))
+# acoes filtradas pelo segmento
+filtro_segmento = acoes.loc[acoes['SEGMENTO'] == segmento].iloc[:,1]
+selecionar_acoes = st.sidebar.multiselect('Selecione ações', sorted(filtro_segmento + '.SA'))
 # st.write(selecionar_acoes)
 
 
