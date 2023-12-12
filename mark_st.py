@@ -60,7 +60,7 @@ selecionar_acoes = st.sidebar.multiselect('Selecione ações', sorted(filtro_seg
 st.set_option('deprecation.showPyplotGlobalUse', False)
 
 # st.subheader('Preço das ações')
-tabela = pd.DataFrame()
+tabela = pd.DataFrame() 
 for i in selecionar_acoes:
     tabela[f'{i}'] = round(yf.download(i, start=data_i, end=data_f)['Adj Close'].resample('M').last(),2)
 # st.write(tabela.head())
