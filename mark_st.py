@@ -25,7 +25,8 @@ from scipy.optimize import minimize
 # tickers acoes existentes (o ideal seria fazer um web scrapping na B3 ou consumir uma api da B3, pq com um arquivo fica muito travado)
 # https://www.dadosdemercado.com.br/bolsa/acoes , att: Cotações atualizadas no fechamento de 24/11/2023.
 yf.pdr_override() #corrige problemas da bibliotece do pandas_datareader
-acoes = pd.read_csv('https://raw.githubusercontent.com/jrodrigotico/python/projeto_acoes/tickers_acoes.csv', sep=';')['Código']
+acoes = pd.read_csv('https://raw.githubusercontent.com/jrodrigotico/python/projeto_acoes/tickers_segmentos.csv', sep=';')
+acoes = acoes.loc[(acoes['LISTAGEM'] != 'CÓDIGO') & (acoes['LISTAGEM'].notna())].iloc[:,range(0,2)]
 
 
 # ---------------- Inicial ---------------- # 
@@ -40,10 +41,19 @@ st.sidebar.header('Parâmetros')
 data_i = st.sidebar.date_input('Data inicial', format='YYYY-MM-DD', value=None)
 data_f = st.sidebar.date_input('Data final',  format='YYYY-MM-DD', value=None)
 
-# seleção de ações
-selecionar_acoes = st.sidebar.multiselect('Selecione ações', sorted(acoes + '.SA'))
-# st.write(selecionar_acoes)
+# seleção de segmento da empresa
+# segmento = st.sidebar.multiselect('Selecione o segmento', sorted(acoes['SEGMENTO'].unique()))
 
+# dados cdi (taxa livre de risco)
+cdi = pd.read_csv('https://raw.githubusercontent.com/jrodrigotico/python/projeto_acoes/cdi_252.csv', sep=';')
+# filtro_cdi = cdi.loc[(cdi['Data']>=data_i) & (cdi['Data']=<data_f)]
+
+
+# seleção de ações
+# acoes filtradas pelo segmento
+filtro_segmento = acoes.loc[acoes['SEGMENTO'] == segmento].iloc[:,1]
+selecionar_acoes = st.sidebar.multiselect('Selecione ações', sorted(filtro_segmento + '.SA'))
+# st.write(selecionar_acoes)
 
 # ---------------- Gráficos e tabelas de preços ---------------- # 
 # grafico e tabela de 'Preço das ações'
