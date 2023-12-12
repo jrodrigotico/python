@@ -51,9 +51,8 @@ cdi = pd.read_csv('https://raw.githubusercontent.com/jrodrigotico/python/projeto
 
 # seleção de ações
 # acoes filtradas pelo segmento
-filtro_segmento = acoes.loc[acoes['SEGMENTO'].isin(segmento)].iloc[:,1]
+filtro_segmento = acoes.loc[acoes['SEGMENTO'].isin(segmento)].iloc[:,1] # esse iloc retorna as acoes de determinado segmento que foi anteriormente selecionado
 selecionar_acoes = st.sidebar.multiselect('Selecione ações', sorted(filtro_segmento + '.SA'))
-# st.write(selecionar_acoes)
 
 
 # ---------------- Gráficos e tabelas de preços ---------------- # 
