@@ -42,18 +42,19 @@ data_i = st.sidebar.date_input('Data inicial', format='YYYY-MM-DD', value=None)
 data_f = st.sidebar.date_input('Data final',  format='YYYY-MM-DD', value=None)
 
 # seleção de segmento da empresa
-# segmento = st.sidebar.multiselect('Selecione o segmento', sorted(acoes['SEGMENTO'].unique()))
+segmento = st.sidebar.multiselect('Selecione o segmento', sorted(acoes['SEGMENTO'].unique()))
 
 # dados cdi (taxa livre de risco)
 cdi = pd.read_csv('https://raw.githubusercontent.com/jrodrigotico/python/projeto_acoes/cdi_252.csv', sep=';')
+# selecionar_cdi = st.sidebar.multiselect('Selecionar período CDI')
 # filtro_cdi = cdi.loc[(cdi['Data']>=data_i) & (cdi['Data']=<data_f)]
-
 
 # seleção de ações
 # acoes filtradas pelo segmento
-filtro_segmento = acoes.loc[acoes['SEGMENTO'] == segmento].iloc[:,1]
+filtro_segmento = acoes.loc[acoes['SEGMENTO'].isin(segmento)].iloc[:,1]
 selecionar_acoes = st.sidebar.multiselect('Selecione ações', sorted(filtro_segmento + '.SA'))
 # st.write(selecionar_acoes)
+
 
 # ---------------- Gráficos e tabelas de preços ---------------- # 
 # grafico e tabela de 'Preço das ações'
