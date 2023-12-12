@@ -69,7 +69,7 @@ for i in tabela.columns:
     
 grafico2 = px.line(tabela_norm)
 grafico2.update_layout(width=800, height=500)
-st.plotly_chart(grafico2)
+st.plotly_chart(grafico2) 
 
 
 # ---------------- Retornos Contínuos e Matriz de Covariância ---------------- #
