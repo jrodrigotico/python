@@ -54,6 +54,7 @@ cdi = pd.read_csv('https://raw.githubusercontent.com/jrodrigotico/python/projeto
 # seleção de ações
 # acoes filtradas pelo subsetor
 filtro_subsetor = acoes.loc[acoes['Subsetor Bovespa'].isin(subsetor)].iloc[:,0] # esse iloc retorna as acoes de determinado subsetor que foi anteriormente selecionado, é zero pq o 0 representa a coluna de códigos que é o que eu desejo que retorne
+
 selecionar_acoes = st.sidebar.multiselect('Selecione ações', sorted(filtro_subsetor + '.SA'))
 
 
