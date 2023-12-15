@@ -20,14 +20,14 @@ from scipy.optimize import minimize
 # https://www.youtube.com/watch?v=BchQuTJvRAs
 # https://www.linkedin.com/pulse/modern-portfolio-theory-python-building-optimal-web-app-phuaphan-oyhhc/
 # https://modern-portfolio-theory.streamlit.app
-# fonte dos tickers e segmento = Economática 14/12/2023
+# fonte dos tickers e segmento = Economática 14/12/2023, a empresa Allos foi classificado como 'Outros' no Subsetor Bovespa
 
 
 # ---------------- Arquivos ---------------- # 
 # tickers acoes existentes (o ideal seria fazer um web scrapping na B3 ou consumir uma api da B3, pq com um arquivo fica muito travado)
 # https://www.dadosdemercado.com.br/bolsa/acoes , att: Cotações atualizadas no fechamento de 24/11/2023.
 yf.pdr_override() #corrige problemas da bibliotece do pandas_datareader
-acoes = pd.read_csv('https://raw.githubusercontent.com/jrodrigotico/python/projeto_acoes/acoes_segmento.csv', sep=';')[['SEGMENTO', 'LISTAGEM']]
+acoes = pd.read_csv('https://raw.githubusercontent.com/jrodrigotico/python/projeto_acoes/base_completa_acoes.csv', sep=';')[['Código','Subsetor Bovespa']]
 # acoes = acoes.loc[(acoes['ticker_numero'] != 'CÓDIGO') & (acoes['LISTAGEM'].notna())].iloc[:,range(0,2)]
 
 
@@ -43,8 +43,8 @@ st.sidebar.header('Parâmetros')
 data_i = st.sidebar.date_input('Data inicial', format='YYYY-MM-DD', value=None)
 data_f = st.sidebar.date_input('Data final',  format='YYYY-MM-DD', value=None)
 
-# seleção de segmento da empresa
-segmento = st.sidebar.multiselect('Selecione o segmento', sorted(acoes['SEGMENTO'].unique()))
+# seleção de subsetor da empresa
+subsetor = st.sidebar.multiselect('Selecione o subsetor', sorted(acoes['Subsetor Bovespa'].unique()))
 
 # dados cdi (taxa livre de risco)
 cdi = pd.read_csv('https://raw.githubusercontent.com/jrodrigotico/python/projeto_acoes/cdi_252.csv', sep=';')
@@ -52,9 +52,9 @@ cdi = pd.read_csv('https://raw.githubusercontent.com/jrodrigotico/python/projeto
 # filtro_cdi = cdi.loc[(cdi['Data']>=data_i) & (cdi['Data']=<data_f)]
 
 # seleção de ações
-# acoes filtradas pelo segmento
-filtro_segmento = acoes.loc[acoes['SEGMENTO'].isin(segmento)].iloc[:,1] # esse iloc retorna as acoes de determinado segmento que foi anteriormente selecionado
-selecionar_acoes = st.sidebar.multiselect('Selecione ações', sorted(filtro_segmento + '.SA'))
+# acoes filtradas pelo subsetor
+filtro_subsetor = acoes.loc[acoes['Subsetor Bovespa'].isin(subsetor)].iloc[:,0] # esse iloc retorna as acoes de determinado subsetor que foi anteriormente selecionado, é zero pq o 0 representa a coluna de códigos que é o que eu desejo que retorne
+selecionar_acoes = st.sidebar.multiselect('Selecione ações', sorted(filtro_subsetor + '.SA'))
 
 
 # ---------------- Gráficos e tabelas de preços ---------------- # 
