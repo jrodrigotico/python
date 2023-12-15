@@ -109,7 +109,7 @@ Camil;ON;Bovespa;Ação;ativo;CAML3;Alimentos Processados
 Carrefour BR;ON;Bovespa;Ação;ativo;CRFB3;Comércio e Distribuição
 Casan;ON;Bovespa;Ação;ativo;CASN3;Água e Saneamento
 Casan;PN;Bovespa;Ação;ativo;CASN4;Água e Saneamento
-Casas Bahia;ON;Bovespa;Ação;ativo;BHIA3;#N/A
+Casas Bahia;ON;Bovespa;Ação;ativo;BHIA3;Comércio
 Cba;ON;Bovespa;Ação;ativo;CBAV3;Mineração
 CCR SA;ON;Bovespa;Ação;ativo;CCRO3;Transporte
 Cea Modas;ON;Bovespa;Ação;ativo;CEAB3;Comércio Varejista
@@ -120,8 +120,8 @@ Cedro;ON;Bovespa;Ação;ativo;CEDO3;Tecidos, Vestuário e Calçados
 Cedro;PN;Bovespa;Ação;ativo;CEDO4;Tecidos, Vestuário e Calçados
 Ceee-D;ON;Bovespa;Ação;ativo;CEED3;Energia Elétrica
 Ceee-D;PN;Bovespa;Ação;ativo;CEED4;Energia Elétrica
-Ceee-G;ON;Bovespa;Ação;ativo;CGEE3;#N/A
-Ceee-G;PN;Bovespa;Ação;ativo;CGEE4;#N/A
+Ceee-G;ON;Bovespa;Ação;ativo;CGEE3;Energia Elétrica
+Ceee-G;PN;Bovespa;Ação;ativo;CGEE4;Energia Elétrica
 Ceg;ON;Bovespa;Ação;ativo;CEGR3;Gás
 Celesc;ON;Bovespa;Ação;ativo;CLSC3;Energia Elétrica
 Celesc;PN;Bovespa;Ação;ativo;CLSC4;Energia Elétrica
@@ -224,7 +224,7 @@ Estrela;PN;Bovespa;Ação;ativo;ESTR4;Viagens e Lazer
 Eternit;ON;Bovespa;Ação;ativo;ETER3;Construção e Engenharia
 Eucatex;ON;Bovespa;Ação;ativo;EUCA3;Madeira e Papel
 Eucatex;PN;Bovespa;Ação;ativo;EUCA4;Madeira e Papel
-Eurofarma SA;ON;Bovespa;Ação;ativo;EUFA3;#N/A
+Eurofarma SA;ON;Bovespa;Ação;ativo;EUFA3;Medicamentos e Outros Produtos
 Even;ON;Bovespa;Ação;ativo;EVEN3;Construção Civil
 Excelsior;ON;Bovespa;Ação;ativo;BAUH3;Alimentos Processados
 Excelsior;PN;Bovespa;Ação;ativo;BAUH4;Alimentos Processados
@@ -232,7 +232,7 @@ Eztec;ON;Bovespa;Ação;ativo;EZTC3;Construção Civil
 Fer Heringer;ON;Bovespa;Ação;ativo;FHER3;Químicos
 Ferbasa;ON;Bovespa;Ação;ativo;FESA3;Siderurgia e Metalurgia
 Ferbasa;PN;Bovespa;Ação;ativo;FESA4;Siderurgia e Metalurgia
-Fica;ON;Bovespa;Ação;ativo;FIEI3;#N/A
+Fica;ON;Bovespa;Ação;ativo;FIEI3;Construção Civil
 Fleury;ON;Bovespa;Ação;ativo;FLRY3;Serviços Médico - Hospitalares, Análises e Diagnósticos
 Fras-Le;ON;Bovespa;Ação;ativo;FRAS3;Material de Transporte
 G2d Invest;A;Bovespa;Ação;ativo;G2DI33;Serviços Financeiros Diversos
@@ -372,7 +372,7 @@ Nexpe;ON;Bovespa;Ação;ativo;NEXP3;Exploração de Imóveis
 Nord Brasil;ON;Bovespa;Ação;ativo;BNBR3;Intermediários Financeiros
 Nordon Met;ON;Bovespa;Ação;ativo;NORD3;Máquinas e Equipamentos
 Nortcquimica;ON;Bovespa;Ação;ativo;NRTQ3;Medicamentos e Outros Produtos
-Nu Holdings Ltd;ON;Bovespa;Ação;ativo;ROXO34;#N/A
+Nu Holdings Ltd;ON;Bovespa;Ação;ativo;ROXO34;Intermediários Financeiros
 Nutriplant;ON;Bovespa;Ação;ativo;NUTR3;Químicos
 Oceanpact;ON;Bovespa;Ação;ativo;OPCT3;Petróleo, Gás e Biocombustíveis
 Oderich;ON;Bovespa;Ação;ativo;ODER3;Alimentos Processados
@@ -438,7 +438,7 @@ Romi;ON;Bovespa;Ação;ativo;ROMI3;Máquinas e Equipamentos
 Rossi Resid;ON;Bovespa;Ação;ativo;RSID3;Construção Civil
 Rumo S.A.;ON;Bovespa;Ação;ativo;RAIL3;Transporte
 Sabesp;ON;Bovespa;Ação;ativo;SBSP3;Água e Saneamento
-Safira Energ;ON;Bovespa;Ação;ativo;SAEN3;#N/A
+Safira Energ;ON;Bovespa;Ação;ativo;SAEN3;Energia Elétrica
 Sanepar;ON;Bovespa;Ação;ativo;SAPR3;Água e Saneamento
 Sanepar;PN;Bovespa;Ação;ativo;SAPR4;Água e Saneamento
 Sanepar;UNT N2;Bovespa;Ação;ativo;SAPR11;Água e Saneamento
@@ -461,7 +461,7 @@ Seg Al Bahia;ON;Bovespa;Ação;ativo;CSAB3;Previdência e Seguros
 Seg Al Bahia;PN;Bovespa;Ação;ativo;CSAB4;Previdência e Seguros
 Sequoia Log;ON;Bovespa;Ação;ativo;SEQL3;Serviços Diversos
 Ser Educa;ON;Bovespa;Ação;ativo;SEER3;Diversos
-Serena;ON;Bovespa;Ação;ativo;SRNA3;#N/A
+Serena;ON;Bovespa;Ação;ativo;SRNA3;Energia Elétrica
 Sid Nacional;ON;Bovespa;Ação;ativo;CSNA3;Siderurgia e Metalurgia
 Simpar;ON;Bovespa;Ação;ativo;SIMH3;Holdings Diversificadas
 Sinqia;ON;Bovespa;Ação;ativo;SQIA3;Programas e Serviços
