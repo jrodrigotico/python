@@ -63,26 +63,33 @@ selecionar_acoes = st.sidebar.multiselect('Selecione ações', sorted(filtro_sub
 st.set_option('deprecation.showPyplotGlobalUse', False)
 
 # st.subheader('Preço das ações')
-tabela = pd.DataFrame() 
-for i in selecionar_acoes:
-    tabela[f'{i}'] = round(yf.download(i, start=data_i, end=data_f)['Adj Close'].resample('M').last(),2)
+# tabela = pd.DataFrame() 
+# for i in selecionar_acoes:
+#     tabela[f'{i}'] = round(yf.download(i, start=data_i, end=data_f)['Adj Close'].resample('M').last(),2)
 # st.write(tabela.head())
 
-# grafico = px.line(tabela)
-# grafico.update_layout(width=800, height=300)
-# st.plotly_chart(grafico)
+st.subheader('Preço das ações')
+tabelas_acoes = []  
+for i in selecionar_acoes:
+    tabela_acao = round(yf.download(i, start=data_i, end=data_f)["Adj Close"].rename(i),2)
+    tabelas_acoes.append(tabela_acao)
+tabela = pd.concat(tabelas_acoes, axis=1)
 
-
-# grafico e tabela de 'Preço das ações normalizado' 
 st.subheader('Preço das ações (normalizado)')
 tabela_norm = pd.DataFrame()
+erro = None
 for i in tabela.columns:
-    tabela_norm[f'{i[:5]}'] = round(tabela[i] / tabela[i].iloc[0],2) # pega dado da tabela anterior
-# st.write(tabela_norm.head())
-    
+    try:
+        tabela_norm[i[:5]] = round(tabela[i] / tabela[i].iloc[0], 2)  # pega dado da tabela anterior
+    except IndexError:
+        st.write(f'Ação {i} não listada')
+
+# usar Comércio e 'RBNS11.SA' para fazer a exceção de erros, acoes com 6 digitos no ticker nao existe mais na bolsa
+
+# Plotar o gráfico com todas as ações selecionadas
 grafico2 = px.line(tabela_norm)
 grafico2.update_layout(width=800, height=500)
-st.plotly_chart(grafico2) 
+st.plotly_chart(grafico2)
 
 
 # ---------------- Retornos Contínuos e Matriz de Covariância ---------------- #
