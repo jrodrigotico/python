@@ -22,7 +22,7 @@ from scipy.optimize import minimize
 # https://www.linkedin.com/pulse/modern-portfolio-theory-python-building-optimal-web-app-phuaphan-oyhhc/
 # https://modern-portfolio-theory.streamlit.app
 # fonte dos tickers e segmento = Economática 14/12/2023, a empresa Allos foi classificado como 'Outros' no Subsetor Bovespa
-# Acoes com problemas: CRTE3, GOLL3
+# Acoes com problemas: CRTE3, GOLL3, INTb3
 
 
 # ---------------- Arquivos ---------------- # 
@@ -182,8 +182,7 @@ def parametros_portofolio (numero_portfolios):
     st.header(f'Gráfico com a simulação de {numero_portfolios} carteiras: ')   
     st.subheader('Média da Taxa livre de risco (SELIC)')
     st.write(ret_livre) 
-    st.subheader('Índice de Sharpe máximo')
-    st.write(indice_sharpe_max) 
+    
     # fig, ax = mplt.subplots()
     # ax.scatter(tabela_volatilidades_esperadas, tabela_retorn_esperados_aritm, c=tabela_sharpe)
     # ax.scatter(tabela_volatilidades_esperadas[indice_sharpe_max], tabela_retorn_esperados_aritm[indice_sharpe_max], c = 'red')
@@ -205,11 +204,23 @@ def parametros_portofolio (numero_portfolios):
     pontos_dispersao = [carteiras_simulacao, carteira_max_retorno]
     fig = go.Figure(data=pontos_dispersao, layout=layout)
     st.plotly_chart(fig)
-
-
+    
 if st.sidebar.button('Run'):
     parametros_portofolio (int(numero_portfolios))
+    st.latex(r'''RetornoCarteira =  \sum_{i=1} WiRi''')
+    st.write('\n')
+    st.latex(r'''RetornoContínuo = \ln{\left(Retorno_t /Retorno_t-1\right) } ''')
+    st.write('\n')
+    st.latex(r''' IndíceSharpe = \left(\frac{{Retorno-Taxa\quad livre\quad de\quad risco}}{{Risco}} \right)''')
+    st.write('\n')
+    st.latex(r'''RiscoCarteira =  \sqrt{\left(Wa^2 \cdot \sigma a^2\right) + \left(Wb^2 \cdot \sigma b^2\right) + 2 \cdot \left( Wa \cdot Wb \cdot \rho ab \cdot \sigma ab \cdot \sigma b  \right)}''')
+    st.write('\n')
+    st.latex(r'''\text{ou}''')
+    st.latex(r'''RiscoCarteira =  \sqrt{\left(Wa^2 \cdot \sigma a^2\right) + \left(Wb^2 \cdot \sigma b^2\right) + 2 \cdot \left( Wa \cdot Wb \cdot covab\right)}''')
 
+
+
+    
 
 
 
