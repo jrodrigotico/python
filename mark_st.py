@@ -90,15 +90,9 @@ if selecionar_acoes:
     tabela = pd.concat(tabelas_acoes, axis=1)
 
     st.subheader('Preço das ações') # normalizado
-    
     erro = None
     for i in tabela.columns:
-        try:
-            tabela_norm[i[:5]] = round(tabela[i] / tabela[i].iloc[0], 2)  # pega dado da tabela anterior
-        except IndexError:
-            st.write(f'Ação {i} não listada')
-
-    # usar Comércio e 'RBNS11.SA' para fazer a exceção de erros, acoes com 6 digitos no ticker nao existe mais na bolsa
+        tabela_norm[i[:5]] = round(tabela[i] / tabela[i].iloc[0], 2)  # pega dado da tabela anterior
 
     # Plotar o gráfico com todas as ações selecionadas
     grafico2 = px.line(tabela_norm)
