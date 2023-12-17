@@ -22,6 +22,7 @@ from scipy.optimize import minimize
 # https://www.linkedin.com/pulse/modern-portfolio-theory-python-building-optimal-web-app-phuaphan-oyhhc/
 # https://modern-portfolio-theory.streamlit.app
 # fonte dos tickers e segmento = Economática 14/12/2023, a empresa Allos foi classificado como 'Outros' no Subsetor Bovespa
+# Acoes com problemas: CRTE3, GOLL3
 
 
 # ---------------- Arquivos ---------------- # 
@@ -75,6 +76,10 @@ st.set_option('deprecation.showPyplotGlobalUse', False)
 #     tabela[f'{i}'] = round(yf.download(i, start=data_i, end=data_f)['Adj Close'].resample('M').last(),2)
 # st.write(tabela.head())
 
+# ---------------- Descrição Markowitz ---------------- #
+
+
+# ---------------- Dados das ações selecionadas ---------------- #
 tabelas_acoes = []  
 tabela_norm = pd.DataFrame()
 
@@ -119,11 +124,15 @@ else:
 # ---------------- Simulação ---------------- #
 
 # selic (taxa livre de risco)
-selic['Data'] = pd.to_datetime(selic['Data']).dt.tz_localize(None)
+selic['Data'] = pd.to_datetime(selic['Data'])
 selic = selic.loc[(selic['Data']>= data_i) & (selic['Data']<= data_f)]
+selic['Taxa SELIC'] = selic['Taxa SELIC'].str.replace(',','.').astype(float)
+# st.write(selic)
+
+ret_livre = selic['Taxa SELIC'].dropna().mean()/100
+
 
 numero_portfolios = st.sidebar.number_input('Insira o número de portfolios')
-
 def parametros_portofolio (numero_portfolios):
         
     tabela_retorn_esperados = np.zeros(numero_portfolios)
@@ -139,7 +148,7 @@ def parametros_portofolio (numero_portfolios):
         tabela_retorn_esperados[i] = np.sum(media_retor * pesos_random * 252)
         tabela_retorn_esperados_aritm[i] = np.exp(tabela_retorn_esperados[i])-1
         tabela_volatilidades_esperadas[i] =  np.sqrt(np.dot(pesos_random.T, np.dot(matriz_cov * 252, pesos_random)))
-        tabela_sharpe[i] = tabela_retorn_esperados[i] / tabela_volatilidades_esperadas[i]
+        tabela_sharpe[i] = (tabela_retorn_esperados[i] - ret_livre) / tabela_volatilidades_esperadas[i]
         
     indice_sharpe_max = tabela_sharpe.argmax()
     carteira_max_retorno = tabela_pesos[indice_sharpe_max]
@@ -177,6 +186,10 @@ def parametros_portofolio (numero_portfolios):
         eixo_x_fronteira_eficiente.append(result['fun'])
 
     st.header(f'Gráfico com a simulação de {numero_portfolios} carteiras: ')   
+    st.subheader('Média da Taxa livre de risco (SELIC)')
+    st.write(ret_livre) 
+    st.subheader('Índice de Sharpe máximo')
+    st.write(indice_sharpe_max) 
     # fig, ax = mplt.subplots()
     # ax.scatter(tabela_volatilidades_esperadas, tabela_retorn_esperados_aritm, c=tabela_sharpe)
     # ax.scatter(tabela_volatilidades_esperadas[indice_sharpe_max], tabela_retorn_esperados_aritm[indice_sharpe_max], c = 'red')
