@@ -12,6 +12,7 @@ import plotly.colors as pcolors
 import plotly.graph_objects as go
 from scipy.optimize import minimize
 
+
 # ---------------- Anotações ---------------- # 
 # arrumar datas nas tabelas
 # ver se consegue tirar o 'empty' da tabela
@@ -42,22 +43,26 @@ st.write('---')
 # parametros de data
 st.sidebar.header('Parâmetros')
 data_i = st.sidebar.date_input('Data inicial', format='YYYY-MM-DD', value=None)
+data_i = pd.Timestamp(data_i)
+
 data_f = st.sidebar.date_input('Data final',  format='YYYY-MM-DD', value=None)
+data_f = pd.Timestamp(data_f)
 
 # seleção de subsetor da empresa
 subsetor = st.sidebar.multiselect('Selecione o subsetor', sorted(acoes['Subsetor Bovespa'].unique()))
 
 # dados cdi (taxa livre de risco)
-cdi = pd.read_csv('https://raw.githubusercontent.com/jrodrigotico/python/projeto_acoes/cdi_252.csv', sep=';')
+# DI - Depósito Interfinanceiro - Taxas - DI PRÉ - Over
+# SELIC
+# 16/01/2013 até 30/11/2023 , fonte B3
+selic = pd.read_csv('https://raw.githubusercontent.com/jrodrigotico/python/projeto_acoes/selic.csv', sep=';')
 # selecionar_cdi = st.sidebar.multiselect('Selecionar período CDI')
 # filtro_cdi = cdi.loc[(cdi['Data']>=data_i) & (cdi['Data']=<data_f)]
 
 # seleção de ações
 # acoes filtradas pelo subsetor
 filtro_subsetor = acoes.loc[acoes['Subsetor Bovespa'].isin(subsetor)].iloc[:,0] # esse iloc retorna as acoes de determinado subsetor que foi anteriormente selecionado, é zero pq o 0 representa a coluna de códigos que é o que eu desejo que retorne
-
 selecionar_acoes = st.sidebar.multiselect('Selecione ações', sorted(filtro_subsetor + '.SA'))
-
 
 
 # ---------------- Gráficos e tabelas de preços ---------------- # 
@@ -70,49 +75,53 @@ st.set_option('deprecation.showPyplotGlobalUse', False)
 #     tabela[f'{i}'] = round(yf.download(i, start=data_i, end=data_f)['Adj Close'].resample('M').last(),2)
 # st.write(tabela.head())
 
-st.subheader('Preço das ações')
 tabelas_acoes = []  
-for i in selecionar_acoes:
-    tabela_acao = round(yf.download(i, start=data_i, end=data_f)["Adj Close"].rename(i),2)
-    tabelas_acoes.append(tabela_acao)
-tabela = pd.concat(tabelas_acoes, axis=1)
-
-st.subheader('Preço das ações (normalizado)')
 tabela_norm = pd.DataFrame()
-erro = None
-for i in tabela.columns:
-    try:
-        tabela_norm[i[:5]] = round(tabela[i] / tabela[i].iloc[0], 2)  # pega dado da tabela anterior
-    except IndexError:
-        st.write(f'Ação {i} não listada')
 
-# usar Comércio e 'RBNS11.SA' para fazer a exceção de erros, acoes com 6 digitos no ticker nao existe mais na bolsa
+if selecionar_acoes:
+    for i in selecionar_acoes:
+        tabela_acao = round(yf.download(i, start=data_i, end=data_f)["Adj Close"].rename(i),2)
+        tabelas_acoes.append(tabela_acao)
+    tabela = pd.concat(tabelas_acoes, axis=1)
 
-# Plotar o gráfico com todas as ações selecionadas
-grafico2 = px.line(tabela_norm)
-grafico2.update_layout(width=800, height=500)
-st.plotly_chart(grafico2)
+    st.subheader('Preço das ações') # normalizado
+    
+    erro = None
+    for i in tabela.columns:
+        try:
+            tabela_norm[i[:5]] = round(tabela[i] / tabela[i].iloc[0], 2)  # pega dado da tabela anterior
+        except IndexError:
+            st.write(f'Ação {i} não listada')
 
+    # usar Comércio e 'RBNS11.SA' para fazer a exceção de erros, acoes com 6 digitos no ticker nao existe mais na bolsa
 
-# ---------------- Retornos Contínuos e Matriz de Covariância ---------------- #
-# ln(retorno_t / retorno_t-1)
-st.header('Médias dos retornos de cada ação:')
-tabela_retorn = tabela_norm.pct_change().dropna()
-media_retor = tabela_retorn.mean()
-for i in range(len(media_retor)):
-    st.write(selecionar_acoes[i], round(media_retor[i],4))
+    # Plotar o gráfico com todas as ações selecionadas
+    grafico2 = px.line(tabela_norm)
+    grafico2.update_layout(width=800, height=500)
+    st.plotly_chart(grafico2)
 
-matriz_cov = tabela_retorn.cov() # para o modelo de markowitz é bom ter acoes com alta correlação negativa ! ver video: https://www.youtube.com/watch?v=Y1E73SQPD1U
-st.header('Matriz de covariância:')
-heatmap_retorn = px.imshow(matriz_cov, text_auto=True)
-st.plotly_chart(heatmap_retorn)
+    # Retornos Contínuos e Matriz de Covariância
+    # ln(retorno_t / retorno_t-1)
+    st.header('Médias dos retornos de cada ação:')
+    tabela_retorn = tabela_norm.pct_change().dropna()
+    media_retor = tabela_retorn.mean()
+    for i in range(len(media_retor)):
+        st.write(selecionar_acoes[i], round(media_retor[i],4))
 
-# grafico3 = px.line(tabela_norm)
-# grafico3.update_layout(width=800, height=300)
-# st.plotly_chart(grafico3)
+    matriz_cov = tabela_retorn.cov() # para o modelo de markowitz é bom ter acoes com alta correlação negativa ! ver video: https://www.youtube.com/watch?v=Y1E73SQPD1U
+    st.header('Matriz de covariância:')
+    heatmap_retorn = px.imshow(matriz_cov, text_auto=True)
+    st.plotly_chart(heatmap_retorn)
+else:
+    st.write('Selecione os parâmetros na barra lateral')
 
 
 # ---------------- Simulação ---------------- #
+
+# selic (taxa livre de risco)
+selic['Data'] = pd.to_datetime(selic['Data']).dt.tz_localize(None)
+selic = selic.loc[(selic['Data']>= data_i) & (selic['Data']<= data_f)]
+
 numero_portfolios = st.sidebar.number_input('Insira o número de portfolios')
 
 def parametros_portofolio (numero_portfolios):
