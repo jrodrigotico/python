@@ -223,7 +223,7 @@ if st.sidebar.button('Simular'):
         st.write('\n')
         st.latex(r''' IndíceSharpe = \left(\frac{{Retorno-Taxa\quad livre\quad de\quad risco}}{{Risco}} \right)''')
         st.write('\n')
-        st.latex(r'''RiscoCarteira =  \sqrt{\left(Wa^2 \cdot \sigma a^2\right) + \left(Wb^2 \cdot \sigma b^2\right) + 2 \cdot \left( Wa \cdot Wb \cdot \rho ab \cdot \sigma ab \cdot \sigma b  \right)}''')
+        st.latex(r'''RiscoCarteira =  \sqrt{\left(Wa^2 \cdot \sigma a^2\right) + \left(Wb^2 \cdot \sigma b^2\right) + 2 \cdot \left( Wa \cdot Wb \cdot \rho ab \cdot \sigma  \cdot \sigma b  \right)}''')
         st.write('\n')
         st.latex(r'''\text{alternativamente pode-se usar a covariância entre os ativos} \\
             \text {multiplicada pelos seus respectivos pesos}''')
