@@ -24,6 +24,8 @@ import warnings
 # https://modern-portfolio-theory.streamlit.app
 # fonte dos tickers e segmento = Economática 14/12/2023, a empresa Allos foi classificado como 'Outros' no Subsetor Bovespa
 # Acoes com problemas: CRTE3, GOLL3, INTb3
+# Pensar em fazer um app multipages
+# pensar em usar o st.session_state
 
 
 # ---------------- Arquivos ---------------- # 
@@ -37,35 +39,37 @@ acoes = acoes[acoes['Código'].apply(lambda x: len(str(x))==5)]
 
 # ---------------- Inicial ---------------- # 
 st.set_page_config(page_title='Markowitz', layout='centered')
-if 'intro' not in st.session_state:
-    st.session_state['intro'] = False
+# if 'intro' not in st.session_state:
+#     st.session_state['intro'] = False
     
 st.header('Teoria Moderna de Portfólio - Markowitz')
 st.markdown('''A Teoria Moderna do Portfólio, desenvolvida por Harry Markowitz na década de 1950,
             é um conceito fundamental em finanças que busca otimizar a relação entre risco e retorno
             em um portfólio de investimentos.''')
 
-if st.button('Simulação de Carteiras'):
-    st.session_state.intro = True # o session_state guarda as informações, ou seja, sem ele rodaria a cada interação, quando o botão 'Simulação de Carteiras', ele fica True
+# if st.button('Simulação de Carteiras'):
+#     st.session_state.intro = True # o session_state guarda as informações, ou seja, sem ele rodaria a cada interação, quando o botão 'Simulação de Carteiras', ele fica True
 
 # variaveis vazias que serão rodadas no 'if', porem depois serão usadas fora do 'if' , por isso preciso declará-las fora
-selecionar_acoes = []
-data_i = None
-data_f = None
+# selecionar_acoes = []
+# data_i = None
+# data_f = None
 
-if st.session_state['intro']: # preserva o estado que a pagina está, ou seja, a barra lateral ficará 'fixa' com os dados 'guardados'
-    st.sidebar.header('Parâmetros')
-    data_i = st.sidebar.date_input('Data inicial', format='YYYY-MM-DD', value=None)
-    
-    data_f = st.sidebar.date_input('Data final',  format='YYYY-MM-DD', value=None)
-    
-    # seleção de subsetor da empresa
-    subsetor = st.sidebar.multiselect('Selecione o subsetor', sorted(acoes['Subsetor Bovespa'].unique()))
-    
-    # seleção de ações
-    # acoes filtradas pelo subsetor
-    filtro_subsetor = acoes.loc[acoes['Subsetor Bovespa'].isin(subsetor)].iloc[:,0] # esse iloc retorna as acoes de determinado subsetor que foi anteriormente selecionado, é zero pq o 0 representa a coluna de códigos que é o que eu desejo que retorne
-    selecionar_acoes = st.sidebar.multiselect('Selecione ações', sorted(filtro_subsetor + '.SA'))
+# if st.session_state['intro']: # preserva o estado que a pagina está, ou seja, a barra lateral ficará 'fixa' com os dados 'guardados'
+st.sidebar.header('Parâmetros')
+data_i = st.sidebar.date_input('Data inicial', format='YYYY-MM-DD', value=None)
+data_i = pd.Timestamp(data_i)
+
+data_f = st.sidebar.date_input('Data final',  format='YYYY-MM-DD', value=None)
+data_f = pd.Timestamp(data_f)
+
+# seleção de subsetor da empresa
+subsetor = st.sidebar.multiselect('Selecione o subsetor', sorted(acoes['Subsetor Bovespa'].unique()))
+
+# seleção de ações
+# acoes filtradas pelo subsetor
+filtro_subsetor = acoes.loc[acoes['Subsetor Bovespa'].isin(subsetor)].iloc[:,0] # esse iloc retorna as acoes de determinado subsetor que foi anteriormente selecionado, é zero pq o 0 representa a coluna de códigos que é o que eu desejo que retorne
+selecionar_acoes = st.sidebar.multiselect('Selecione as ações', sorted(filtro_subsetor + '.SA'))
 
 
 st.set_option('deprecation.showPyplotGlobalUse', False)
@@ -83,6 +87,7 @@ if selecionar_acoes:
         tabelas_acoes.append(tabela_acao)
     tabela = pd.concat(tabelas_acoes, axis=1)
 
+    st.write('---')
     st.subheader('Preço das ações') # normalizado
     erro = None
     for i in tabela.columns:
@@ -95,6 +100,7 @@ if selecionar_acoes:
 
     # Retornos Contínuos e Matriz de Covariância
     # ln(retorno_t / retorno_t-1)
+    st.write('---')
     st.header('Médias dos retornos de cada ação:')
     tabela_retorn = tabela_norm.pct_change().dropna()
     media_retor = tabela_retorn.mean()
@@ -102,11 +108,10 @@ if selecionar_acoes:
         st.write(selecionar_acoes[i], round(media_retor[i],4))
 
     matriz_cov = tabela_retorn.cov() # para o modelo de markowitz é bom ter acoes com alta correlação negativa ! ver video: https://www.youtube.com/watch?v=Y1E73SQPD1U
+    st.write('---')
     st.header('Matriz de covariância:')
     heatmap_retorn = px.imshow(matriz_cov, text_auto=True)
     st.plotly_chart(heatmap_retorn)
-else:
-    st.write('Selecione os parâmetros na barra lateral')
 
 
 # ---------------- SELIC ---------------- #
@@ -119,15 +124,15 @@ selic['Data'] = pd.to_datetime(selic['Data'])
 
 # verificacoes da data para nao dar warning antes de selecionar os parametros da barra lateral
 # isinstance verifica se é uma lista
-if isinstance(data_i, list) and len(data_i) > 0:
-    data_i = pd.to_datetime(data_i[0])
-else:
-    data_i = pd.to_datetime(data_i[0])
+# if isinstance(data_i, list) and len(data_i) > 0:
+#     data_i = pd.to_datetime(data_i[0])
+# else:
+#     data_i = pd.to_datetime(data_i[0])
 
-if isinstance(data_f, list) and len(data_f) > 0:
-    data_f = pd.to_datetime(data_f[0])
-else:
-    data_f = pd.to_datetime(data_f[0])
+# if isinstance(data_f, list) and len(data_f) > 0:
+#     data_f = pd.to_datetime(data_f[0])
+# else:
+#     data_f = pd.to_datetime(data_f[0])
 
 selic = selic.loc[(selic['Data'] >= data_i) & (selic['Data'] <= data_f)]
 selic['Taxa SELIC'] = selic['Taxa SELIC'].str.replace(',','.').astype(float)    
@@ -156,7 +161,8 @@ def parametros_portofolio (numero_portfolios):
         
     indice_sharpe_max = tabela_sharpe.argmax()
     carteira_max_retorno = tabela_pesos[indice_sharpe_max]
-        
+    
+    st.write('---') 
     st.header('Pesos da carteira ideal:')
     for z in range(len(selecionar_acoes)):
         st.write(selecionar_acoes[z], round(carteira_max_retorno[z],4))
@@ -189,8 +195,12 @@ def parametros_portofolio (numero_portfolios):
         result = minimize(pegando_vol, peso_inicial, method='SLSQP', bounds = limites, constraints = restricoes)
         eixo_x_fronteira_eficiente.append(result['fun'])
 
-    st.header(f'Gráfico com a simulação de {numero_portfolios} carteiras: ')   
-    st.markdown(f'Média da Taxa livre de risco (SELIC): {round(ret_livre,4)}')
+    st.write('---')
+    st.header(f'Gráfico com a simulação de {numero_portfolios} carteiras: ') 
+    st.subheader('Taxa livre de risco (SELIC)')  
+    st.write(ret_livre)
+    st.subheader('Índice de Sharpe máximo')  
+    st.write((tabela_retorn_esperados_aritm[indice_sharpe_max] - ret_livre) / tabela_volatilidades_esperadas[indice_sharpe_max])
 
     # grafico interativo com a fronteira eficiente
     carteiras_simulacao = go.Scatter(x=tabela_volatilidades_esperadas,y=tabela_retorn_esperados_aritm,mode='markers',
@@ -205,18 +215,19 @@ def parametros_portofolio (numero_portfolios):
     
 if st.sidebar.button('Simular'):
     parametros_portofolio (int(numero_portfolios))
+    st.write('---')
+    with st.expander('Princpais fórmulas'):
+        st.latex(r'''RetornoCarteira =  \sum_{i=1} WiRi''')
+        st.write('\n')
+        st.latex(r'''RetornoContínuo = \ln{\left(Retorno_t /Retorno_t-1\right) } ''')
+        st.write('\n')
+        st.latex(r''' IndíceSharpe = \left(\frac{{Retorno-Taxa\quad livre\quad de\quad risco}}{{Risco}} \right)''')
+        st.write('\n')
+        st.latex(r'''RiscoCarteira =  \sqrt{\left(Wa^2 \cdot \sigma a^2\right) + \left(Wb^2 \cdot \sigma b^2\right) + 2 \cdot \left( Wa \cdot Wb \cdot \rho ab \cdot \sigma ab \cdot \sigma b  \right)}''')
+        st.write('\n')
+        st.latex(r'''\text{ou}''')
+        st.latex(r'''RiscoCarteira =  \sqrt{\left(Wa^2 \cdot \sigma a^2\right) + \left(Wb^2 \cdot \sigma b^2\right) + 2 \cdot \left( Wa \cdot Wb \cdot covab\right)}''')
 
 
-# ---------------- Fórmulas ---------------- #
-st.write('---')
-with st.expander('Princpais fórmulas'):
-    st.latex(r'''RetornoCarteira =  \sum_{i=1} WiRi''')
-    st.write('\n')
-    st.latex(r'''RetornoContínuo = \ln{\left(Retorno_t /Retorno_t-1\right) } ''')
-    st.write('\n')
-    st.latex(r''' IndíceSharpe = \left(\frac{{Retorno-Taxa\quad livre\quad de\quad risco}}{{Risco}} \right)''')
-    st.write('\n')
-    st.latex(r'''RiscoCarteira =  \sqrt{\left(Wa^2 \cdot \sigma a^2\right) + \left(Wb^2 \cdot \sigma b^2\right) + 2 \cdot \left( Wa \cdot Wb \cdot \rho ab \cdot \sigma ab \cdot \sigma b  \right)}''')
-    st.write('\n')
-    st.latex(r'''\text{ou}''')
-    st.latex(r'''RiscoCarteira =  \sqrt{\left(Wa^2 \cdot \sigma a^2\right) + \left(Wb^2 \cdot \sigma b^2\right) + 2 \cdot \left( Wa \cdot Wb \cdot covab\right)}''')
+
+
