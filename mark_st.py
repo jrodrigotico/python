@@ -11,6 +11,7 @@ import plotly.express as px
 import plotly.colors as pcolors
 import plotly.graph_objects as go
 from scipy.optimize import minimize
+import warnings
 
 
 # ---------------- Anotações ---------------- # 
@@ -37,33 +38,33 @@ acoes = acoes[acoes['Código'].apply(lambda x: len(str(x))==5)]
 # ---------------- Inicial ---------------- # 
 st.set_page_config(page_title='Markowitz', layout='centered')
 st.header('Teoria Moderna de Portfólio - Markowitz')
-st.write('---')
+st.markdown('''A Teoria Moderna do Portfólio, desenvolvida por Harry Markowitz na década de 1950,
+            é um conceito fundamental em finanças que busca otimizar a relação entre risco e retorno
+            em um portfólio de investimentos.''')
 
+if 'intro' not in st.session_state:
+    st.session_state['intro'] = False
 
-# ---------------- Barra lateral ---------------- # 
-# parametros de data
-st.sidebar.header('Parâmetros')
-data_i = st.sidebar.date_input('Data inicial', format='YYYY-MM-DD', value=None)
-data_i = pd.Timestamp(data_i)
+if st.button('Simulação de Carteiras'):
+    st.session_state.intro = True # o session_state guarda as informações, ou seja, sem ele rodaria a cada interação, quando o botão 'Simulação de Carteiras', ele fica True
 
-data_f = st.sidebar.date_input('Data final',  format='YYYY-MM-DD', value=None)
-data_f = pd.Timestamp(data_f)
+if st.session_state['intro']: # preserva o estado que a pagina está, ou seja, a barra lateral ficará 'fixa' com os dados 'guardados'
+    with warnings.catch_warnings():
+        warnings.filterwarnings('ignore', category = UserWarning) # ignorar o warning de erro, ja que quando aperta-se em 'Simulação de Carteiras' o warning some
+        st.sidebar.header('Parâmetros')
+        data_i = st.sidebar.date_input('Data inicial', format='YYYY-MM-DD', value=None)
+        data_i = pd.Timestamp(data_i)
 
-# seleção de subsetor da empresa
-subsetor = st.sidebar.multiselect('Selecione o subsetor', sorted(acoes['Subsetor Bovespa'].unique()))
+        data_f = st.sidebar.date_input('Data final',  format='YYYY-MM-DD', value=None)
+        data_f = pd.Timestamp(data_f)
 
-# dados cdi (taxa livre de risco)
-# DI - Depósito Interfinanceiro - Taxas - DI PRÉ - Over
-# SELIC
-# 16/01/2013 até 30/11/2023 , fonte B3
-selic = pd.read_csv('https://raw.githubusercontent.com/jrodrigotico/python/projeto_acoes/selic.csv', sep=';')
-# selecionar_cdi = st.sidebar.multiselect('Selecionar período CDI')
-# filtro_cdi = cdi.loc[(cdi['Data']>=data_i) & (cdi['Data']=<data_f)]
+        # seleção de subsetor da empresa
+        subsetor = st.sidebar.multiselect('Selecione o subsetor', sorted(acoes['Subsetor Bovespa'].unique()))
+        # seleção de ações
+        # acoes filtradas pelo subsetor
+        filtro_subsetor = acoes.loc[acoes['Subsetor Bovespa'].isin(subsetor)].iloc[:,0] # esse iloc retorna as acoes de determinado subsetor que foi anteriormente selecionado, é zero pq o 0 representa a coluna de códigos que é o que eu desejo que retorne
+        selecionar_acoes = st.sidebar.multiselect('Selecione ações', sorted(filtro_subsetor + '.SA'))
 
-# seleção de ações
-# acoes filtradas pelo subsetor
-filtro_subsetor = acoes.loc[acoes['Subsetor Bovespa'].isin(subsetor)].iloc[:,0] # esse iloc retorna as acoes de determinado subsetor que foi anteriormente selecionado, é zero pq o 0 representa a coluna de códigos que é o que eu desejo que retorne
-selecionar_acoes = st.sidebar.multiselect('Selecione ações', sorted(filtro_subsetor + '.SA'))
 
 
 # ---------------- Gráficos e tabelas de preços ---------------- # 
@@ -75,8 +76,6 @@ st.set_option('deprecation.showPyplotGlobalUse', False)
 # for i in selecionar_acoes:
 #     tabela[f'{i}'] = round(yf.download(i, start=data_i, end=data_f)['Adj Close'].resample('M').last(),2)
 # st.write(tabela.head())
-
-# ---------------- Descrição Markowitz ---------------- #
 
 
 # ---------------- Dados das ações selecionadas ---------------- #
@@ -115,8 +114,14 @@ else:
     st.write('Selecione os parâmetros na barra lateral')
 
 
-# ---------------- Simulação ---------------- #
+# Dados cdi (taxa livre de risco)
+# DI - Depósito Interfinanceiro - Taxas - DI PRÉ - Over
+# SELIC
+# 16/01/2013 até 30/11/2023 , fonte B3
+selic = pd.read_csv('https://raw.githubusercontent.com/jrodrigotico/python/projeto_acoes/selic.csv', sep=';')
 
+
+# ---------------- Simulação ---------------- #
 # selic (taxa livre de risco)
 selic['Data'] = pd.to_datetime(selic['Data'])
 selic = selic.loc[(selic['Data']>= data_i) & (selic['Data']<= data_f)]
