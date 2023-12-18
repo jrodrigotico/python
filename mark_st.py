@@ -48,37 +48,31 @@ if 'intro' not in st.session_state:
 if st.button('Simulação de Carteiras'):
     st.session_state.intro = True # o session_state guarda as informações, ou seja, sem ele rodaria a cada interação, quando o botão 'Simulação de Carteiras', ele fica True
 
+# variaveis vazias que serão rodadas no 'if', porem depois serão usadas fora do 'if' , por isso preciso declará-las fora
+selecionar_acoes = []
+data_i = []
+data_f = []
+
 if st.session_state['intro']: # preserva o estado que a pagina está, ou seja, a barra lateral ficará 'fixa' com os dados 'guardados'
-    with warnings.catch_warnings():
-        warnings.filterwarnings('ignore', category = UserWarning) # ignorar o warning de erro, ja que quando aperta-se em 'Simulação de Carteiras' o warning some
-        st.sidebar.header('Parâmetros')
-        data_i = st.sidebar.date_input('Data inicial', format='YYYY-MM-DD', value=None)
-        data_i = pd.Timestamp(data_i)
+    st.sidebar.header('Parâmetros')
+    data_i = st.sidebar.date_input('Data inicial', format='YYYY-MM-DD', value=None)
+    data_f = st.sidebar.date_input('Data final',  format='YYYY-MM-DD', value=None)
 
-        data_f = st.sidebar.date_input('Data final',  format='YYYY-MM-DD', value=None)
-        data_f = pd.Timestamp(data_f)
-
-        # seleção de subsetor da empresa
-        subsetor = st.sidebar.multiselect('Selecione o subsetor', sorted(acoes['Subsetor Bovespa'].unique()))
-        # seleção de ações
-        # acoes filtradas pelo subsetor
-        filtro_subsetor = acoes.loc[acoes['Subsetor Bovespa'].isin(subsetor)].iloc[:,0] # esse iloc retorna as acoes de determinado subsetor que foi anteriormente selecionado, é zero pq o 0 representa a coluna de códigos que é o que eu desejo que retorne
-        selecionar_acoes = st.sidebar.multiselect('Selecione ações', sorted(filtro_subsetor + '.SA'))
+    # seleção de subsetor da empresa
+    subsetor = st.sidebar.multiselect('Selecione o subsetor', sorted(acoes['Subsetor Bovespa'].unique()))
+    
+    # seleção de ações
+    # acoes filtradas pelo subsetor
+    filtro_subsetor = acoes.loc[acoes['Subsetor Bovespa'].isin(subsetor)].iloc[:,0] # esse iloc retorna as acoes de determinado subsetor que foi anteriormente selecionado, é zero pq o 0 representa a coluna de códigos que é o que eu desejo que retorne
+    selecionar_acoes = st.sidebar.multiselect('Selecione ações', sorted(filtro_subsetor + '.SA'))
 
 
-
-# ---------------- Gráficos e tabelas de preços ---------------- # 
-# grafico e tabela de 'Preço das ações'
 st.set_option('deprecation.showPyplotGlobalUse', False)
-
-# st.subheader('Preço das ações')
-# tabela = pd.DataFrame() 
-# for i in selecionar_acoes:
-#     tabela[f'{i}'] = round(yf.download(i, start=data_i, end=data_f)['Adj Close'].resample('M').last(),2)
-# st.write(tabela.head())
 
 
 # ---------------- Dados das ações selecionadas ---------------- #
+# for i in selecionar_acoes:
+#     tabela[f'{i}'] = round(yf.download(i, start=data_i, end=data_f)['Adj Close'].resample('M').last(),2)
 tabelas_acoes = []  
 tabela_norm = pd.DataFrame()
 
@@ -114,23 +108,33 @@ else:
     st.write('Selecione os parâmetros na barra lateral')
 
 
+# ---------------- SELIC ---------------- #
 # Dados cdi (taxa livre de risco)
 # DI - Depósito Interfinanceiro - Taxas - DI PRÉ - Over
 # SELIC
 # 16/01/2013 até 30/11/2023 , fonte B3
 selic = pd.read_csv('https://raw.githubusercontent.com/jrodrigotico/python/projeto_acoes/selic.csv', sep=';')
-
-
-# ---------------- Simulação ---------------- #
-# selic (taxa livre de risco)
 selic['Data'] = pd.to_datetime(selic['Data'])
-selic = selic.loc[(selic['Data']>= data_i) & (selic['Data']<= data_f)]
-selic['Taxa SELIC'] = selic['Taxa SELIC'].str.replace(',','.').astype(float)
-# st.write(selic)
+
+# verificacoes da data para nao dar warning antes de selecionar os parametros da barra lateral
+# isinstance verifica se é uma lista
+if isinstance(data_i, list) and len(data_i) > 0:
+    data_i = pd.to_datetime(data_i[0], errors='coerce')
+else:
+    data_i = pd.to_datetime(data_i, errors='coerce')
+
+if isinstance(data_f, list) and len(data_f) > 0:
+    data_f = pd.to_datetime(data_f[0], errors='coerce')
+else:
+    data_f = pd.to_datetime(data_f, errors='coerce')
+
+selic = selic.loc[(selic['Data'] >= data_i) & (selic['Data'] <= data_f)]
+selic['Taxa SELIC'] = selic['Taxa SELIC'].str.replace(',','.').astype(float)    
 
 ret_livre = selic['Taxa SELIC'].dropna().mean()/100
 
 
+# ---------------- Simulação ---------------- #
 numero_portfolios = st.sidebar.number_input('Insira o número de portfolios')
 def parametros_portofolio (numero_portfolios):
         
@@ -185,33 +189,26 @@ def parametros_portofolio (numero_portfolios):
         eixo_x_fronteira_eficiente.append(result['fun'])
 
     st.header(f'Gráfico com a simulação de {numero_portfolios} carteiras: ')   
-    st.subheader('Média da Taxa livre de risco (SELIC)')
-    st.write(ret_livre) 
-    
-    # fig, ax = mplt.subplots()
-    # ax.scatter(tabela_volatilidades_esperadas, tabela_retorn_esperados_aritm, c=tabela_sharpe)
-    # ax.scatter(tabela_volatilidades_esperadas[indice_sharpe_max], tabela_retorn_esperados_aritm[indice_sharpe_max], c = 'red')
-    # ax.plot(eixo_x_fronteira_eficiente, fronteira_eficiente_y)
-    # st.pyplot(fig)
-    
+    st.markdown(f'Média da Taxa livre de risco (SELIC): {round(ret_livre,4)}')
+
     # grafico interativo com a fronteira eficiente
     carteiras_simulacao = go.Scatter(x=tabela_volatilidades_esperadas,y=tabela_retorn_esperados_aritm,mode='markers',
         marker=dict(size=8, color=tabela_sharpe, colorscale='Viridis'), name = 'Carteiras simuladas')
-
     carteira_max_retorno = go.Scatter(x=[tabela_volatilidades_esperadas[indice_sharpe_max]], y=[tabela_retorn_esperados_aritm[indice_sharpe_max]],
         mode='markers', marker= dict(size=12, color='red'), name = 'Carteira com o melhor Índice de Sharpe')
 
-    # linha_eficiencia = go.Scatter(x=eixo_x_fronteira_eficiente, y=fronteira_eficiente_y, mode='lines', name = 'Fronteira eficiente')
-
     layout = go.Layout(xaxis= dict(title='Risco esperado'), yaxis= dict(title='Retorno esperado'))
-
-    # data = [carteiras_simulacao, carteira_max_retorno, linha_eficiencia]
     pontos_dispersao = [carteiras_simulacao, carteira_max_retorno]
     fig = go.Figure(data=pontos_dispersao, layout=layout)
     st.plotly_chart(fig)
     
-if st.sidebar.button('Run'):
+if st.sidebar.button('Simular'):
     parametros_portofolio (int(numero_portfolios))
+
+
+# ---------------- Fórmulas ---------------- #
+st.write('---')
+with st.expander('Princpais fórmulas'):
     st.latex(r'''RetornoCarteira =  \sum_{i=1} WiRi''')
     st.write('\n')
     st.latex(r'''RetornoContínuo = \ln{\left(Retorno_t /Retorno_t-1\right) } ''')
@@ -222,6 +219,10 @@ if st.sidebar.button('Run'):
     st.write('\n')
     st.latex(r'''\text{ou}''')
     st.latex(r'''RiscoCarteira =  \sqrt{\left(Wa^2 \cdot \sigma a^2\right) + \left(Wb^2 \cdot \sigma b^2\right) + 2 \cdot \left( Wa \cdot Wb \cdot covab\right)}''')
+    
+    
+
+    
 
 
 
