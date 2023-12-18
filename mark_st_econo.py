@@ -23,7 +23,7 @@ import warnings
 # https://www.linkedin.com/pulse/modern-portfolio-theory-python-building-optimal-web-app-phuaphan-oyhhc/
 # https://modern-portfolio-theory.streamlit.app
 # fonte dos tickers e segmento = Economática 14/12/2023, a empresa Allos foi classificado como 'Outros' no Subsetor Bovespa
-# Acoes com problemas: CRTE3, GOLL3, INTb3
+# Acoes com problemas: CRTE3, GOLL3, INTB3
 # Pensar em fazer um app multipages
 # pensar em usar o st.session_state
 # dados economatica = 01/01/2013 até 01/11/2023
