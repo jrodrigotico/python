@@ -24,6 +24,7 @@ import warnings
 # https://modern-portfolio-theory.streamlit.app
 # https://analisemacro.com.br/mercado-financeiro/selecao-de-carteira-e-teoria-de-markowitz/ - riskfolio
 # https://medium.com/@rodrigobercinimartins/como-extrair-dados-da-bovespa-sem-gastar-nada-com-python-14a03454a720 - yahoo query
+# https://www.youtube.com/watch?v=rxWkIn1EZnM&t=236s - pie chart streamlit
 # fonte dos tickers e segmento = Economática 14/12/2023, a empresa Allos foi classificado como 'Outros' no Subsetor Bovespa
 # Acoes com problemas: CRTE3, GOLL3, INTB3
 # Pensar em fazer um app multipages
@@ -281,6 +282,11 @@ if st.sidebar.button('Simular'):
         st.latex(r'''\text{alternativamente pode-se usar a covariância entre os ativos} \\
             \text {multiplicada pelos seus respectivos pesos}''')
         st.latex(r'''RiscoCarteira =  \sqrt{\left(Wa^2 \cdot \sigma a^2\right) + \left(Wb^2 \cdot \sigma b^2\right) + 2 \cdot \left( Wa \cdot Wb \cdot covab\right)}''')
+    with st.expander('Referências'):
+        st.latex(r'''\text{Guasti Lima, Fabiano. Análise de Risco. Atlas, 2016}''')
+        st.latex(r'''\text{Streamlit Documentaion - https://docs.streamlit.io}''')
+        st.latex(r'''\text{Assaf Net, Alexandre. Mercado Financeiro. Décima Terceira Edição. Atlas}''')
+        
 
 
 
