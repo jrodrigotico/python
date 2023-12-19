@@ -22,7 +22,8 @@ import warnings
 # https://www.youtube.com/watch?v=BchQuTJvRAs
 # https://www.linkedin.com/pulse/modern-portfolio-theory-python-building-optimal-web-app-phuaphan-oyhhc/
 # https://modern-portfolio-theory.streamlit.app
-# https://analisemacro.com.br/mercado-financeiro/selecao-de-carteira-e-teoria-de-markowitz/
+# https://analisemacro.com.br/mercado-financeiro/selecao-de-carteira-e-teoria-de-markowitz/ - riskfolio
+# https://medium.com/@rodrigobercinimartins/como-extrair-dados-da-bovespa-sem-gastar-nada-com-python-14a03454a720 - yahoo query
 # fonte dos tickers e segmento = Economática 14/12/2023, a empresa Allos foi classificado como 'Outros' no Subsetor Bovespa
 # Acoes com problemas: CRTE3, GOLL3, INTB3
 # Pensar em fazer um app multipages
