@@ -22,10 +22,14 @@ import warnings
 # https://www.youtube.com/watch?v=BchQuTJvRAs
 # https://www.linkedin.com/pulse/modern-portfolio-theory-python-building-optimal-web-app-phuaphan-oyhhc/
 # https://modern-portfolio-theory.streamlit.app
+# https://analisemacro.com.br/mercado-financeiro/selecao-de-carteira-e-teoria-de-markowitz/
 # fonte dos tickers e segmento = Economática 14/12/2023, a empresa Allos foi classificado como 'Outros' no Subsetor Bovespa
-# Acoes com problemas: CRTE3, GOLL3, INTb3
+# Acoes com problemas: CRTE3, GOLL3, INTB3
 # Pensar em fazer um app multipages
 # pensar em usar o st.session_state
+# dados economatica = 01/01/2013 até 01/11/2023
+# carteira de maior retorno é a carteira em que 100% do capital está no ativo de maior retorno
+# carteira de mínima variancia é a carteira que seria o ponto de inflexao da curva, seria bem no meio da curva
 
 
 # ---------------- Arquivos ---------------- # 
@@ -80,37 +84,68 @@ st.set_option('deprecation.showPyplotGlobalUse', False)
 #     tabela[f'{i}'] = round(yf.download(i, start=data_i, end=data_f)['Adj Close'].resample('M').last(),2)
 tabelas_acoes = []  
 tabela_norm = pd.DataFrame()
+valores_iniciais = {}
+indices_iniciais = {}
 
 if selecionar_acoes:
     for i in selecionar_acoes:
-        tabela_acao = round(yf.download(i, start=data_i, end=data_f)["Adj Close"].rename(i),2)
+        tabela_acao = round(yf.download(i, start=data_i, end=data_f)["Adj Close"].rename(i), 2)
         tabelas_acoes.append(tabela_acao)
+
+        # primeiro valor e seu índice para cada ação
+        primeiro_valor = tabela_acao.first_valid_index()
+        if primeiro_valor:
+            valores_iniciais[i] = tabela_acao.loc[primeiro_valor]
+            indices_iniciais[i] = primeiro_valor
+
     tabela = pd.concat(tabelas_acoes, axis=1)
 
     st.write('---')
-    st.subheader('Preço das ações') # normalizado
-    erro = None
+    st.subheader('Preço das ações histórico')
     for i in tabela.columns:
-        tabela_norm[i[:5]] = round(tabela[i] / tabela[i].iloc[0], 2)  # pega dado da tabela anterior
-
-    # Plotar o gráfico com todas as ações selecionadas
+        if i in valores_iniciais and i in indices_iniciais: # normaliza usando o primeiro valor válido de cada ação, se disponível
+            first_valid_index = indices_iniciais[i]
+            tabela_norm[i[:5]] = round(tabela[i] / valores_iniciais[i], 2)
+        else:
+            first_valid_index = tabela[i].first_valid_index()
+            if first_valid_index:
+                tabela_norm[i[:5]] = round(tabela[i] / tabela[i].loc[first_valid_index], 2)
+            else:
+                tabela_norm[i[:5]] = tabela[i]
+                
+            
+    # Plotar o gráfico com todas as ações selecionadas considerando intervalo em que determinada ação ainda nao existia e portanto preço igual a zero
     grafico2 = px.line(tabela_norm)
     grafico2.update_layout(width=800, height=500)
     st.plotly_chart(grafico2)
-
-    # Retornos Contínuos e Matriz de Covariância
+    
+    
+    # st.write('---')
+    # st.subheader('Preço das ações') # normalizado
+    # erro = None
+    # for i in tabela.columns:
+    #     tabela_norm[i[:5]] = round(tabela[i] / tabela[i].iloc[0], 2)  # pega dado da tabela anterior
+    
+    # # Plotar o gráfico com todas as ações selecionadas, a partir do momento em que todas as ações selecionadas existem    
+    # grafico3 = px.line(tabela_norm)
+    # grafico3.update_layout(width=800, height=500)
+    # st.plotly_chart(grafico3)
+    
+    
+    # Retornos Contínuos e Matriz de Correlação
     # ln(retorno_t / retorno_t-1)
     st.write('---')
     st.header('Médias dos retornos de cada ação:')
     tabela_retorn = tabela_norm.pct_change().dropna()
     media_retor = tabela_retorn.mean()
     for i in range(len(media_retor)):
-        st.write(selecionar_acoes[i], round(media_retor[i],4))
+        st.write(selecionar_acoes[i], round(media_retor[i],10))
 
-    matriz_cov = tabela_retorn.cov() # para o modelo de markowitz é bom ter acoes com alta correlação negativa ! ver video: https://www.youtube.com/watch?v=Y1E73SQPD1U
+    matriz_corr = tabela_retorn.corr() # para o modelo de markowitz é bom ter acoes com alta correlação negativa ! ver video: https://www.youtube.com/watch?v=Y1E73SQPD1U
     st.write('---')
     st.header('Matriz de covariância:')
-    heatmap_retorn = px.imshow(matriz_cov, text_auto=True)
+    st.markdown('''Quanto menor a correlação entre os ativos ou até mesmo quanto mais negativa, menor será o risco dessa carteira se comparada aos ativos individuais ''')
+    heatmap_retorn = px.imshow(matriz_corr, text_auto=True)
     st.plotly_chart(heatmap_retorn)
 
 
@@ -156,17 +191,17 @@ def parametros_portofolio (numero_portfolios):
         tabela_pesos[i,:] = pesos_random
         tabela_retorn_esperados[i] = np.sum(media_retor * pesos_random * 252)
         tabela_retorn_esperados_aritm[i] = np.exp(tabela_retorn_esperados[i])-1
-        tabela_volatilidades_esperadas[i] =  np.sqrt(np.dot(pesos_random.T, np.dot(matriz_cov * 252, pesos_random)))
+        tabela_volatilidades_esperadas[i] =  np.sqrt(np.dot(pesos_random.T, np.dot(matriz_corr * 252, pesos_random)))
         tabela_sharpe[i] = (tabela_retorn_esperados[i] - ret_livre) / tabela_volatilidades_esperadas[i]
         
     indice_sharpe_max = tabela_sharpe.argmax()
     carteira_max_retorno = tabela_pesos[indice_sharpe_max]
     
     st.write('---') 
-    st.header('Pesos da carteira ideal:')
+    st.header('Composição da carteira de Índice Sharpe máximo:')
     for z in range(len(selecionar_acoes)):
         st.write(selecionar_acoes[z], round(carteira_max_retorno[z],4))
-        
+    
     # restrições PPL para curva de fronteira eficiente
     def pegando_retorno (peso_teste):
         peso_teste = np.array(peso_teste)
@@ -179,7 +214,7 @@ def parametros_portofolio (numero_portfolios):
     
     def pegando_vol(peso_teste):
         peso_teste = np.array(peso_teste)
-        vol = np.sqrt(np.dot(peso_teste.T, np.dot(matriz_cov * 252, peso_teste)))
+        vol = np.sqrt(np.dot(peso_teste.T, np.dot(matriz_corr * 252, peso_teste)))
         return vol
     
     peso_inicial = [1/len(selecionar_acoes)] * len(selecionar_acoes)  # pesos iguais para todas as acoes
@@ -207,9 +242,10 @@ def parametros_portofolio (numero_portfolios):
         marker=dict(size=8, color=tabela_sharpe, colorscale='Viridis'), name = 'Carteiras simuladas')
     carteira_max_retorno = go.Scatter(x=[tabela_volatilidades_esperadas[indice_sharpe_max]], y=[tabela_retorn_esperados_aritm[indice_sharpe_max]],
         mode='markers', marker= dict(size=12, color='red'), name = 'Carteira com o melhor Índice de Sharpe')
+    
 
     layout = go.Layout(xaxis= dict(title='Risco esperado'), yaxis= dict(title='Retorno esperado'))
-    pontos_dispersao = [carteiras_simulacao, carteira_max_retorno]
+    pontos_dispersao = [carteiras_simulacao, carteira_max_retorno ]
     fig = go.Figure(data=pontos_dispersao, layout=layout)
     st.plotly_chart(fig)
     
