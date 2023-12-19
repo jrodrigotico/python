@@ -209,9 +209,9 @@ def parametros_portofolio (numero_portfolios):
     st.plotly_chart(graph_pizza)
         
     st.header('Composição da carteira de mínima variância:')
-    legenda2 = selecionar_acoes
+    legenda = selecionar_acoes
     valores_cart_min_var = carteira_min_variancia
-    graph_pizza2 = go.Figure(data=[go.Pie(labels=legenda2, values =valores_cart_min_var )])
+    graph_pizza2 = go.Figure(data=[go.Pie(labels=legenda, values =valores_cart_min_var )])
     st.plotly_chart(graph_pizza2)
     
     
