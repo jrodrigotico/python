@@ -196,11 +196,18 @@ def parametros_portofolio (numero_portfolios):
         
     indice_sharpe_max = tabela_sharpe.argmax()
     carteira_max_retorno = tabela_pesos[indice_sharpe_max]
+    menor_risco = tabela_volatilidades_esperadas.argmin()
+    carteira_min_variancia= tabela_pesos[menor_risco]
     
     st.write('---') 
     st.header('Composição da carteira de Índice Sharpe máximo:')
     for z in range(len(selecionar_acoes)):
         st.write(selecionar_acoes[z], round(carteira_max_retorno[z],4))
+        
+    st.header('Composição da carteira de mínima variância:')
+    for z in range(len(selecionar_acoes)):
+        st.write(selecionar_acoes[z], round(carteira_min_variancia[z],4)) 
+    
     
     # restrições PPL para curva de fronteira eficiente
     def pegando_retorno (peso_teste):
@@ -240,15 +247,20 @@ def parametros_portofolio (numero_portfolios):
     # grafico interativo com a fronteira eficiente
     carteiras_simulacao = go.Scatter(x=tabela_volatilidades_esperadas,y=tabela_retorn_esperados_aritm,mode='markers',
         marker=dict(size=8, color=tabela_sharpe, colorscale='Viridis'), name = 'Carteiras simuladas')
-    carteira_max_retorno = go.Scatter(x=[tabela_volatilidades_esperadas[indice_sharpe_max]], y=[tabela_retorn_esperados_aritm[indice_sharpe_max]],
+    
+    carteira_max_sharpe = go.Scatter(x=[tabela_volatilidades_esperadas[indice_sharpe_max]], y=[tabela_retorn_esperados_aritm[indice_sharpe_max]],
         mode='markers', marker= dict(size=12, color='red'), name = 'Carteira com o melhor Índice de Sharpe')
     
-
+    carteira_min_variancia = go.Scatter(x=[tabela_volatilidades_esperadas[menor_risco]], y=[tabela_retorn_esperados_aritm[menor_risco]],
+        mode='markers', marker= dict(size=12, color='black'), name = 'Carteira de mínima variância') # essa carteira é importante lembrar do ponto de 'inflexão'
+    
     layout = go.Layout(xaxis= dict(title='Risco esperado'), yaxis= dict(title='Retorno esperado'))
-    pontos_dispersao = [carteiras_simulacao, carteira_max_retorno ]
+    pontos_dispersao = [carteiras_simulacao, carteira_max_sharpe, carteira_min_variancia]
     fig = go.Figure(data=pontos_dispersao, layout=layout)
     st.plotly_chart(fig)
-    
+
+
+# ---------------- Simulação ativada e principais fórmulas ---------------- #   
 if st.sidebar.button('Simular'):
     parametros_portofolio (int(numero_portfolios))
     st.write('---')
