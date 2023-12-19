@@ -201,8 +201,6 @@ def parametros_portofolio (numero_portfolios):
     
     st.write('---') 
     st.header('Composição da carteira de Índice Sharpe máximo:')
-    # for z in range(len(selecionar_acoes)):
-    #     st.write(selecionar_acoes[z], round(carteira_max_retorno[z],4))
     legenda = selecionar_acoes
     valores_cart_max_retorno = carteira_max_retorno
     graph_pizza = go.Figure(data=[go.Pie(labels=legenda, values =valores_cart_max_retorno )])
