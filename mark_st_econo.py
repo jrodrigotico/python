@@ -12,6 +12,7 @@ import plotly.colors as pcolors
 import plotly.graph_objects as go
 from scipy.optimize import minimize
 import warnings
+import riskfolio as rf
 
 
 # ---------------- Anotações ---------------- # 
@@ -90,7 +91,6 @@ if selecionar_acoes:
 
     st.write('---')
     st.subheader('Preço das ações') # normalizado
-    erro = None
     for i in tabela.columns:
         tabela_norm[i[:5]] = round(tabela[i] / tabela[i].iloc[0], 2)  # pega dado da tabela anterior
 
@@ -142,93 +142,57 @@ ret_livre = selic['Taxa SELIC'].dropna().mean()/100
 
 
 # ---------------- Simulação ---------------- #
-numero_portfolios = st.sidebar.number_input('Insira o número de portfolios')
-def parametros_portofolio (numero_portfolios):
-        
-    tabela_retorn_esperados = np.zeros(numero_portfolios)
-    tabela_volatilidades_esperadas = np.zeros(numero_portfolios)
-    tabela_sharpe = np.zeros(numero_portfolios)
-    tabela_pesos = np.zeros((numero_portfolios, len(selecionar_acoes)))
-    tabela_retorn_esperados_aritm = np.zeros(numero_portfolios)
-    
-    for i in range(numero_portfolios):
-        pesos_random = np.random.random(len(selecionar_acoes))
-        pesos_random /= np.sum(pesos_random)
-        tabela_pesos[i,:] = pesos_random
-        tabela_retorn_esperados[i] = np.sum(media_retor * pesos_random * 252)
-        tabela_retorn_esperados_aritm[i] = np.exp(tabela_retorn_esperados[i])-1
-        tabela_volatilidades_esperadas[i] =  np.sqrt(np.dot(pesos_random.T, np.dot(matriz_cov * 252, pesos_random)))
-        tabela_sharpe[i] = (tabela_retorn_esperados[i] - ret_livre) / tabela_volatilidades_esperadas[i]
-        
-    indice_sharpe_max = tabela_sharpe.argmax()
-    carteira_max_retorno = tabela_pesos[indice_sharpe_max]
-    
-    st.write('---') 
-    st.header('Pesos da carteira ideal:')
-    for z in range(len(selecionar_acoes)):
-        st.write(selecionar_acoes[z], round(carteira_max_retorno[z],4))
-        
-    # restrições PPL para curva de fronteira eficiente
-    def pegando_retorno (peso_teste):
-        peso_teste = np.array(peso_teste)
-        retorno = np.sum(media_retor * peso_teste) * 252
-        retorno = np.exp(retorno) - 1 # aqui estou passando os retornos para aritmeticos
-        return retorno
-    
-    def checando_soma_pesos(peso_teste):
-        return np.sum(peso_teste)-1
-    
-    def pegando_vol(peso_teste):
-        peso_teste = np.array(peso_teste)
-        vol = np.sqrt(np.dot(peso_teste.T, np.dot(matriz_cov * 252, peso_teste)))
-        return vol
-    
-    peso_inicial = [1/len(selecionar_acoes)] * len(selecionar_acoes)  # pesos iguais para todas as acoes
-    limites = tuple([(0,1) for i in selecionar_acoes])   # aqui nenhuma acao pode ter mais que 100%
-    
-    eixo_x_fronteira_eficiente = []
-    fronteira_eficiente_y = np.linspace(tabela_retorn_esperados_aritm.min(), tabela_retorn_esperados_aritm.max(), 50 ) 
+portfolio = rf.Portfolio(returns = Y)
+method_mu = 'hist' # Método para estimar retornos esperados com base em dados históricos.
+method_cov = 'hist' # Método para estimar a matriz de covariância com base em dados históricos.
 
-    # fronteira eficiente com as restrições
-    for retorno_possivel in fronteira_eficiente_y:
-        restricoes = ({'type':'eq', 'fun':checando_soma_pesos}, {'type':'eq', 'fun' : lambda weight: pegando_retorno(weight) - retorno_possivel}) # é um dicionario de restricoes, quando a igualdade ('eq') for zero é pq a restricao fo satisfeita
-        
-        result = minimize(pegando_vol, peso_inicial, method='SLSQP', bounds = limites, constraints = restricoes)
-        eixo_x_fronteira_eficiente.append(result['fun'])
+# Cria os inputs
+portfolio.assets_stats(method_mu = method_mu, method_cov = method_cov)
 
-    st.write('---')
-    st.header(f'Gráfico com a simulação de {numero_portfolios} carteiras: ') 
-    st.subheader('Taxa livre de risco (SELIC)')  
-    st.write(ret_livre)
-    st.subheader('Índice de Sharpe máximo')  
-    st.write((tabela_retorn_esperados_aritm[indice_sharpe_max] - ret_livre) / tabela_volatilidades_esperadas[indice_sharpe_max])
+# Estimando o portfólio ótimo:
+model = 'Classic' # Pode ser Classic (histórico), BL (Black Litterman) ou FM (Modelo de Fatores)
+rm = 'MV' # Medida de risco usada, mean-variance. Há possibilidade de diversas outras medidas de risco, checar documentação.
+obj = 'MinRisk' # Função objetivo, pode ser MinRisk, MaxRet, Utility ou Sharpe
+hist = True # Usar cenários históricos para medidas de risco que dependem de cenários
+rf = 0 # Taxa livre de risco
+l = 0 # Fator de aversão ao risco, útil apenas quando obj é 'Utility'
 
-    # grafico interativo com a fronteira eficiente
-    carteiras_simulacao = go.Scatter(x=tabela_volatilidades_esperadas,y=tabela_retorn_esperados_aritm,mode='markers',
-        marker=dict(size=8, color=tabela_sharpe, colorscale='Viridis'), name = 'Carteiras simuladas')
-    carteira_max_retorno = go.Scatter(x=[tabela_volatilidades_esperadas[indice_sharpe_max]], y=[tabela_retorn_esperados_aritm[indice_sharpe_max]],
-        mode='markers', marker= dict(size=12, color='red'), name = 'Carteira com o melhor Índice de Sharpe')
+# Otimização do portfólio
+w = portfolio.optimization(model = model, rm = rm, obj = obj, rf = rf, l = l, hist = hist)
 
-    layout = go.Layout(xaxis= dict(title='Risco esperado'), yaxis= dict(title='Retorno esperado'))
-    pontos_dispersao = [carteiras_simulacao, carteira_max_retorno]
-    fig = go.Figure(data=pontos_dispersao, layout=layout)
-    st.plotly_chart(fig)
+# Gerando a fronteira eficiente
+points = 50 # Número de pontos da fronteira
+
+# Cria a variável da fronteira
+frontier = portfolio.efficient_frontier(model = model, rm = rm, points = points, rf = rf, hist = hist)
+
+
+# Plotando a fronteira eficiente
+mu = portfolio.mu # Retorno Esperado
+cov = portfolio.cov # Matriz de Covariância
+returns = portfolio.returns # Retorno dos ativos
+
+# Cria o gráfico
+ax = rf.plot_frontier(w_frontier=frontier, mu=mu, cov=cov, returns=returns, rm=rm,
+rf=rf, alpha=0.05, cmap='viridis', w=w, s=16, c='r', height=6, width=10, ax=None, t_factor = 12)
+
+
     
-if st.sidebar.button('Simular'):
-    parametros_portofolio (int(numero_portfolios))
-    st.write('---')
-    with st.expander('Princpais fórmulas'):
-        st.latex(r'''RetornoCarteira =  \sum_{i=1} WiRi''')
-        st.write('\n')
-        st.latex(r'''RetornoContínuo = \ln{\left(Retorno_t /Retorno_t-1\right) } ''')
-        st.write('\n')
-        st.latex(r''' IndíceSharpe = \left(\frac{{Retorno-Taxa\quad livre\quad de\quad risco}}{{Risco}} \right)''')
-        st.write('\n')
-        st.latex(r'''RiscoCarteira =  \sqrt{\left(Wa^2 \cdot \sigma a^2\right) + \left(Wb^2 \cdot \sigma b^2\right) + 2 \cdot \left( Wa \cdot Wb \cdot \rho ab \cdot \sigma  \cdot \sigma b  \right)}''')
-        st.write('\n')
-        st.latex(r'''\text{alternativamente pode-se usar a covariância entre os ativos} \\
-            \text {multiplicada pelos seus respectivos pesos}''')
-        st.latex(r'''RiscoCarteira =  \sqrt{\left(Wa^2 \cdot \sigma a^2\right) + \left(Wb^2 \cdot \sigma b^2\right) + 2 \cdot \left( Wa \cdot Wb \cdot covab\right)}''')
+# if st.sidebar.button('Simular'):
+#     parametros_portofolio (int(numero_portfolios))
+#     st.write('---')
+#     with st.expander('Princpais fórmulas'):
+#         st.latex(r'''RetornoCarteira =  \sum_{i=1} WiRi''')
+#         st.write('\n')
+#         st.latex(r'''RetornoContínuo = \ln{\left(Retorno_t /Retorno_t-1\right) } ''')
+#         st.write('\n')
+#         st.latex(r''' IndíceSharpe = \left(\frac{{Retorno-Taxa\quad livre\quad de\quad risco}}{{Risco}} \right)''')
+#         st.write('\n')
+#         st.latex(r'''RiscoCarteira =  \sqrt{\left(Wa^2 \cdot \sigma a^2\right) + \left(Wb^2 \cdot \sigma b^2\right) + 2 \cdot \left( Wa \cdot Wb \cdot \rho ab \cdot \sigma  \cdot \sigma b  \right)}''')
+#         st.write('\n')
+#         st.latex(r'''\text{alternativamente pode-se usar a covariância entre os ativos} \\
+#             \text {multiplicada pelos seus respectivos pesos}''')
+#         st.latex(r'''RiscoCarteira =  \sqrt{\left(Wa^2 \cdot \sigma a^2\right) + \left(Wb^2 \cdot \sigma b^2\right) + 2 \cdot \left( Wa \cdot Wb \cdot covab\right)}''')
 
 
 
