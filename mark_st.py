@@ -26,7 +26,8 @@ import warnings
 # https://medium.com/@rodrigobercinimartins/como-extrair-dados-da-bovespa-sem-gastar-nada-com-python-14a03454a720 - yahoo query
 # https://www.youtube.com/watch?v=rxWkIn1EZnM&t=236s - pie chart streamlit
 # fonte dos tickers e segmento = Economática 14/12/2023, a empresa Allos foi classificado como 'Outros' no Subsetor Bovespa
-# Acoes com problemas: CRTE3, GOLL3, INTB3
+# Acoes com problemas: CRTE3, GOLL3, INTB3, BAUH4
+# se eu adicionar uma acao que nao comeca no mesmo intervalo de tempo, da problema no indice de sharpe que fica 'nan', ex: 'AGXY3'
 # Pensar em fazer um app multipages
 # pensar em usar o st.session_state
 # dados economatica = 01/01/2013 até 01/11/2023
@@ -158,7 +159,7 @@ if selecionar_acoes:
 
     matriz_corr = tabela_retorn.corr() # para o modelo de markowitz é bom ter acoes com alta correlação negativa ! ver video: https://www.youtube.com/watch?v=Y1E73SQPD1U
     st.write('---')
-    st.header('Matriz de covariância:')
+    st.header('Matriz de correlação:')
     st.markdown('''Quanto menor a correlação entre os ativos ou até mesmo quanto mais negativa, menor será o risco dessa carteira se comparada aos ativos individuais ''')
     heatmap_retorn = px.imshow(matriz_corr, text_auto=True)
     st.plotly_chart(heatmap_retorn)
@@ -271,7 +272,7 @@ def parametros_portofolio (numero_portfolios):
         mode='markers', marker= dict(size=12, color='red'), name = 'Carteira com o melhor Índice de Sharpe')
     
     carteira_min_variancia = go.Scatter(x=[tabela_volatilidades_esperadas[menor_risco]], y=[tabela_retorn_esperados_aritm[menor_risco]],
-        mode='markers', marker= dict(size=12, color='black'), name = 'Carteira de mínima variância') # essa carteira é importante lembrar do ponto de 'inflexão'
+        mode='markers', marker= dict(size=12, color='pink'), name = 'Carteira de mínima variância') # essa carteira é importante lembrar do ponto de 'inflexão'
     
     layout = go.Layout(xaxis= dict(title='Risco esperado'), yaxis= dict(title='Retorno esperado'))
     pontos_dispersao = [carteiras_simulacao, carteira_max_sharpe, carteira_min_variancia]
@@ -290,16 +291,16 @@ if st.sidebar.button('Simular'):
         st.write('\n')
         st.latex(r''' IndíceSharpe = \left(\frac{{Retorno-Taxa\quad livre\quad de\quad risco}}{{Risco}} \right)''')
         st.write('\n')
-        st.latex(r'''RiscoCarteira =  \sqrt{\left(Wa^2 \cdot \sigma a^2\right) + \left(Wb^2 \cdot \sigma b^2\right) + 2 \cdot \left( Wa \cdot Wb \cdot \rho ab \cdot \sigma  \cdot \sigma b  \right)}''')
+        st.latex(r'''RiscoCarteira =  \sqrt{\left(Wa^2 \cdot \sigma a^2\right) + \left(Wb^2 \cdot \sigma b^2\right) + 2 \cdot \left( Wa \cdot Wb \cdot \rho ab \cdot \sigma a  \cdot \sigma b  \right)}''')
         st.write('\n')
         st.latex(r'''\text{alternativamente pode-se usar a covariância entre os ativos} \\
             \text {multiplicada pelos seus respectivos pesos}''')
         st.latex(r'''RiscoCarteira =  \sqrt{\left(Wa^2 \cdot \sigma a^2\right) + \left(Wb^2 \cdot \sigma b^2\right) + 2 \cdot \left( Wa \cdot Wb \cdot covab\right)}''')
     with st.expander('Referências'):
         st.latex(r'''\text{Guasti Lima, Fabiano. Análise de Risco. Atlas, 2016}''')
-        st.latex(r'''\text{Streamlit Documentaion - https://docs.streamlit.io}''')
         st.latex(r'''\text{Assaf Net, Alexandre. Mercado Financeiro. Décima Terceira Edição. Atlas}''')
-        
+        st.latex(r'''\text{Canal Brenno Sullivan - VAROS Quant }''')
+        st.latex(r'''\text{Streamlit Documentaion - https://docs.streamlit.io}''')
 
 
 
