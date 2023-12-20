@@ -75,6 +75,7 @@ subsetor = st.sidebar.multiselect('Selecione o subsetor', sorted(acoes['Subsetor
 # seleção de ações
 # acoes filtradas pelo subsetor
 filtro_subsetor = acoes.loc[acoes['Subsetor Bovespa'].isin(subsetor)].iloc[:,0] # esse iloc retorna as acoes de determinado subsetor que foi anteriormente selecionado, é zero pq o 0 representa a coluna de códigos que é o que eu desejo que retorne
+filtro_subsetor = pd.DataFrame(filtro_subsetor)
 
 # retirar tickers que deram problema com o yahoo finance
 acoes_erro = pd.read_csv('https://raw.githubusercontent.com/jrodrigotico/python/projeto_acoes/acoes_erro_yahoo.csv', sep=';') 
@@ -84,12 +85,12 @@ def retirar_sa(i):
     return i[:5]
 
 acoes_erro['Ticker'] = acoes_erro['Ticker'].apply(retirar_sa)
+valores_fixos = ~filtro_subsetor['Código'].isin(acoes_erro['Ticker'])
+filtro_subsetor = filtro_subsetor[valores_fixos] # mantem os valores que nao estao em 'acoes_erro'
 
-# retira as acoes de acordo com 'acoes_erro'
-filtro_subsetor = filtro_subsetor.drop(acoes_erro['Ticker'])
 
 # filtro de acoes depois de selecionados os subsetores
-selecionar_acoes = st.sidebar.multiselect('Selecione as ações', sorted(filtro_subsetor + '.SA'))
+selecionar_acoes = st.sidebar.multiselect('Selecione as ações', sorted(filtro_subsetor['Código'] + '.SA'))
 st.set_option('deprecation.showPyplotGlobalUse', False)
 
 
