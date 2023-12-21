@@ -26,7 +26,7 @@ import warnings
 # https://medium.com/@rodrigobercinimartins/como-extrair-dados-da-bovespa-sem-gastar-nada-com-python-14a03454a720 - yahoo query
 # https://www.youtube.com/watch?v=rxWkIn1EZnM&t=236s - pie chart streamlit
 # fonte dos tickers e segmento = Economática 14/12/2023, a empresa Allos foi classificado como 'Outros' no Subsetor Bovespa
-# Acoes com problemas: CRTE3, GOLL3, INTB3, BAUH4
+# Acoes com problemas:  OIBR3 (da retorno inf), MMAQ3 ( nan na media dos retornos)
 # se eu adicionar uma acao que nao comeca no mesmo intervalo de tempo, da problema no indice de sharpe que fica 'nan', ex: 'AGXY3'
 # Pensar em fazer um app multipages
 # pensar em usar o st.session_state
@@ -152,10 +152,17 @@ if selecionar_acoes:
     # ln(retorno_t / retorno_t-1)
     st.write('---')
     st.header('Médias dos retornos de cada ação:')
-    tabela_retorn = tabela_norm.pct_change().dropna()
-    media_retor = tabela_retorn.mean()
+    tabela_retorn = tabela_norm.pct_change().dropna() # aqui se faz a formula norma de variacao percentual: 'Valor f/Valor i - 1 '
+    retorno_contiuo = np.log(tabela_retorn + 1) # aqui soma-se 1 para ficar apenas a divisao entre 'Valor f/Valor i' e o LN é aplicado nessa divisão
+    
+    def media(i):
+        return i.mean()
+    media_retor = retorno_contiuo.apply(media, axis = 0)
+    
+    # media_retor = tabela_retorn.mean()
+    
     for i in range(len(media_retor)):
-        st.write(selecionar_acoes[i], round(media_retor[i],10))
+        st.write(f'{selecionar_acoes[i]}: {round(media_retor[i],4)} ,{media_retor[i]*100:.4f}%')
 
     matriz_corr = tabela_retorn.corr() # para o modelo de markowitz é bom ter acoes com alta correlação negativa ! ver video: https://www.youtube.com/watch?v=Y1E73SQPD1U
     st.write('---')
@@ -215,19 +222,19 @@ def parametros_portofolio (numero_portfolios):
     menor_risco = tabela_volatilidades_esperadas.argmin()
     carteira_min_variancia= tabela_pesos[menor_risco]
     
+    st.header('Composição da carteira de mínima variância:')
+    legenda = selecionar_acoes
+    valores_cart_min_var = carteira_min_variancia
+    graph_pizza2 = go.Figure(data=[go.Pie(labels=legenda, values =valores_cart_min_var )])
+    st.plotly_chart(graph_pizza2)
+        
     st.write('---') 
     st.header('Composição da carteira de Índice Sharpe máximo:')
     legenda = selecionar_acoes
     valores_cart_max_retorno = carteira_max_retorno
     graph_pizza = go.Figure(data=[go.Pie(labels=legenda, values =valores_cart_max_retorno )])
     st.plotly_chart(graph_pizza)
-        
-    st.header('Composição da carteira de mínima variância:')
-    legenda = selecionar_acoes
-    valores_cart_min_var = carteira_min_variancia
-    graph_pizza2 = go.Figure(data=[go.Pie(labels=legenda, values =valores_cart_min_var )])
-    st.plotly_chart(graph_pizza2)
-    
+
     
     # restrições PPL para curva de fronteira eficiente
     def pegando_retorno (peso_teste):
@@ -258,11 +265,13 @@ def parametros_portofolio (numero_portfolios):
         eixo_x_fronteira_eficiente.append(result['fun'])
 
     st.write('---')
+    
     st.header(f'Gráfico com a simulação de {numero_portfolios} carteiras: ') 
-    st.subheader('Taxa livre de risco (SELIC)')  
-    st.write(ret_livre)
-    st.subheader('Índice de Sharpe máximo')  
-    st.write((tabela_retorn_esperados_aritm[indice_sharpe_max] - ret_livre) / tabela_volatilidades_esperadas[indice_sharpe_max])
+    st.markdown(f'Taxa livre de risco (SELIC): {round(ret_livre,4)}')
+    
+    sharpe_max = ((tabela_retorn_esperados_aritm[indice_sharpe_max] - ret_livre) / tabela_volatilidades_esperadas[indice_sharpe_max])
+    st.markdown(f'Índice de Sharpe Máximo: {round(sharpe_max,4)}')    
+
 
     # grafico interativo com a fronteira eficiente
     carteiras_simulacao = go.Scatter(x=tabela_volatilidades_esperadas,y=tabela_retorn_esperados_aritm,mode='markers',
@@ -273,7 +282,7 @@ def parametros_portofolio (numero_portfolios):
     
     carteira_min_variancia = go.Scatter(x=[tabela_volatilidades_esperadas[menor_risco]], y=[tabela_retorn_esperados_aritm[menor_risco]],
         mode='markers', marker= dict(size=12, color='pink'), name = 'Carteira de mínima variância') # essa carteira é importante lembrar do ponto de 'inflexão'
-    
+
     layout = go.Layout(xaxis= dict(title='Risco esperado'), yaxis= dict(title='Retorno esperado'))
     pontos_dispersao = [carteiras_simulacao, carteira_max_sharpe, carteira_min_variancia]
     fig = go.Figure(data=pontos_dispersao, layout=layout)
