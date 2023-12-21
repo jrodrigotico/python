@@ -161,8 +161,12 @@ if selecionar_acoes:
     
     # media_retor = tabela_retorn.mean()
     
+    # for i in range(len(media_retor)):
+    #     st.write(f'{selecionar_acoes[i]}: {round(media_retor[i],4)} ,{media_retor[i]*100:.4f}%') # POSSO TESTAR ESCREVER EM LATEX
+        
     for i in range(len(media_retor)):
-        st.write(f'{selecionar_acoes[i]}: {round(media_retor[i],4)} ,{media_retor[i]*100:.4f}%') # POSSO TESTAR ESCREVER EM LATEX
+        st.latex(f'''\text{{selecionar_acoes[i]}}''')
+    
 
     matriz_corr = tabela_retorn.corr() # para o modelo de markowitz é bom ter acoes com alta correlação negativa ! ver video: https://www.youtube.com/watch?v=Y1E73SQPD1U
     st.write('---')
