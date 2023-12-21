@@ -226,14 +226,14 @@ def parametros_portofolio (numero_portfolios):
     menor_risco = tabela_volatilidades_esperadas.argmin()
     carteira_min_variancia= tabela_pesos[menor_risco]
     
-    st.header('Composição da carteira de mínima variância:')
+    st.header('Carteira de mínima variância:')
     legenda = selecionar_acoes
     valores_cart_min_var = carteira_min_variancia
     graph_pizza2 = go.Figure(data=[go.Pie(labels=legenda, values =valores_cart_min_var )])
     st.plotly_chart(graph_pizza2)
         
     st.write('---') 
-    st.header('Composição da carteira de Índice Sharpe máximo:')
+    st.header('Carteira ótima:')
     legenda = selecionar_acoes
     valores_cart_max_retorno = carteira_max_retorno
     graph_pizza = go.Figure(data=[go.Pie(labels=legenda, values =valores_cart_max_retorno )])
