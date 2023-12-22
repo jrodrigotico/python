@@ -239,8 +239,7 @@ def parametros_portofolio (numero_portfolios):
                     yyyyyyyyyyyyyyyyyyy''')    
 
     st.write('---') 
-    
-    
+        
     # restrições PPL para curva de fronteira eficiente
     def pegando_retorno (peso_teste):
         peso_teste = np.array(peso_teste)
