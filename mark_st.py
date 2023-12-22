@@ -184,21 +184,8 @@ if selecionar_acoes:
 selic = pd.read_csv('https://raw.githubusercontent.com/jrodrigotico/python/projeto_acoes/selic.csv', sep=';')
 selic['Data'] = pd.to_datetime(selic['Data'])
 
-# verificacoes da data para nao dar warning antes de selecionar os parametros da barra lateral
-# isinstance verifica se é uma lista
-# if isinstance(data_i, list) and len(data_i) > 0:
-#     data_i = pd.to_datetime(data_i[0])
-# else:
-#     data_i = pd.to_datetime(data_i[0])
-
-# if isinstance(data_f, list) and len(data_f) > 0:
-#     data_f = pd.to_datetime(data_f[0])
-# else:
-#     data_f = pd.to_datetime(data_f[0])
-
 selic = selic.loc[(selic['Data'] >= data_i) & (selic['Data'] <= data_f)]
 selic['Taxa SELIC'] = selic['Taxa SELIC'].str.replace(',','.').astype(float)    
-
 ret_livre = selic['Taxa SELIC'].dropna().mean()/100
 
 
@@ -226,19 +213,35 @@ def parametros_portofolio (numero_portfolios):
     menor_risco = tabela_volatilidades_esperadas.argmin()
     carteira_min_variancia= tabela_pesos[menor_risco]
     
-    st.header('Carteira de mínima variância:')
-    legenda = selecionar_acoes
-    valores_cart_min_var = carteira_min_variancia
-    graph_pizza2 = go.Figure(data=[go.Pie(labels=legenda, values =valores_cart_min_var )])
-    st.plotly_chart(graph_pizza2)
+    col1, col2 = st.columns(2)
+    with col1:
+        st.header('Carteira de mínima variância:')
+        legenda = selecionar_acoes
+        valores_cart_min_var = carteira_min_variancia
+        graph_pizza2 = go.Figure(data=[go.Pie(labels=legenda, values =valores_cart_min_var )])
+        st.plotly_chart(graph_pizza2)
+    
+    with col2:
+        st.markdown(''' xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+                    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+                    xxxxxxxxxxxxxxxxxxxxxxxxxxx''')
         
-    st.write('---') 
-    st.header('Carteira ótima:')
-    legenda = selecionar_acoes
-    valores_cart_max_retorno = carteira_max_retorno
-    graph_pizza = go.Figure(data=[go.Pie(labels=legenda, values =valores_cart_max_retorno )])
-    st.plotly_chart(graph_pizza)
+    col11, col22 = st.columns(2)
+    with col11:
+        st.header('Carteira ótima:')
+        legenda = selecionar_acoes
+        valores_cart_max_retorno = carteira_max_retorno
+        graph_pizza = go.Figure(data=[go.Pie(labels=legenda, values =valores_cart_max_retorno )])
+        st.plotly_chart(graph_pizza)
+        
+    with col22:
+        st.markdown('''yyyyyyyyyyyyyyyyyyyyyyy
+                    yyyyyyyyyyyyy
+                    yyyyyyyyyy
+                    yyyyyyyyyyyyyyyyyyy''')    
 
+    st.write('---') 
+    
     
     # restrições PPL para curva de fronteira eficiente
     def pegando_retorno (peso_teste):
@@ -311,7 +314,7 @@ if st.sidebar.button('Simular'):
         st.latex(r'''RiscoCarteira =  \sqrt{\left(Wa^2 \cdot \sigma a^2\right) + \left(Wb^2 \cdot \sigma b^2\right) + 2 \cdot \left( Wa \cdot Wb \cdot covab\right)}''')
     with st.expander('Referências'):
         st.latex(r'''\text{Guasti Lima, Fabiano. Análise de Risco. Atlas, 2016}''')
-        st.latex(r'''\text{Assaf Net, Alexandre. Mercado Financeiro. Décima Terceira Edição. Atlas}''')
+        st.latex(r'''\text{Assaf Neto, Alexandre. Mercado Financeiro. Décima Terceira Edição. Atlas}''')
         st.latex(r'''\text{Canal Brenno Sullivan - VAROS Quant }''')
         st.latex(r'''\text{Streamlit Documentaion - https://docs.streamlit.io}''')
 
