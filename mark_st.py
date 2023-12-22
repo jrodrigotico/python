@@ -220,21 +220,19 @@ def parametros_portofolio (numero_portfolios):
         valores_cart_min_var = carteira_min_variancia
         graph_pizza2 = go.Figure(data=[go.Pie(labels=legenda, values =valores_cart_min_var )])
         st.plotly_chart(graph_pizza2)
-    
     with col2:
         st.markdown(''' xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
                     xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
                     xxxxxxxxxxxxxxxxxxxxxxxxxxx''')
         
-    col11, col22 = st.columns(2)
-    with col11:
+    col1, col2 = st.columns(2)
+    with col1:
         st.header('Carteira ótima:')
         legenda = selecionar_acoes
         valores_cart_max_retorno = carteira_max_retorno
         graph_pizza = go.Figure(data=[go.Pie(labels=legenda, values =valores_cart_max_retorno )])
         st.plotly_chart(graph_pizza)
-        
-    with col22:
+    with col2:
         st.markdown('''yyyyyyyyyyyyyyyyyyyyyyy
                     yyyyyyyyyyyyy
                     yyyyyyyyyy
