@@ -167,7 +167,7 @@ if 'inicio' in st.session_state and st.session_state.inicio:
         st.write('---')
         st.header('Médias dos retornos de cada ação:')
         st.markdown('''Foi utilizado o retorno contínuo para o cálculo do retorno de cada ação, em seguida, foi-se calculada a média.
-                    Os dados mostrados abaixo já estão em porcentagem''')
+                    Os dados mostrados abaixo já estão em porcentagem.''')
         tabela_retorn = tabela_norm.pct_change().dropna() # aqui se faz a formula norma de variacao percentual: 'Valor f/Valor i - 1 '
         retorno_contiuo = np.log(tabela_retorn + 1) # aqui soma-se 1 para ficar apenas a divisao entre 'Valor f/Valor i' e o LN é aplicado nessa divisão
         
