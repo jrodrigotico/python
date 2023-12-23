@@ -35,6 +35,8 @@ import warnings
 # carteira de mínima variancia é a carteira que seria o ponto de inflexao da curva, seria bem no meio da curva
 # papaer: V = variância da carteira , E = retorno da carteira
 # sigma = σ = covariancia
+# na parte de retornos por acao colocar uma caixinha de seleção com 'diario', 'mensal' ou 'anual'. Fazer o resto do código com o que foi selecionado
+#    inclusive a simulação
 
 # Textos - rascunho
 #  ****(μi, σij) 
@@ -80,11 +82,12 @@ if st.button('Simulação de Carteiras', key='start_'):
 
 if 'inicio' in st.session_state and st.session_state.inicio:
     st.sidebar.header('Parâmetros')
+
     data_i = st.sidebar.date_input('Data inicial', format='YYYY-MM-DD', value=None)
     data_i = pd.Timestamp(data_i)
-
     data_f = st.sidebar.date_input('Data final',  format='YYYY-MM-DD', value=None)
     data_f = pd.Timestamp(data_f)
+    peridiocidade = st.sidebar.selectbox('Selecione a peridiocidade', ('Diário', 'Mensal', 'Anual'))
 
     # seleção de subsetor da empresa
     subsetor = st.sidebar.multiselect('Selecione o subsetor', sorted(acoes['Subsetor Bovespa'].unique()))
@@ -105,11 +108,9 @@ if 'inicio' in st.session_state and st.session_state.inicio:
     valores_fixos = ~filtro_subsetor['Código'].isin(acoes_erro['Ticker'])
     filtro_subsetor = filtro_subsetor[valores_fixos] # mantem os valores que nao estao em 'acoes_erro'
 
-
     # filtro de acoes depois de selecionados os subsetores
     selecionar_acoes = st.sidebar.multiselect('Selecione as ações', sorted(filtro_subsetor['Código'] + '.SA'))
     st.set_option('deprecation.showPyplotGlobalUse', False)
-
 
     # ---------------- Dados das ações selecionadas ---------------- #
     # for i in selecionar_acoes:
@@ -121,7 +122,14 @@ if 'inicio' in st.session_state and st.session_state.inicio:
 
     if selecionar_acoes:
         for i in selecionar_acoes:
+            # tabela_acao = round(yf.download(i, start=data_i, end=data_f)['Adj Close'].resample('M').last(),2)
             tabela_acao = round(yf.download(i, start=data_i, end=data_f)["Adj Close"].rename(i), 2)
+            if peridiocidade=='Mensal':
+                tabela_acao = tabela_acao.resample('M').last()
+            elif peridiocidade == 'Anual':
+                tabela_acao = tabela_acao.resample('Y').last()
+            else:
+                tabela_acao = tabela_acao
             tabelas_acoes.append(tabela_acao)
 
             # primeiro valor e seu índice para cada ação
@@ -133,7 +141,11 @@ if 'inicio' in st.session_state and st.session_state.inicio:
         tabela = pd.concat(tabelas_acoes, axis=1)
 
         st.write('---')
-        st.subheader('Preço das ações histórico')
+        st.subheader(f'Preço das ações {peridiocidade}')
+        st.markdown('''Os preços das ações selecionadas ao longo do intervalo de tempo estão normalizados. 
+                    Essa normalização garante que o preço de todas as ações comece a partir do mesmo valor, 
+                    possibilitando a comparação e sem alterar o comportamento dessas ações.''')
+        
         for i in tabela.columns:
             if i in valores_iniciais and i in indices_iniciais: # normaliza usando o primeiro valor válido de cada ação, se disponível
                 first_valid_index = indices_iniciais[i]
@@ -144,33 +156,18 @@ if 'inicio' in st.session_state and st.session_state.inicio:
                     tabela_norm[i[:5]] = round(tabela[i] / tabela[i].loc[first_valid_index], 2)
                 else:
                     tabela_norm[i[:5]] = tabela[i]
-                    
-                
+
         # Plotar o gráfico com todas as ações selecionadas considerando intervalo em que determinada ação ainda nao existia e portanto preço igual a zero
         grafico2 = px.line(tabela_norm)
         grafico2.update_layout(width=800, height=500)
         st.plotly_chart(grafico2)
-        
-        
-        # st.write('---')
-        # st.subheader('Preço das ações') # normalizado
-        # erro = None
-        # for i in tabela.columns:
-        #     tabela_norm[i[:5]] = round(tabela[i] / tabela[i].iloc[0], 2)  # pega dado da tabela anterior
-        
-        # # Plotar o gráfico com todas as ações selecionadas, a partir do momento em que todas as ações selecionadas existem    
-        # grafico3 = px.line(tabela_norm)
-        # grafico3.update_layout(width=800, height=500)
-        # st.plotly_chart(grafico3)
-        
-        
+
         # Retornos Contínuos e Matriz de Correlação
         # ln(retorno_t / retorno_t-1)
         st.write('---')
         st.header('Médias dos retornos de cada ação:')
-        st.markdown(''' xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-                    xxxxxxxxxxxxxxxxxxxxx
-                    xxxxxxxxxx''')
+        st.markdown('''Foi utilizado o retorno contínuo para o cálculo do retorno de cada ação, em seguida, foi-se calculada a média.
+                    Os dados mostrados abaixo já estão em porcentagem''')
         tabela_retorn = tabela_norm.pct_change().dropna() # aqui se faz a formula norma de variacao percentual: 'Valor f/Valor i - 1 '
         retorno_contiuo = np.log(tabela_retorn + 1) # aqui soma-se 1 para ficar apenas a divisao entre 'Valor f/Valor i' e o LN é aplicado nessa divisão
         
@@ -178,12 +175,13 @@ if 'inicio' in st.session_state and st.session_state.inicio:
             return i.mean()
         media_retor = retorno_contiuo.apply(media, axis = 0) # compara os valores das linhas
 
+        st.subheader(f'Retornos ({peridiocidade})')
         for i, z in zip(media_retor, selecionar_acoes):
             porcent = i * 100
-            st.latex(rf'''\text{{{z}: {i:.4f}\%}}''')
-        
-
+            # st.latex(rf'''\text{{{z}: {i:.4f}\%}}''')
+            st.write(z, ": ", round(i,4))
         matriz_corr = tabela_retorn.corr() # para o modelo de markowitz é bom ter acoes com alta correlação negativa ! ver video: https://www.youtube.com/watch?v=Y1E73SQPD1U
+
         st.write('---')
         st.header('Matriz de correlação:')
         st.markdown('''Quanto menor a correlação entre os ativos ou até mesmo quanto mais negativa, menor será o risco dessa carteira se comparada aos ativos individuais ''')
@@ -227,7 +225,8 @@ if 'inicio' in st.session_state and st.session_state.inicio:
         carteira_max_retorno = tabela_pesos[indice_sharpe_max]
         menor_risco = tabela_volatilidades_esperadas.argmin()
         carteira_min_variancia= tabela_pesos[menor_risco]
-        
+
+        st.write('---')
         col1, col2 = st.columns(2)
         with col1:
             st.header('Carteira de mínima variância:')
@@ -238,7 +237,7 @@ if 'inicio' in st.session_state and st.session_state.inicio:
         with col2:
             st.markdown('''Para uma determinada combinação de pesos de ativos em uma carteira, há um ponto que representa o risco  mínimo.
                         Esse ponto representa a carteira de mínimo risco ou carteira de mínima variância.''')
-            
+
         col1, col2 = st.columns(2)
         with col1:
             st.header('Carteira ótima:')
@@ -251,7 +250,7 @@ if 'inicio' in st.session_state and st.session_state.inicio:
                         mostra a combinação de ativos para ter um ganho a partir de uma taxa livre de risco.''')    
 
         # st.write('---') 
-            
+
         # restrições PPL para curva de fronteira eficiente
         def pegando_retorno (peso_teste):
             peso_teste = np.array(peso_teste)
@@ -283,10 +282,12 @@ if 'inicio' in st.session_state and st.session_state.inicio:
         st.write('---')
         
         st.header(f'Gráfico com a simulação de {numero_portfolios} carteiras: ') 
-        st.markdown(f'Taxa livre de risco (SELIC): {round(ret_livre,4)}')
+        st.latex(rf'''\text{{Taxa livre de risco (SELIC) média: {ret_livre*100:.4f}\%}}''')
+
         
         sharpe_max = ((tabela_retorn_esperados_aritm[indice_sharpe_max] - ret_livre) / tabela_volatilidades_esperadas[indice_sharpe_max])
-        st.markdown(f'Índice de Sharpe Máximo: {round(sharpe_max,4)}')    
+        st.latex(rf'''\text{{Índice de Sharpe Máximo: {sharpe_max}}}''')
+        # st.markdown(f'Índice de Sharpe Máximo: {round(sharpe_max,4)}')    
 
 
         # grafico interativo com a fronteira eficiente
