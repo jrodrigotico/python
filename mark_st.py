@@ -152,20 +152,19 @@ if selecionar_acoes:
     # ln(retorno_t / retorno_t-1)
     st.write('---')
     st.header('Médias dos retornos de cada ação:')
+    st.markdown(''' xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+                xxxxxxxxxxxxxxxxxxxxx
+                xxxxxxxxxx''')
     tabela_retorn = tabela_norm.pct_change().dropna() # aqui se faz a formula norma de variacao percentual: 'Valor f/Valor i - 1 '
     retorno_contiuo = np.log(tabela_retorn + 1) # aqui soma-se 1 para ficar apenas a divisao entre 'Valor f/Valor i' e o LN é aplicado nessa divisão
     
     def media(i):
         return i.mean()
-    media_retor = retorno_contiuo.apply(media, axis = 0)
-    
-    # media_retor = tabela_retorn.mean()
-    
-    # for i in range(len(media_retor)):
-    #     st.write(f'{selecionar_acoes[i]}: {round(media_retor[i],4)} ,{media_retor[i]*100:.4f}%') # POSSO TESTAR ESCREVER EM LATEX
-        
-    for i in range(len(media_retor)):
-        st.latex(f'''\text{{selecionar_acoes[i]}}''')
+    media_retor = retorno_contiuo.apply(media, axis = 0) # compara os valores das linhas
+
+    for i, z in zip(media_retor, selecionar_acoes):
+        porcent = i * 100
+        st.latex(rf'''\text{{{z}: {i:.4f}\%}}''')
     
 
     matriz_corr = tabela_retorn.corr() # para o modelo de markowitz é bom ter acoes com alta correlação negativa ! ver video: https://www.youtube.com/watch?v=Y1E73SQPD1U
@@ -238,7 +237,7 @@ def parametros_portofolio (numero_portfolios):
                     yyyyyyyyyy
                     yyyyyyyyyyyyyyyyyyy''')    
 
-    st.write('---') 
+    # st.write('---') 
         
     # restrições PPL para curva de fronteira eficiente
     def pegando_retorno (peso_teste):
