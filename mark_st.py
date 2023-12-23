@@ -33,6 +33,15 @@ import warnings
 # dados economatica = 01/01/2013 até 01/11/2023
 # carteira de maior retorno é a carteira em que 100% do capital está no ativo de maior retorno
 # carteira de mínima variancia é a carteira que seria o ponto de inflexao da curva, seria bem no meio da curva
+# papaer: V = variância da carteira , E = retorno da carteira
+# sigma = σ = covariancia
+
+# Textos - rascunho
+#  ****(μi, σij) 
+# O símbolo "μi" representa a média ou o valor esperado de uma variável aleatória "i"
+# "σij" sugere uma matriz de covariância ou uma medida que captura a variabilidade conjunta entre as variáveis "i" e "j". Isso implica que há uma relação ou dependência entre essas variáveis.
+
+
 
 
 # ---------------- Arquivos ---------------- # 
@@ -50,9 +59,19 @@ st.set_page_config(page_title='Markowitz', layout='centered')
 #     st.session_state['intro'] = False
     
 st.header('Teoria Moderna de Portfólio - Markowitz')
-st.markdown('''A Teoria Moderna do Portfólio, desenvolvida por Harry Markowitz na década de 1950,
-            é um conceito fundamental em finanças que busca otimizar a relação entre risco e retorno
-            em um portfólio de investimentos.''')
+st.markdown('''A Teoria Moderna do Portfólio, desenvolvida por Harry Markowitz em meados de 1950, postula que diferentes ativos 
+            podem compor 'n' carteiras de investimentos com o intuito de encontrar uma relação ótima entre risco (variância) e retorno.
+            Para determinar essa relação, Markowitz não descarta o uso do julgamento profissional para a escolha dos ativos, utilizando 
+            critérios específicos que não são contemplados nos cálculos matemáticos formais. Com essa abordagem, 
+            torna-se viável calcular combinações de 'retorno' e 'risco'
+            ''')
+
+# imagem nobel, Fonte: The Nobel Prize
+st.image('intro_markow.jpg', caption = 'Fonte: The Nobel Prize')
+
+if 'inicio' not in st.session_state:
+    st.session_state['inicio'] = False
+
 
 # if st.button('Simulação de Carteiras'):
 #     st.session_state.intro = True # o session_state guarda as informações, ou seja, sem ele rodaria a cada interação, quando o botão 'Simulação de Carteiras', ele fica True
@@ -63,6 +82,9 @@ st.markdown('''A Teoria Moderna do Portfólio, desenvolvida por Harry Markowitz 
 # data_f = None
 
 # if st.session_state['intro']: # preserva o estado que a pagina está, ou seja, a barra lateral ficará 'fixa' com os dados 'guardados'
+if st.button('Simulação de Carteiras', key='start_'):
+st.session_state.inicio=True
+
 st.sidebar.header('Parâmetros')
 data_i = st.sidebar.date_input('Data inicial', format='YYYY-MM-DD', value=None)
 data_i = pd.Timestamp(data_i)
@@ -309,6 +331,7 @@ if st.sidebar.button('Simular'):
             \text {multiplicada pelos seus respectivos pesos}''')
         st.latex(r'''RiscoCarteira =  \sqrt{\left(Wa^2 \cdot \sigma a^2\right) + \left(Wb^2 \cdot \sigma b^2\right) + 2 \cdot \left( Wa \cdot Wb \cdot covab\right)}''')
     with st.expander('Referências'):
+        st.latex(r'''\text{MARKOWITZ, Harry. Portfolio selection. The Journal of Finance, v. 7, n. 1, p. 77-91, Mar. 1952}''')
         st.latex(r'''\text{Guasti Lima, Fabiano. Análise de Risco. Atlas, 2016}''')
         st.latex(r'''\text{Assaf Neto, Alexandre. Mercado Financeiro. Décima Terceira Edição. Atlas}''')
         st.latex(r'''\text{Canal Brenno Sullivan - VAROS Quant }''')
