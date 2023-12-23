@@ -41,7 +41,9 @@ import warnings
 # O símbolo "μi" representa a média ou o valor esperado de uma variável aleatória "i"
 # "σij" sugere uma matriz de covariância ou uma medida que captura a variabilidade conjunta entre as variáveis "i" e "j". Isso implica que há uma relação ou dependência entre essas variáveis.
 
-
+# ***** indice de sharpe negativo
+# Se, por acaso, o ativo em análise apresentar um Sharpe negativo, isso indica que o retorno
+#  da aplicação não compensa o seu risco, que é representado pela volatilidade
 
 
 # ---------------- Arquivos ---------------- # 
@@ -65,8 +67,8 @@ with introducao:
                 podem compor 'n' carteiras de investimentos com o intuito de encontrar uma relação ótima entre risco (variância) e retorno.
                 Para determinar essa relação, Markowitz não descarta o uso do julgamento profissional para a escolha dos ativos, utilizando 
                 critérios específicos que não são contemplados nos cálculos matemáticos formais. Com essa abordagem, 
-                torna-se viável calcular combinações de 'retorno' e 'risco'
-                ''')
+                torna-se viável calcular combinações de 'retorno' e 'risco.
+                Markowitz é o principal responsável por introduzir conceitos de diversificação de ativos!''')
 
     # imagem nobel, Fonte: The Nobel Prize
     st.image('intro_markow.jpg', caption = 'Fonte: The Nobel Prize')
@@ -234,9 +236,8 @@ if 'inicio' in st.session_state and st.session_state.inicio:
             graph_pizza2 = go.Figure(data=[go.Pie(labels=legenda, values =valores_cart_min_var )])
             st.plotly_chart(graph_pizza2)
         with col2:
-            st.markdown(''' xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-                        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-                        xxxxxxxxxxxxxxxxxxxxxxxxxxx''')
+            st.markdown('''Para uma determinada combinação de pesos de ativos em uma carteira, há um ponto que representa o risco  mínimo.
+                        Esse ponto representa a carteira de mínimo risco ou carteira de mínima variância.''')
             
         col1, col2 = st.columns(2)
         with col1:
@@ -246,10 +247,8 @@ if 'inicio' in st.session_state and st.session_state.inicio:
             graph_pizza = go.Figure(data=[go.Pie(labels=legenda, values =valores_cart_max_retorno )])
             st.plotly_chart(graph_pizza)
         with col2:
-            st.markdown('''yyyyyyyyyyyyyyyyyyyyyyy
-                        yyyyyyyyyyyyy
-                        yyyyyyyyyy
-                        yyyyyyyyyyyyyyyyyyy''')    
+            st.markdown('''Para a determinação da carteira ótima foi utilizado o 'Índice de Sharpe'.  O ponto que representa a carteira ótima
+                        mostra a combinação de ativos para ter um ganho a partir de uma taxa livre de risco.''')    
 
         # st.write('---') 
             
