@@ -138,7 +138,7 @@ if not exibir_introducao:
 
         tabela = pd.concat(tabelas_acoes, axis=1)
 
-        st.subheader(f'Preço das ações {peridiocidade}')
+        st.subheader(f'Preço das ações - {peridiocidade}')
         st.markdown('''Os preços das ações selecionadas ao longo do intervalo de tempo estão normalizados. 
                     Essa normalização garante que o preço de todas as ações comece a partir do mesmo valor, 
                     possibilitando a comparação e sem alterar o comportamento dessas ações.''')
