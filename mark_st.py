@@ -172,7 +172,6 @@ if not exibir_introducao:
             return i.mean()
         media_retor = retorno_contiuo.apply(media, axis = 0) # compara os valores das linhas
 
-        st.subheader(f'{peridiocidade}')
         for i, z in zip(media_retor, selecionar_acoes):
             porcent = i * 100
             # st.latex(rf'''\text{{{z}: {i:.4f}\%}}''')
@@ -224,27 +223,24 @@ if not exibir_introducao:
         carteira_min_variancia= tabela_pesos[menor_risco]
 
         st.write('---')
-        col1, col2 = st.columns(2)
-        with col1:
-            st.header('Carteira de mínima variância:')
-            legenda = selecionar_acoes
-            valores_cart_min_var = carteira_min_variancia
-            graph_pizza2 = go.Figure(data=[go.Pie(labels=legenda, values =valores_cart_min_var )])
-            st.plotly_chart(graph_pizza2)
-        with col2:
-            st.markdown('''Para uma determinada combinação de pesos de ativos em uma carteira, há um ponto que representa o risco  mínimo.
-                        Esse ponto representa a carteira de mínimo risco ou carteira de mínima variância.''')
+        st.header('Carteira de mínima variância:')
+        st.markdown('''Para uma determinada combinação de pesos de ativos em uma carteira, há um ponto que representa o risco  mínimo.
+                    Esse ponto representa a carteira de mínimo risco ou carteira de mínima variância.''')
+        
+        legenda = selecionar_acoes
+        valores_cart_min_var = carteira_min_variancia
+        graph_pizza2 = go.Figure(data=[go.Pie(labels=legenda, values =valores_cart_min_var )])
+        st.plotly_chart(graph_pizza2)
+        
 
-        col1, col2 = st.columns(2)
-        with col1:
-            st.header('Carteira ótima:')
-            legenda = selecionar_acoes
-            valores_cart_max_retorno = carteira_max_retorno
-            graph_pizza = go.Figure(data=[go.Pie(labels=legenda, values =valores_cart_max_retorno )])
-            st.plotly_chart(graph_pizza)
-        with col2:
-            st.markdown('''Para a determinação da carteira ótima foi utilizado o 'Índice de Sharpe'.  O ponto que representa a carteira ótima
+        st.header('Carteira ótima:')
+        st.markdown('''Para a determinação da carteira ótima foi utilizado o 'Índice de Sharpe'.  O ponto que representa a carteira ótima
                         mostra a combinação de ativos para ter um ganho a partir de uma taxa livre de risco.''')    
+        
+        legenda = selecionar_acoes
+        valores_cart_max_retorno = carteira_max_retorno
+        graph_pizza = go.Figure(data=[go.Pie(labels=legenda, values =valores_cart_max_retorno )])
+        st.plotly_chart(graph_pizza)
 
         # st.write('---') 
 
