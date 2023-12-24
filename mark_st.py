@@ -54,33 +54,33 @@ import warnings
 yf.pdr_override() #corrige problemas da bibliotece do pandas_datareader
 acoes = pd.read_csv('https://raw.githubusercontent.com/jrodrigotico/python/projeto_acoes/base_completa_acoes_subsetor.csv', sep=';')[['Código','Subsetor Bovespa']]
 acoes = acoes[acoes['Código'].apply(lambda x: len(str(x))==5)]
-# acoes = acoes.loc[(acoes['ticker_numero'] != 'CÓDIGO') & (acoes['LISTAGEM'].notna())].iloc[:,range(0,2)]
 
 
-# ---------------- Inicial ---------------- # 
-st.set_page_config(page_title='Markowitz', layout='centered')
-if 'intro' not in st.session_state:
-    st.session_state['intro'] = False
+# ---------------- Introducao ---------------- # 
+def introducao():
+    introducao = st.container()
+    introducao.header('Teoria Moderna de Portfólio - Markowitz')
+    introducao.write('''A Teoria Moderna do Portfólio, desenvolvida por Harry Markowitz em meados de 1950, postula que diferentes ativos 
+                        podem compor 'n' carteiras de investimentos com o intuito de encontrar uma relação ótima entre risco (variância) e retorno.
+                        Para determinar essa relação, Markowitz não descarta o uso do julgamento profissional para a escolha dos ativos, utilizando 
+                        critérios específicos que não são contemplados nos cálculos matemáticos formais. Com essa abordagem, 
+                        torna-se viável calcular combinações de 'retorno' e 'risco.
+                        Markowitz é o principal responsável por introduzir conceitos de diversificação de ativos!''')
+    # Fonte: The Nobel Prize
+    introducao.image('intro_markow.jpg', caption='Fonte: The Nobel Prize')
 
-introducao = st.container()
-with introducao:
-    st.header('Teoria Moderna de Portfólio - Markowitz')
-    st.markdown('''A Teoria Moderna do Portfólio, desenvolvida por Harry Markowitz em meados de 1950, postula que diferentes ativos 
-                podem compor 'n' carteiras de investimentos com o intuito de encontrar uma relação ótima entre risco (variância) e retorno.
-                Para determinar essa relação, Markowitz não descarta o uso do julgamento profissional para a escolha dos ativos, utilizando 
-                critérios específicos que não são contemplados nos cálculos matemáticos formais. Com essa abordagem, 
-                torna-se viável calcular combinações de 'retorno' e 'risco.
-                Markowitz é o principal responsável por introduzir conceitos de diversificação de ativos!''')
+exibir_introducao = st.session_state.get('exibir_introducao', True)
 
-    # imagem nobel, Fonte: The Nobel Prize
-    st.image('intro_markow.jpg', caption = 'Fonte: The Nobel Prize')
+if exibir_introducao:
+    introducao()
 
-# o session_state guarda as informações, ou seja, sem ele rodaria a cada interação, quando o botão 'Simulação de Carteiras', ele fica True
-# if st.session_state['intro']: # preserva o estado que a pagina está, ou seja, a barra lateral ficará 'fixa' com os dados 'guardados'
-if st.button('Simulação de Carteiras', key='start_'):
-    st.session_state.inicio=True
+    # remove a introdução
+    if st.button('Simulação de Carteiras'):
+        st.session_state['exibir_introducao'] = False
+        st.experimental_rerun()
 
-if 'inicio' in st.session_state and st.session_state.inicio:
+# --------- Código geral ---------- #
+if not exibir_introducao:
     st.sidebar.header('Parâmetros')
 
     data_i = st.sidebar.date_input('Data inicial', format='YYYY-MM-DD', value=None)
@@ -113,8 +113,6 @@ if 'inicio' in st.session_state and st.session_state.inicio:
     st.set_option('deprecation.showPyplotGlobalUse', False)
 
     # ---------------- Dados das ações selecionadas ---------------- #
-    # for i in selecionar_acoes:
-    #     tabela[f'{i}'] = round(yf.download(i, start=data_i, end=data_f)['Adj Close'].resample('M').last(),2)
     tabelas_acoes = []  
     tabela_norm = pd.DataFrame()
     valores_iniciais = {}
@@ -140,7 +138,6 @@ if 'inicio' in st.session_state and st.session_state.inicio:
 
         tabela = pd.concat(tabelas_acoes, axis=1)
 
-        st.write('---')
         st.subheader(f'Preço das ações {peridiocidade}')
         st.markdown('''Os preços das ações selecionadas ao longo do intervalo de tempo estão normalizados. 
                     Essa normalização garante que o preço de todas as ações comece a partir do mesmo valor, 
@@ -175,7 +172,7 @@ if 'inicio' in st.session_state and st.session_state.inicio:
             return i.mean()
         media_retor = retorno_contiuo.apply(media, axis = 0) # compara os valores das linhas
 
-        st.subheader(f'Retornos ({peridiocidade})')
+        st.subheader(f'{peridiocidade}')
         for i, z in zip(media_retor, selecionar_acoes):
             porcent = i * 100
             # st.latex(rf'''\text{{{z}: {i:.4f}\%}}''')
@@ -282,13 +279,12 @@ if 'inicio' in st.session_state and st.session_state.inicio:
         st.write('---')
         
         st.header(f'Gráfico com a simulação de {numero_portfolios} carteiras: ') 
-        st.latex(rf'''\text{{Taxa livre de risco (SELIC) média: {ret_livre*100:.4f}\%}}''')
-
+        # st.latex(rf'''\text{{Taxa livre de risco (SELIC) média: {ret_livre*100:.4f}\%}}''')
+        st.markdown(f'Taxa livre de risco (SELIC) média: {round(ret_livre,4)}')   
         
         sharpe_max = ((tabela_retorn_esperados_aritm[indice_sharpe_max] - ret_livre) / tabela_volatilidades_esperadas[indice_sharpe_max])
-        st.latex(rf'''\text{{Índice de Sharpe Máximo: {sharpe_max}}}''')
-        # st.markdown(f'Índice de Sharpe Máximo: {round(sharpe_max,4)}')    
-
+        # st.latex(rf'''\text{{Índice de Sharpe Máximo: {sharpe_max}}}''')
+        st.markdown(f'Índice de Sharpe Máximo: {round(sharpe_max,4)}')    
 
         # grafico interativo com a fronteira eficiente
         carteiras_simulacao = go.Scatter(x=tabela_volatilidades_esperadas,y=tabela_retorn_esperados_aritm,mode='markers',
