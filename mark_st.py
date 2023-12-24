@@ -57,7 +57,7 @@ acoes = acoes[acoes['Código'].apply(lambda x: len(str(x))==5)]
 
 
 # ---------------- Introducao ---------------- # 
-def introducao():
+def introducao(): # funcao para exibir a introducao e seus componentes
     introducao = st.container()
     introducao.header('Teoria Moderna de Portfólio - Markowitz')
     introducao.write('''A Teoria Moderna do Portfólio, desenvolvida por Harry Markowitz em meados de 1950, postula que diferentes ativos 
@@ -76,8 +76,8 @@ if exibir_introducao:
 
     # remove a introdução
     if st.button('Simulação de Carteiras'):
-        st.session_state['exibir_introducao'] = False
-        st.experimental_rerun()
+        st.session_state['exibir_introducao'] = False # transforma a chave em falsa
+        st.experimental_rerun() # recarrega a página
 
 # --------- Código geral ---------- #
 if not exibir_introducao:
