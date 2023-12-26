@@ -35,8 +35,6 @@ import warnings
 # carteira de mínima variancia é a carteira que seria o ponto de inflexao da curva, seria bem no meio da curva
 # papaer: V = variância da carteira , E = retorno da carteira
 # sigma = σ = covariancia
-# na parte de retornos por acao colocar uma caixinha de seleção com 'diario', 'mensal' ou 'anual'. Fazer o resto do código com o que foi selecionado
-#    inclusive a simulação
 
 # Textos - rascunho
 #  ****(μi, σij) 
@@ -125,7 +123,7 @@ if not exibir_introducao:
                 tabela_acao = round(yf.download(i, start=data_i, end=data_f)["Adj Close"].rename(i), 2)
             except:
                 pass
-            
+
             if peridiocidade=='Mensal':
                 tabela_acao = tabela_acao.resample('M').last()
             elif peridiocidade == 'Anual':
@@ -243,7 +241,6 @@ if not exibir_introducao:
         valores_cart_min_var = carteira_min_variancia
         graph_pizza2 = go.Figure(data=[go.Pie(labels=legenda, values =valores_cart_min_var )])
         st.plotly_chart(graph_pizza2)
-        
 
         st.header('Carteira ótima:')
         st.markdown('''Para a determinação da carteira ótima foi utilizado o 'Índice de Sharpe'.  O ponto que representa a carteira ótima
@@ -294,9 +291,9 @@ if not exibir_introducao:
         # st.latex(rf'''\text{{Índice de Sharpe Máximo: {sharpe_max}}}''')
         st.markdown(f'Índice de Sharpe Máximo: {round(sharpe_max,4)}')
         if sharpe_max>0:
-            st.write(f'O índice de Sharpe de {round(sharpe_max,4)} diz que para cada 1 ponto de risco, o investidor obteve um retorno positivo de {round(sharpe_max,4)}')
+            st.write(f'O índice de Sharpe de {round(sharpe_max,4)} diz que para cada 1 ponto de risco, o investidor obteve um retorno positivo de {round(sharpe_max,4)}. Com isso o investimento na carteira compensa o risco.')
         elif sharpe_max<0:
-            st.write(f'O índice de Sharpe de {sharpe_max} diz que para cada 1 ponto de risco, o investidor obteve um retorno negativo de {sharpe_max}')
+            st.write(f'O índice de Sharpe de {sharpe_max} diz que para cada 1 ponto de risco, o investidor obteve um retorno negativo de {sharpe_max}. Com isso o investimento na carteira não compensa o risco.')
         elif sharpe_max=='nan':
             st.write('Algum ativo escolhido apresenta média de retorno igual a zero ou nan')
 
@@ -333,7 +330,8 @@ if not exibir_introducao:
                 \text {multiplicada pelos seus respectivos pesos}''')
             st.latex(r'''RiscoCarteira =  \sqrt{\left(Wa^2 \cdot \sigma a^2\right) + \left(Wb^2 \cdot \sigma b^2\right) + 2 \cdot \left( Wa \cdot Wb \cdot covab\right)}''')
         with st.expander('Referências'):
-            st.latex(r'''\text{MARKOWITZ, Harry. Portfolio selection. The Journal of Finance, v. 7, n. 1, p. 77-91, Mar. 1952}''')
+            st.latex(r'''\text{MARKOWITZ, Harry. Portfolio selection. The Journal of Finance,}\\
+                    \text {v. 7, n. 1, p. 77-91, Mar. 1952}''')
             st.latex(r'''\text{Guasti Lima, Fabiano. Análise de Risco. Atlas, 2016}''')
             st.latex(r'''\text{Assaf Neto, Alexandre. Mercado Financeiro. Décima Terceira Edição. Atlas}''')
             st.latex(r'''\text{Canal Brenno Sullivan - VAROS Quant }''')
