@@ -202,6 +202,7 @@ if not exibir_introducao:
 
 
     # ---------------- Simulação ---------------- #
+    fator_periodicidade = []
     numero_portfolios = st.sidebar.number_input('Insira o número de portfolios')
     def parametros_portofolio (numero_portfolios):
             
@@ -210,14 +211,21 @@ if not exibir_introducao:
         tabela_sharpe = np.zeros(numero_portfolios)
         tabela_pesos = np.zeros((numero_portfolios, len(selecionar_acoes)))
         tabela_retorn_esperados_aritm = np.zeros(numero_portfolios)
+
+        if peridiocidade == 'Mensal':
+            fator_periodicidade = 12
+        elif peridiocidade == 'Anual':
+            fator_periodicidade = 1
+        elif peridiocidade == 'Diário':
+            fator_periodicidade = 252     
         
         for i in range(numero_portfolios):
             pesos_random = np.random.random(len(selecionar_acoes))
             pesos_random /= np.sum(pesos_random)
             tabela_pesos[i,:] = pesos_random
-            tabela_retorn_esperados[i] = np.sum(media_retor * pesos_random * 252)
+            tabela_retorn_esperados[i] = np.sum(media_retor * pesos_random * fator_periodicidade)
             tabela_retorn_esperados_aritm[i] = np.exp(tabela_retorn_esperados[i])-1
-            tabela_volatilidades_esperadas[i] =  np.sqrt(np.dot(pesos_random.T, np.dot(matriz_corr * 252, pesos_random)))
+            tabela_volatilidades_esperadas[i] =  np.sqrt(np.dot(pesos_random.T, np.dot(matriz_corr * fator_periodicidade, pesos_random)))
             tabela_sharpe[i] = (tabela_retorn_esperados[i] - ret_livre) / tabela_volatilidades_esperadas[i]
             
         indice_sharpe_max = tabela_sharpe.argmax()
@@ -283,7 +291,13 @@ if not exibir_introducao:
         
         sharpe_max = ((tabela_retorn_esperados_aritm[indice_sharpe_max] - ret_livre) / tabela_volatilidades_esperadas[indice_sharpe_max])
         # st.latex(rf'''\text{{Índice de Sharpe Máximo: {sharpe_max}}}''')
-        st.markdown(f'Índice de Sharpe Máximo: {round(sharpe_max,4)}')    
+        st.markdown(f'Índice de Sharpe Máximo: {round(sharpe_max,4)}')
+        if sharpe_max>0:
+            st.write(f'O índice de Sharpe de {round(sharpe_max,4)} diz que para cada 1 ponto de risco, o investidor obteve um retorno positivo de {round(sharpe_max,4)}')
+        elif sharpe_max<0:
+            st.write(f'O índice de Sharpe de {sharpe_max} diz que para cada 1 ponto de risco, o investidor obteve um retorno negativo de {sharpe_max}')
+        elif sharpe_max=='nan':
+            st.write('Algum ativo escolhido apresenta média de retorno igual a zero ou nan')
 
         # grafico interativo com a fronteira eficiente
         carteiras_simulacao = go.Scatter(x=tabela_volatilidades_esperadas,y=tabela_retorn_esperados_aritm,mode='markers',
