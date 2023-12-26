@@ -125,6 +125,7 @@ if not exibir_introducao:
                 tabela_acao = round(yf.download(i, start=data_i, end=data_f)["Adj Close"].rename(i), 2)
             except:
                 pass
+            
             if peridiocidade=='Mensal':
                 tabela_acao = tabela_acao.resample('M').last()
             elif peridiocidade == 'Anual':
