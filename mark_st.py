@@ -165,8 +165,7 @@ if not exibir_introducao:
         # ln(retorno_t / retorno_t-1)
         st.write('---')
         st.header('Médias dos retornos de cada ação:')
-        st.markdown('''Foi utilizado o retorno contínuo para o cálculo do retorno de cada ação, em seguida, foi-se calculada a média.
-                    Os dados mostrados abaixo já estão em porcentagem.''')
+        st.markdown('''Foi utilizado o retorno contínuo para o cálculo do retorno de cada ação, em seguida, foi-se calculada a média.''')
         tabela_retorn = tabela_norm.pct_change().dropna() # aqui se faz a formula norma de variacao percentual: 'Valor f/Valor i - 1 '
         retorno_contiuo = np.log(tabela_retorn + 1) # aqui soma-se 1 para ficar apenas a divisao entre 'Valor f/Valor i' e o LN é aplicado nessa divisão
         
@@ -177,7 +176,8 @@ if not exibir_introducao:
         for i, z in zip(media_retor, selecionar_acoes):
             porcent = i * 100
             # st.latex(rf'''\text{{{z}: {i:.4f}\%}}''')
-            st.write(z, ": ", round(i,4))
+            st.markdown(f'**{z}** &mdash; {round(i*100,4)} %')
+            # st.write(z, ": ", i*100, '%')
         matriz_corr = tabela_retorn.corr() # para o modelo de markowitz é bom ter acoes com alta correlação negativa ! ver video: https://www.youtube.com/watch?v=Y1E73SQPD1U
 
         st.write('---')
