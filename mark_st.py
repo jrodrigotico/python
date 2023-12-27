@@ -25,11 +25,11 @@ import warnings
 # https://analisemacro.com.br/mercado-financeiro/selecao-de-carteira-e-teoria-de-markowitz/ - riskfolio
 # https://medium.com/@rodrigobercinimartins/como-extrair-dados-da-bovespa-sem-gastar-nada-com-python-14a03454a720 - yahoo query
 # https://www.youtube.com/watch?v=rxWkIn1EZnM&t=236s - pie chart streamlit
+# https://streamlit-emoji-shortcodes-streamlit-app-gwckff.streamlit.app - emojis
+# https://lume.ufrgs.br/bitstream/handle/10183/60625/000863146.pdf?sequence=1 - tcc ufrgs
 # fonte dos tickers e segmento = Economática 14/12/2023, a empresa Allos foi classificado como 'Outros' no Subsetor Bovespa
 # Acoes com problemas:  OIBR3 (da retorno inf), MMAQ3 ( nan na media dos retornos)
 # se eu adicionar uma acao que nao comeca no mesmo intervalo de tempo, da problema no indice de sharpe que fica 'nan', ex: 'AGXY3'
-# Pensar em fazer um app multipages
-# pensar em usar o st.session_state
 # dados economatica = 01/01/2013 até 01/11/2023
 # carteira de maior retorno é a carteira em que 100% do capital está no ativo de maior retorno
 # carteira de mínima variancia é a carteira que seria o ponto de inflexao da curva, seria bem no meio da curva
@@ -58,12 +58,20 @@ acoes = acoes[acoes['Código'].apply(lambda x: len(str(x))==5)]
 def introducao(): # funcao para exibir a introducao e seus componentes
     introducao = st.container()
     introducao.header('Teoria Moderna de Portfólio - Markowitz')
-    introducao.write('''A Teoria Moderna do Portfólio, desenvolvida por Harry Markowitz em meados de 1950, postula que diferentes ativos 
-                        podem compor 'n' carteiras de investimentos com o intuito de encontrar uma relação ótima entre risco (variância) e retorno.
-                        Para determinar essa relação, Markowitz não descarta o uso do julgamento profissional para a escolha dos ativos, utilizando 
-                        critérios específicos que não são contemplados nos cálculos matemáticos formais. Com essa abordagem, 
-                        torna-se viável calcular combinações de 'retorno' e 'risco.
-                        Markowitz é o principal responsável por introduzir conceitos de diversificação de ativos!''')
+    introducao.markdown('''A Teoria Moderna do Portfólio, desenvolvida por Harry Markowitz em meados de 1950, 
+                    postula que diferentes ativos podem compor 'n' carteiras de investimentos com o intuito de encontrar
+                    uma relação ótima entre risco (variância) e retorno. Para determinar essa relação, Markowitz não descarta o uso do 
+                    julgamento profissional na escolha dos ativos, utilizando critérios específicos que não são contemplados nos cálculos 
+                    matemáticos formais. Essa abordagem viabiliza o cálculo de combinações de 'retorno' e 'risco'.''')
+    st.text('\n')
+    introducao.markdown('''Essa teoria tem como principal objetivo diminuir o 'Risco Diversificável', que consiste 
+                    no risco que pode ser eliminado por meio da diversificação da carteira de investimentos. Diferentemente 
+                    do 'Risco Não-Diversificável', que não pode ser eliminado pela diversificação, pois suas flutuações dependem 
+                    do cenário econômico como um todo.''')
+    st.text('\n')
+    introducao.markdown('''Markowitz é o principal responsável por introduzir conceitos de diversificação de ativos, 
+                    contribuindo significativamente para o aprimoramento das estratégias de investimento''')
+    
     # Fonte: The Nobel Prize
     introducao.image('intro_markow.jpg', caption='Fonte: The Nobel Prize')
 
@@ -73,7 +81,7 @@ if exibir_introducao:
     introducao()
 
     # remove a introdução
-    if st.button('Simulação de Carteiras'):
+    if st.button('Simulação de Carteiras :bar_chart: '):
         st.session_state['exibir_introducao'] = False # transforma a chave em falsa
         st.experimental_rerun() # recarrega a página
 
@@ -85,10 +93,10 @@ if not exibir_introducao:
     data_i = pd.Timestamp(data_i)
     data_f = st.sidebar.date_input('Data final',  format='YYYY-MM-DD', value=None)
     data_f = pd.Timestamp(data_f)
-    peridiocidade = st.sidebar.selectbox('Selecione a peridiocidade', ('Diário', 'Mensal', 'Anual'))
+    peridiocidade = st.sidebar.selectbox('Peridiocidade', ('Diário', 'Mensal', 'Anual'))
 
     # seleção de subsetor da empresa
-    subsetor = st.sidebar.multiselect('Selecione o subsetor', sorted(acoes['Subsetor Bovespa'].unique()))
+    subsetor = st.sidebar.multiselect('Subsetor', sorted(acoes['Subsetor Bovespa'].unique()))
 
     # seleção de ações
     # acoes filtradas pelo subsetor
@@ -107,7 +115,7 @@ if not exibir_introducao:
     filtro_subsetor = filtro_subsetor[valores_fixos] # mantem os valores que nao estao em 'acoes_erro'
 
     # filtro de acoes depois de selecionados os subsetores
-    selecionar_acoes = st.sidebar.multiselect('Selecione as ações', sorted(filtro_subsetor['Código'] + '.SA'))
+    selecionar_acoes = st.sidebar.multiselect('Ações', sorted(filtro_subsetor['Código'] + '.SA'))
     st.set_option('deprecation.showPyplotGlobalUse', False)
 
     # ---------------- Dados das ações selecionadas ---------------- #
@@ -165,24 +173,34 @@ if not exibir_introducao:
         # ln(retorno_t / retorno_t-1)
         st.write('---')
         st.header('Médias dos retornos de cada ação:')
-        st.markdown('''Foi utilizado o retorno contínuo para o cálculo do retorno de cada ação, em seguida, foi-se calculada a média.''')
+        st.markdown('''Foi utilizado o retorno contínuo para o cálculo do retorno de cada ação, em seguida, 
+                    foi-se calculada a média para cada ação.\n''')
         tabela_retorn = tabela_norm.pct_change().dropna() # aqui se faz a formula norma de variacao percentual: 'Valor f/Valor i - 1 '
         retorno_contiuo = np.log(tabela_retorn + 1) # aqui soma-se 1 para ficar apenas a divisao entre 'Valor f/Valor i' e o LN é aplicado nessa divisão
-        
+
         def media(i):
             return i.mean()
         media_retor = retorno_contiuo.apply(media, axis = 0) # compara os valores das linhas
 
         for i, z in zip(media_retor, selecionar_acoes):
             porcent = i * 100
-            # st.latex(rf'''\text{{{z}: {i:.4f}\%}}''')
-            st.markdown(f'**{z}** &mdash; {round(i*100,4)} %')
-            # st.write(z, ": ", i*100, '%')
+            if porcent > 0:
+                st.markdown(f'**{z}** &mdash; {round(i*100,4)} % :white_check_mark:  ')
+            elif porcent < 0:
+                st.markdown(f'**{z}** &mdash; {round(i*100,4)} % :warning:')
+            elif porcent == 0:
+                st.markdown(f'**{z}** &mdash; {round(i*100,4)} % :warning:')
+        
         matriz_corr = tabela_retorn.corr() # para o modelo de markowitz é bom ter acoes com alta correlação negativa ! ver video: https://www.youtube.com/watch?v=Y1E73SQPD1U
 
         st.write('---')
         st.header('Matriz de correlação:')
-        st.markdown('''Quanto menor a correlação entre os ativos ou até mesmo quanto mais negativa, menor será o risco dessa carteira se comparada aos ativos individuais ''')
+        st.markdown('''Retorno e risco possuem uma correlação positiva, ou seja, se um fator aumenta, o outro fator tende a aumentar também.
+                    A correlação explica o grau de relação entre os preços.
+                    Deve-se evitar ativos com grau de correlação positiva, pois convergem mais intenasmento no mesmo sentido, tanto do lado positivo como do lado negativo.
+                    Quanto menor for o coeficiente de correlção entre os ativos em questão, maior será a diversificação dos riscos.
+                    Quanto menor a correlação entre os ativos ou até mesmo quanto mais negativa,
+                    menor será o risco dessa carteira se comparada aos ativos individuais ''')
         heatmap_retorn = px.imshow(matriz_corr, text_auto=True)
         st.plotly_chart(heatmap_retorn)
 
@@ -202,7 +220,7 @@ if not exibir_introducao:
 
     # ---------------- Simulação ---------------- #
     fator_periodicidade = []
-    numero_portfolios = st.sidebar.number_input('Insira o número de portfolios')
+    numero_portfolios = st.sidebar.number_input('Número de portfolios')
     def parametros_portofolio (numero_portfolios):
             
         tabela_retorn_esperados = np.zeros(numero_portfolios)
