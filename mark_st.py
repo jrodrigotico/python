@@ -13,39 +13,33 @@ import plotly.graph_objects as go
 from scipy.optimize import minimize
 import warnings
 import scipy.interpolate as interp
+import datetime as dt
 
 
 # ---------------- Anotações ---------------- # 
-# arrumar datas nas tabelas
-# ver se consegue tirar o 'empty' da tabela
 # streamlit run mark_st.py
+# as datas sao agora de 16-01-2013 ate 30-11-2023 que é o período que tem de taxa selic, para ficar tudo igual
 # https://www.youtube.com/watch?v=Y1E73SQPD1U
 # https://www.youtube.com/watch?v=BchQuTJvRAs
 # https://www.linkedin.com/pulse/modern-portfolio-theory-python-building-optimal-web-app-phuaphan-oyhhc/
 # https://modern-portfolio-theory.streamlit.app
 # https://analisemacro.com.br/mercado-financeiro/selecao-de-carteira-e-teoria-de-markowitz/ - riskfolio
 # https://medium.com/@rodrigobercinimartins/como-extrair-dados-da-bovespa-sem-gastar-nada-com-python-14a03454a720 - yahoo query
-# https://www.youtube.com/watch?v=rxWkIn1EZnM&t=236s - pie chart streamlit
 # https://streamlit-emoji-shortcodes-streamlit-app-gwckff.streamlit.app - emojis
 # https://lume.ufrgs.br/bitstream/handle/10183/60625/000863146.pdf?sequence=1 - tcc ufrgs
 # https://investidorsardinha.r7.com/aprender/fronteira-eficiente/ - importancia da fronteira eficiente
 # fonte dos tickers e segmento = Economática 14/12/2023, a empresa Allos foi classificado como 'Outros' no Subsetor Bovespa
 # Acoes com problemas:  OIBR3 (da retorno inf), MMAQ3 ( nan na media dos retornos)
 # se eu adicionar uma acao que nao comeca no mesmo intervalo de tempo, da problema no indice de sharpe que fica 'nan', ex: 'AGXY3'
-# dados economatica = 01/01/2013 até 01/11/2023
 # carteira de maior retorno é a carteira em que 100% do capital está no ativo de maior retorno
-# carteira de mínima variancia é a carteira que seria o ponto de inflexao da curva, seria bem no meio da curva
-# papaer: V = variância da carteira , E = retorno da carteira
+# paper: V = variância da carteira , E = retorno da carteira
 # sigma = σ = covariancia
 
 # Textos - rascunho
 #  ****(μi, σij) 
 # O símbolo "μi" representa a média ou o valor esperado de uma variável aleatória "i"
-# "σij" sugere uma matriz de covariância ou uma medida que captura a variabilidade conjunta entre as variáveis "i" e "j". Isso implica que há uma relação ou dependência entre essas variáveis.
-
-# ***** indice de sharpe negativo
-# Se, por acaso, o ativo em análise apresentar um Sharpe negativo, isso indica que o retorno
-#  da aplicação não compensa o seu risco, que é representado pela volatilidade
+# "σij" sugere uma matriz de covariância ou uma medida que captura a variabilidade conjunta entre as variáveis "i" e "j". 
+#   Isso implica que há uma relação ou dependência entre essas variáveis.
 
 
 # ---------------- Arquivos ---------------- # 
@@ -55,6 +49,8 @@ yf.pdr_override() #corrige problemas da bibliotece do pandas_datareader
 acoes = pd.read_csv('https://raw.githubusercontent.com/jrodrigotico/python/projeto_acoes/base_completa_acoes_subsetor.csv', sep=';')[['Código','Subsetor Bovespa']]
 acoes = acoes[acoes['Código'].apply(lambda x: len(str(x))==5)]
 
+selic = pd.read_csv('https://raw.githubusercontent.com/jrodrigotico/python/projeto_acoes/selic.csv', sep=';')
+selic['Data'] = pd.to_datetime(selic['Data'])
 
 # ---------------- Introducao ---------------- # 
 def introducao(): # funcao para exibir a introducao e seus componentes
@@ -86,15 +82,19 @@ if exibir_introducao:
         st.session_state['exibir_introducao'] = False # transforma a chave em falsa
         st.experimental_rerun() # recarrega a página
 
+
 # --------- Código geral ---------- #
 if not exibir_introducao:
     st.sidebar.header('Parâmetros')
 
-    data_i = st.sidebar.date_input('Data inicial', format='YYYY-MM-DD', value=None)
+    data_minima = dt.date(2013,1,16)
+    data_maxima = dt.date(2023,11,30)
+
+    data_i = st.sidebar.date_input('Data inicial', format='YYYY-MM-DD', value=None, min_value=data_minima, max_value=data_maxima)
     data_i = pd.Timestamp(data_i)
-    data_f = st.sidebar.date_input('Data final',  format='YYYY-MM-DD', value=None)
+    data_f = st.sidebar.date_input('Data final',  format='YYYY-MM-DD', value=None, min_value=data_minima, max_value=data_maxima)
     data_f = pd.Timestamp(data_f)
-    peridiocidade = st.sidebar.selectbox('Peridiocidade', ('Diário', 'Mensal'))
+    peridiocidade = st.sidebar.selectbox('Peridiocidade', ('Diário', 'Mensal', 'Anual'))
 
     # seleção de subsetor da empresa
     subsetor = st.sidebar.multiselect('Subsetor', sorted(acoes['Subsetor Bovespa'].unique()))
@@ -127,7 +127,6 @@ if not exibir_introducao:
 
     if selecionar_acoes:
         for i in selecionar_acoes:
-            # tabela_acao = round(yf.download(i, start=data_i, end=data_f)['Adj Close'].resample('M').last(),2)
             try:
                 tabela_acao = round(yf.download(i, start=data_i, end=data_f)["Adj Close"].rename(i), 2)
             except:
@@ -157,7 +156,7 @@ if not exibir_introducao:
         for i in tabela.columns:
             if i in valores_iniciais and i in indices_iniciais: # normaliza usando o primeiro valor válido de cada ação, se disponível
                 first_valid_index = indices_iniciais[i]
-                tabela_norm[i[:5]] = round(tabela[i] / valores_iniciais[i], 2)
+                tabela_norm[i[:5]] = round(tabela[i] / valores_iniciais[i], 2) # ignora o '.SA'
             else:
                 first_valid_index = tabela[i].first_valid_index()
                 if first_valid_index:
@@ -212,9 +211,6 @@ if not exibir_introducao:
     # DI - Depósito Interfinanceiro - Taxas - DI PRÉ - Over
     # SELIC
     # 16/01/2013 até 30/11/2023 , fonte B3
-    selic = pd.read_csv('https://raw.githubusercontent.com/jrodrigotico/python/projeto_acoes/selic.csv', sep=';')
-    selic['Data'] = pd.to_datetime(selic['Data'])
-
     selic = selic.loc[(selic['Data'] >= data_i) & (selic['Data'] <= data_f)]
     selic['Taxa SELIC'] = selic['Taxa SELIC'].str.replace(',','.').astype(float)    
     ret_livre = selic['Taxa SELIC'].dropna().mean()/100
@@ -275,7 +271,6 @@ if not exibir_introducao:
         st.plotly_chart(graph_pizza)
 
         # restrições PPL para curva de fronteira eficiente
-
         def pegando_retorno (peso_teste):
             peso_teste = np.array(peso_teste)
             retorno = np.sum(media_retor * peso_teste) * fator_periodicidade
@@ -306,10 +301,14 @@ if not exibir_introducao:
         st.write('---')
 
         st.header(f'Gráfico com a simulação de {numero_portfolios} carteiras: ') 
-        st.markdown(f'Taxa livre de risco (SELIC) média: {round(ret_livre,4)}')   
+        st.markdown(f'Taxa livre de risco (SELIC) média: {round(ret_livre*100,4)}%')   
 
         sharpe_max = ((tabela_retorn_esperados_aritm[indice_sharpe_max] - ret_livre) / tabela_volatilidades_esperadas[indice_sharpe_max])
-        st.markdown(f'Índice de Sharpe Máximo: {round(sharpe_max,4)}')
+        if sharpe_max >0:
+            st.markdown(f'Índice de Sharpe Máximo: {round(sharpe_max,4)} :white_check_mark:')
+        else:
+            st.markdown(f'Índice de Sharpe Máximo: {round(sharpe_max,4)} :warning:')
+        
         if sharpe_max>0:
             st.write(f'O índice de Sharpe de {round(sharpe_max,4)} diz que para cada 1 ponto de risco, o investidor obteve um retorno positivo de {round(sharpe_max,4)}. Com isso o investimento na carteira compensa o risco.')
         elif sharpe_max<0:
@@ -340,11 +339,11 @@ if not exibir_introducao:
         st.text('\n')
 
         st.markdown('''A Hipérbole de Markowitz, ou Fronteira Eficiente, mostra as várias combinações de carteiras considerando
-                    um conjunto de ativos. Matemática falando, esse conceito revela a importância da diversificação na construção
+                    um conjunto de ativos. Matematicamente falando, esse conceito revela a importância da diversificação na construção
                     de uma carteira ao analisar a relação entre retorno e risco.''')
         st.text('\n')
         st.markdown('''A teoria de Markowitz evidencia que o desempenho conjunto de ativos dentro de uma carteira
-                    é superior ao desempenho desses mesmos ativos quando analisados individualmente. Isso destaca a relevância da interação
+                    é superior ao desempenho desses mesmos ativos quando analisados individualmente. Isso enfatiza a relevância da interação
                     e do equilíbrio entre diferentes investimentos para otimizar tanto o potencial de retorno quanto a redução do risco
                     associado a uma carteira de investimentos. ''')
 
