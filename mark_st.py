@@ -12,6 +12,7 @@ import plotly.colors as pcolors
 import plotly.graph_objects as go
 from scipy.optimize import minimize
 import warnings
+import scipy.interpolate as interp
 
 
 # ---------------- Anotações ---------------- # 
@@ -27,6 +28,7 @@ import warnings
 # https://www.youtube.com/watch?v=rxWkIn1EZnM&t=236s - pie chart streamlit
 # https://streamlit-emoji-shortcodes-streamlit-app-gwckff.streamlit.app - emojis
 # https://lume.ufrgs.br/bitstream/handle/10183/60625/000863146.pdf?sequence=1 - tcc ufrgs
+# https://investidorsardinha.r7.com/aprender/fronteira-eficiente/ - importancia da fronteira eficiente
 # fonte dos tickers e segmento = Economática 14/12/2023, a empresa Allos foi classificado como 'Outros' no Subsetor Bovespa
 # Acoes com problemas:  OIBR3 (da retorno inf), MMAQ3 ( nan na media dos retornos)
 # se eu adicionar uma acao que nao comeca no mesmo intervalo de tempo, da problema no indice de sharpe que fica 'nan', ex: 'AGXY3'
@@ -70,7 +72,7 @@ def introducao(): # funcao para exibir a introducao e seus componentes
                     do cenário econômico como um todo.''')
     st.text('\n')
     introducao.markdown('''Markowitz é o principal responsável por introduzir conceitos de diversificação de ativos, 
-                    contribuindo significativamente para o aprimoramento das estratégias de investimento''')
+                    contribuindo significativamente para o aprimoramento das estratégias de investimentos''')
     
     # Fonte: The Nobel Prize
     introducao.image('intro_markow.jpg', caption='Fonte: The Nobel Prize')
@@ -79,7 +81,6 @@ exibir_introducao = st.session_state.get('exibir_introducao', True)
 
 if exibir_introducao:
     introducao()
-
     # remove a introdução
     if st.button('Simulação de Carteiras :bar_chart: '):
         st.session_state['exibir_introducao'] = False # transforma a chave em falsa
@@ -93,7 +94,7 @@ if not exibir_introducao:
     data_i = pd.Timestamp(data_i)
     data_f = st.sidebar.date_input('Data final',  format='YYYY-MM-DD', value=None)
     data_f = pd.Timestamp(data_f)
-    peridiocidade = st.sidebar.selectbox('Peridiocidade', ('Diário', 'Mensal', 'Anual'))
+    peridiocidade = st.sidebar.selectbox('Peridiocidade', ('Diário', 'Mensal'))
 
     # seleção de subsetor da empresa
     subsetor = st.sidebar.multiselect('Subsetor', sorted(acoes['Subsetor Bovespa'].unique()))
@@ -186,21 +187,22 @@ if not exibir_introducao:
             porcent = i * 100
             if porcent > 0:
                 st.markdown(f'**{z}** &mdash; {round(i*100,4)} % :white_check_mark:  ')
-            elif porcent < 0:
+            else:
                 st.markdown(f'**{z}** &mdash; {round(i*100,4)} % :warning:')
-            elif porcent == 0:
-                st.markdown(f'**{z}** &mdash; {round(i*100,4)} % :warning:')
-        
+
         matriz_corr = tabela_retorn.corr() # para o modelo de markowitz é bom ter acoes com alta correlação negativa ! ver video: https://www.youtube.com/watch?v=Y1E73SQPD1U
 
         st.write('---')
         st.header('Matriz de correlação:')
-        st.markdown('''Retorno e risco possuem uma correlação positiva, ou seja, se um fator aumenta, o outro fator tende a aumentar também.
-                    A correlação explica o grau de relação entre os preços.
-                    Deve-se evitar ativos com grau de correlação positiva, pois convergem mais intenasmento no mesmo sentido, tanto do lado positivo como do lado negativo.
-                    Quanto menor for o coeficiente de correlção entre os ativos em questão, maior será a diversificação dos riscos.
-                    Quanto menor a correlação entre os ativos ou até mesmo quanto mais negativa,
+        st.markdown('''A correlação explica o grau de relação entre os ativos.''')
+        st.text('\n')
+        st.markdown('''Deve-se evitar ativos com grau de correlação positiva, pois convergem mais intensamente no mesmo sentido,
+                    tanto do lado positivo como do lado negativo, portanto quanto menor for o coeficiente de correlação entre os ativos
+                    maior será a diversificação.''')
+        st.text('\n')
+        st.markdown('''Quanto menor a correlação entre os ativos ou até mesmo quanto mais negativa,
                     menor será o risco dessa carteira se comparada aos ativos individuais ''')
+        
         heatmap_retorn = px.imshow(matriz_corr, text_auto=True)
         st.plotly_chart(heatmap_retorn)
 
@@ -222,7 +224,7 @@ if not exibir_introducao:
     fator_periodicidade = []
     numero_portfolios = st.sidebar.number_input('Número de portfolios')
     def parametros_portofolio (numero_portfolios):
-            
+    
         tabela_retorn_esperados = np.zeros(numero_portfolios)
         tabela_volatilidades_esperadas = np.zeros(numero_portfolios)
         tabela_sharpe = np.zeros(numero_portfolios)
@@ -261,20 +263,22 @@ if not exibir_introducao:
         st.plotly_chart(graph_pizza2)
 
         st.header('Carteira ótima:')
-        st.markdown('''Para a determinação da carteira ótima foi utilizado o 'Índice de Sharpe'.  O ponto que representa a carteira ótima
-                        mostra a combinação de ativos para ter um ganho a partir de uma taxa livre de risco.''')    
+        st.markdown('''Para a determinação da carteira ótima foi utilizado o 'Índice de Sharpe'.''')
+        st.text('\n')            
+        st.markdown('''O ponto que representa a carteira ótima
+                        mostra a combinação de ativos para ter um ganho a partir de uma taxa livre de risco, ou seja, existe uma carteira
+                        de ativos com alta chance de ser preferível às demais combinações de carteiras no mercado.''')    
         
         legenda = selecionar_acoes
         valores_cart_max_retorno = carteira_max_retorno
         graph_pizza = go.Figure(data=[go.Pie(labels=legenda, values =valores_cart_max_retorno )])
         st.plotly_chart(graph_pizza)
 
-        # st.write('---') 
-
         # restrições PPL para curva de fronteira eficiente
+
         def pegando_retorno (peso_teste):
             peso_teste = np.array(peso_teste)
-            retorno = np.sum(media_retor * peso_teste) * 252
+            retorno = np.sum(media_retor * peso_teste) * fator_periodicidade
             retorno = np.exp(retorno) - 1 # aqui estou passando os retornos para aritmeticos
             return retorno
         
@@ -283,52 +287,66 @@ if not exibir_introducao:
         
         def pegando_vol(peso_teste):
             peso_teste = np.array(peso_teste)
-            vol = np.sqrt(np.dot(peso_teste.T, np.dot(matriz_corr * 252, peso_teste)))
+            vol = np.sqrt(np.dot(peso_teste.T, np.dot(matriz_corr * fator_periodicidade, peso_teste)))
             return vol
         
         peso_inicial = [1/len(selecionar_acoes)] * len(selecionar_acoes)  # pesos iguais para todas as acoes
         limites = tuple([(0,1) for i in selecionar_acoes])   # aqui nenhuma acao pode ter mais que 100%
         
-        eixo_x_fronteira_eficiente = []
-        fronteira_eficiente_y = np.linspace(tabela_retorn_esperados_aritm.min(), tabela_retorn_esperados_aritm.max(), 50 ) 
-
         # fronteira eficiente com as restrições
+        eixo_x_fronteira_eficiente = []
+        fronteira_eficiente_y = np.linspace(tabela_retorn_esperados_aritm.min(), tabela_retorn_esperados_aritm.max(), 50)
+
         for retorno_possivel in fronteira_eficiente_y:
-            restricoes = ({'type':'eq', 'fun':checando_soma_pesos}, {'type':'eq', 'fun' : lambda weight: pegando_retorno(weight) - retorno_possivel}) # é um dicionario de restricoes, quando a igualdade ('eq') for zero é pq a restricao fo satisfeita
-            
+            restricoes = ({'type':'eq', 'fun':checando_soma_pesos},
+                        {'type':'eq', 'fun' : lambda weight: pegando_retorno(weight) - retorno_possivel}) # é um dicionario de restricoes, quando a igualdade ('eq') for zero é pq a restricao fo satisfeita
             result = minimize(pegando_vol, peso_inicial, method='SLSQP', bounds = limites, constraints = restricoes)
             eixo_x_fronteira_eficiente.append(result['fun'])
-
+        
         st.write('---')
-        
+
         st.header(f'Gráfico com a simulação de {numero_portfolios} carteiras: ') 
-        # st.latex(rf'''\text{{Taxa livre de risco (SELIC) média: {ret_livre*100:.4f}\%}}''')
         st.markdown(f'Taxa livre de risco (SELIC) média: {round(ret_livre,4)}')   
-        
+
         sharpe_max = ((tabela_retorn_esperados_aritm[indice_sharpe_max] - ret_livre) / tabela_volatilidades_esperadas[indice_sharpe_max])
-        # st.latex(rf'''\text{{Índice de Sharpe Máximo: {sharpe_max}}}''')
         st.markdown(f'Índice de Sharpe Máximo: {round(sharpe_max,4)}')
         if sharpe_max>0:
             st.write(f'O índice de Sharpe de {round(sharpe_max,4)} diz que para cada 1 ponto de risco, o investidor obteve um retorno positivo de {round(sharpe_max,4)}. Com isso o investimento na carteira compensa o risco.')
         elif sharpe_max<0:
-            st.write(f'O índice de Sharpe de {sharpe_max} diz que para cada 1 ponto de risco, o investidor obteve um retorno negativo de {sharpe_max}. Com isso o investimento na carteira não compensa o risco.')
+            st.write(f'O índice de Sharpe de {round(sharpe_max,4)} diz que para cada 1 ponto de risco, o investidor obteve um retorno negativo de {round(sharpe_max,4)}. Com isso o investimento na carteira não compensa o risco.')
         elif sharpe_max=='nan':
             st.write('Algum ativo escolhido apresenta média de retorno igual a zero ou nan')
 
-        # grafico interativo com a fronteira eficiente
+        # grafico interativo
         carteiras_simulacao = go.Scatter(x=tabela_volatilidades_esperadas,y=tabela_retorn_esperados_aritm,mode='markers',
             marker=dict(size=8, color=tabela_sharpe, colorscale='Viridis'), name = 'Carteiras simuladas')
-        
+
         carteira_max_sharpe = go.Scatter(x=[tabela_volatilidades_esperadas[indice_sharpe_max]], y=[tabela_retorn_esperados_aritm[indice_sharpe_max]],
             mode='markers', marker= dict(size=12, color='red'), name = 'Carteira com o melhor Índice de Sharpe')
-        
+
         carteira_min_variancia = go.Scatter(x=[tabela_volatilidades_esperadas[menor_risco]], y=[tabela_retorn_esperados_aritm[menor_risco]],
             mode='markers', marker= dict(size=12, color='pink'), name = 'Carteira de mínima variância') # essa carteira é importante lembrar do ponto de 'inflexão'
 
-        layout = go.Layout(xaxis= dict(title='Risco esperado'), yaxis= dict(title='Retorno esperado'))
-        pontos_dispersao = [carteiras_simulacao, carteira_max_sharpe, carteira_min_variancia]
+        fronteira_eficiente = go.Scatter(x=eixo_x_fronteira_eficiente, y=fronteira_eficiente_y,
+                                    mode='lines', line=dict(color='green', width=2),
+                                    name='Fronteira Eficiente')
+        
+        # Criação do gráfico Plotly com todos os dados
+        layout = go.Layout(xaxis=dict(title='Risco esperado'), yaxis=dict(title='Retorno esperado'))
+        pontos_dispersao = [carteiras_simulacao, carteira_max_sharpe, carteira_min_variancia, fronteira_eficiente]
         fig = go.Figure(data=pontos_dispersao, layout=layout)
         st.plotly_chart(fig)
+
+        st.text('\n')
+
+        st.markdown('''A Hipérbole de Markowitz, ou Fronteira Eficiente, mostra as várias combinações de carteiras considerando
+                    um conjunto de ativos. Matemática falando, esse conceito revela a importância da diversificação na construção
+                    de uma carteira ao analisar a relação entre retorno e risco.''')
+        st.text('\n')
+        st.markdown('''A teoria de Markowitz evidencia que o desempenho conjunto de ativos dentro de uma carteira
+                    é superior ao desempenho desses mesmos ativos quando analisados individualmente. Isso destaca a relevância da interação
+                    e do equilíbrio entre diferentes investimentos para otimizar tanto o potencial de retorno quanto a redução do risco
+                    associado a uma carteira de investimentos. ''')
 
 
     # ---------------- Simulação ativada e principais fórmulas ---------------- #   
