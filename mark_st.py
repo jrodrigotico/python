@@ -192,13 +192,13 @@ if not exibir_introducao:
 
         st.write('---')
         st.header('Matriz de correlação:')
-        st.markdown('''A correlação explica o grau de relação entre os ativos.''')
+        st.markdown('''A partir dos retornos de cada ativo, é possível calcular a correlação entre eles. A correlação explica
+                    o grau de relação entre os ativos.''')
         st.text('\n')
         st.markdown('''Deve-se evitar ativos com grau de correlação positiva, pois convergem mais intensamente no mesmo sentido,
-                    tanto do lado positivo como do lado negativo, portanto quanto menor for o coeficiente de correlação entre os ativos
-                    maior será a diversificação.''')
+                    tanto do lado positivo como do lado negativo.''')
         st.text('\n')
-        st.markdown('''Quanto menor a correlação entre os ativos ou até mesmo quanto mais negativa,
+        st.markdown('''Portanto, quanto menor a correlação entre os ativos ou até mesmo quanto mais negativa,
                     menor será o risco dessa carteira se comparada aos ativos individuais ''')
         
         heatmap_retorn = px.imshow(matriz_corr, text_auto=True)
@@ -289,7 +289,7 @@ if not exibir_introducao:
         
         # fronteira eficiente com as restrições
         eixo_x_fronteira_eficiente = []
-        fronteira_eficiente_y = np.linspace(tabela_retorn_esperados_aritm.min(), tabela_retorn_esperados_aritm.max(), 50)
+        fronteira_eficiente_y = np.linspace(tabela_retorn_esperados_aritm.min(), tabela_retorn_esperados_aritm.max(), 200)
 
         for retorno_possivel in fronteira_eficiente_y:
             restricoes = ({'type':'eq', 'fun':checando_soma_pesos},
@@ -309,9 +309,13 @@ if not exibir_introducao:
             st.markdown(f'Índice de Sharpe Máximo: {round(sharpe_max,4)} :warning:')
         
         if sharpe_max>0:
-            st.write(f'O índice de Sharpe de {round(sharpe_max,4)} diz que para cada 1 ponto de risco, o investidor obteve um retorno positivo de {round(sharpe_max,4)}. Com isso o investimento na carteira compensa o risco.')
+            st.write(f'O índice de Sharpe de {round(sharpe_max,4)} diz que para cada 1 ponto de risco,
+                    o investidor obteve um retorno positivo de {round(sharpe_max,4)} pontos de rentabilidade acima da rentabilidade que
+                    esse investidor teria caso optasse por investir em um ativo livre de risco.
+                    Com isso o investimento na carteira compensa o risco.')
         elif sharpe_max<0:
-            st.write(f'O índice de Sharpe de {round(sharpe_max,4)} diz que para cada 1 ponto de risco, o investidor obteve um retorno negativo de {round(sharpe_max,4)}. Com isso o investimento na carteira não compensa o risco.')
+            st.write(f'O índice de Sharpe de {round(sharpe_max,4)} diz que para cada 1 ponto de risco,
+                    o investidor obteve um retorno negativo de {round(sharpe_max,4)}. Com isso o investimento na carteira não compensa o risco.')
         elif sharpe_max=='nan':
             st.write('Algum ativo escolhido apresenta média de retorno igual a zero ou nan')
 
@@ -336,10 +340,12 @@ if not exibir_introducao:
         st.plotly_chart(fig)
 
         st.text('\n')
-
         st.markdown('''A Hipérbole de Markowitz, ou Fronteira Eficiente, mostra as várias combinações de carteiras considerando
                     um conjunto de ativos. Matematicamente falando, esse conceito revela a importância da diversificação na construção
                     de uma carteira ao analisar a relação entre retorno e risco.''')
+        st.text('\n')
+        st.markdown('''Os pares ordenados abaixo do par ordenado da carteira de mínima variância, representam portófilios não eficientes, devido
+                    ao fato de que há um aumento do risco e diminuição do retorno''')
         st.text('\n')
         st.markdown('''A teoria de Markowitz evidencia que o desempenho conjunto de ativos dentro de uma carteira
                     é superior ao desempenho desses mesmos ativos quando analisados individualmente. Isso enfatiza a relevância da interação
