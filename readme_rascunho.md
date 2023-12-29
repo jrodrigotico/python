@@ -11,9 +11,6 @@ https://www.alura.com.br/artigos/escrever-bom-readme - geral e bom
 https://clipchamp.com/pt-br/ - gerador de gifs 
 
 
-
-
-
 # ------------------- estrutura rascunho ------------------- #
 Título e Imagem de capa;
 Badges (data da ultima versão, licença, status do projeto );
