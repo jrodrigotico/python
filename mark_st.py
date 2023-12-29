@@ -1,10 +1,10 @@
+# ---------------- Anotações ---------------- # 
 import pandas as pd
 import yfinance as yf
 import pandas_datareader as pdr
 import numpy as np
 import matplotlib.pyplot as mplt
 import seaborn as sn
-import datetime
 import streamlit as st
 import os
 import plotly.express as px
@@ -12,7 +12,6 @@ import plotly.colors as pcolors
 import plotly.graph_objects as go
 from scipy.optimize import minimize
 import warnings
-import scipy.interpolate as interp
 import datetime as dt
 
 
@@ -45,7 +44,7 @@ import datetime as dt
 # ---------------- Arquivos ---------------- # 
 # tickers acoes existentes (o ideal seria fazer um web scrapping na B3 ou consumir uma api da B3, pq com um arquivo fica muito travado)
 # https://www.dadosdemercado.com.br/bolsa/acoes , att: Cotações atualizadas no fechamento de 24/11/2023.
-yf.pdr_override() #corrige problemas da bibliotece do pandas_datareader
+# yf.pdr_override() #corrige problemas da bibliotece do pandas_datareader
 acoes = pd.read_csv('https://raw.githubusercontent.com/jrodrigotico/python/projeto_acoes/base_completa_acoes_subsetor.csv', sep=';')[['Código','Subsetor Bovespa']]
 acoes = acoes[acoes['Código'].apply(lambda x: len(str(x))==5)]
 
