@@ -61,9 +61,9 @@ def introducao(): # funcao para exibir a introducao e seus componentes
                     julgamento profissional na escolha dos ativos, utilizando critérios específicos que não são contemplados nos cálculos 
                     matemáticos formais. Essa abordagem viabiliza o cálculo de combinações de 'retorno' e 'risco'.''')
     st.text('\n')
-    introducao.markdown('''Essa teoria tem como principal objetivo diminuir o 'Risco Diversificável', que consiste 
+    introducao.markdown('''Essa teoria tem como principal objetivo diminuir o 'Risco diversificável', que consiste 
                     no risco que pode ser eliminado por meio da diversificação da carteira de investimentos. Diferentemente 
-                    do 'Risco Não-Diversificável', que não pode ser eliminado pela diversificação, pois suas flutuações dependem 
+                    do 'Risco não-diversificável', que não pode ser eliminado pela diversificação, pois suas flutuações dependem 
                     do cenário econômico como um todo.''')
     st.text('\n')
     introducao.markdown('''Markowitz é o principal responsável por introduzir conceitos de diversificação de ativos, 
@@ -115,7 +115,7 @@ if not exibir_introducao:
     filtro_subsetor = filtro_subsetor[valores_fixos] # mantem os valores que nao estao em 'acoes_erro'
 
     # filtro de acoes depois de selecionados os subsetores
-    selecionar_acoes = st.sidebar.multiselect('Ações', sorted(filtro_subsetor['Código'] + '.SA'))
+    selecionar_acoes = st.sidebar.multiselect('Ações', sorted(filtro_subsetor['Código'] + '.SA'), help='Esperar gráfico de uma ação ser plotado antes de selecionar outra ação!')
     st.set_option('deprecation.showPyplotGlobalUse', False)
 
     # ---------------- Dados das ações selecionadas ---------------- #
