@@ -8,22 +8,26 @@ https://github.com/m-ballabio1/mehedi-app - exemplo de instalação de requireme
 https://shields.io - badges
 https://blog.rocketseat.com.br/como-fazer-um-bom-readme/ - blog importante e que explica tudo
 https://www.alura.com.br/artigos/escrever-bom-readme - geral e bom
-https://www.acethinker.com.br/gravador-de-tela-gratis-online - gerador de gifs
+https://clipchamp.com/pt-br/ - gerador de gifs 
+
+
 
 
 
 # ------------------- estrutura rascunho ------------------- #
 Título e Imagem de capa;
-Badges;
+Badges (data da ultima versão, licença, status do projeto );
 Descrição do Projeto;
 Índice;
-Status do Projeto; (caso nao tenha a badge de versionamento ou status)
-Funcionalidades e Demonstração da Aplicação; (aqui vai o gif, print ou vídeo)
-Acesso ao Projeto; (como foi pelo streamlit, só indicar o link e colocar a cora e 'open streamlit')
+Data Scrapping (citar os arquivos e como foi editado, posso usar outro código demonstrando o tratamento dos dados, nao esquecer das fontes e datas);
+Funcionalidades e Demonstração da Aplicação; (aqui vai o gif, print ou vídeo e uma descrição);
+Acesso ao Projeto; (como foi pelo streamlit, só indicar o link e colocar a cora e 'open streamlit');
 Tecnologias utilizadas;
-Estrutura do repositório; (fazer uma tabela e organizar)
-Contact me e: 'Don't forget to ⭐️ the repo 👆 so you can find it easily later.' (colocar linkedin e me apresentar)
-Licença 
+Estrutura do repositório; (fazer uma tabela e organizar);
+Contact me (colocar linkedin e me apresentar);
+
+* 'Don't forget to ⭐️ the repo 👆 so you can find it easily later.'
+
 
 # ------------------- exemplos ------------------- #
 # Descrição do Projeto
