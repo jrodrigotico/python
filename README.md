@@ -5,7 +5,6 @@
 :office: Projeto em desenvolvimento
 
 
-
 ## Teoria Moderna de Portfólio - Markowitz
 Essa teoria tem como principal objetivo diminuir o 'Risco diversificável', que consiste 
 no risco que pode ser eliminado por meio da diversificação da carteira de investimentos. Diferentemente 
@@ -48,9 +47,13 @@ Access the app in your browser at http://localhost:8501
 | ------------- | ------------- |
 | arquivos | Arquivos no formato '.csv' que são utilizados em 'mark_st.py' |
 | mark_st.py | Aplicação web utilizando Streamlit |
-| requirements.txt | Contém todos os 'requirements' necessários para o deploy |
+| requirements.txt | Dependências do projeto |
 
-## Contato
+
+## Contato e Feedback
+Your feedback is valuable! If you encounter any issues, have suggestions for improvements, or would like to contribute to this project, please post an issue in the project repository.
 colocar linkedin 
+
+
 
 
