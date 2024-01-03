@@ -22,8 +22,6 @@ gif, falar brevemente da utilidade e funcionalidades
 
 
 ## Acesso ao aplicativo
-Pode-se acessar do projeto pelo link:...................
-
 Clone do repositório:
 
 ```
@@ -36,7 +34,7 @@ Instalação das depedências:
 pip install -r requirements.txt
 ```
 
-Rodar o aplicativo Streamlit pelo terminal:
+Rodar o script 'mark_st.py' e aplicar o seguinte comando no terminal:
 ```
 streamlit run mark_st.py
 ```
