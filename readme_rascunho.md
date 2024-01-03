@@ -7,6 +7,7 @@ https://github.com/m-ballabio1/mehedi-app - exemplo de boa organização
 https://github.com/m-ballabio1/mehedi-app - exemplo de instalação de requirements pacotes python
 https://github.com/Hamagistral/de-zoomcamp-ui/tree/master/streamlit - exemplo multipage - exemplo bom de usage
 https://shields.io - badges
+https://github.com/alexandresanlim/Badges4-README.md-Profile - badges
 https://blog.rocketseat.com.br/como-fazer-um-bom-readme/ - blog importante e que explica tudo
 https://www.alura.com.br/artigos/escrever-bom-readme - geral e bom
 https://clipchamp.com/pt-br/ - gerador de gifs 

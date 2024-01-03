@@ -1,6 +1,7 @@
 ![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)
 ![Python Version](https://img.shields.io/badge/python-3.11.6-blue.svg)
 ![GitHub License](https://img.shields.io/github/license/jrodrigotico/python)
+https://img.shields.io/badge/VSCode-0078D4?style=for-the-badge&logo=visual%20studio%20code&logoColor=white
 <!-- ![Badge em Desenvolvimento](http://img.shields.io/static/v1?label=STATUS&message=EM%20DESENVOLVIMENTO&color=GREEN&style=for-the-badge) -->
 :office: Projeto em desenvolvimento
 
@@ -46,9 +47,9 @@ http://localhost:8501
 
 
 ## Tecnologias utilizadas
-- ``Python - 3.11.6``
-- ``API Yahoo Finance ( yfinance - v0.2.33)``
-- ``Streamlit``
+- ``Python - 3.11.6`` 	https://img.shields.io/badge/Python-FFD43B?style=for-the-badge&logo=python&logoColor=blue
+- ``API Yahoo Finance ( yfinance - v0.2.33)`` 
+- ``Streamlit`` https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=Streamlit&logoColor=white
 
 
 ## Estrutura do repositório
@@ -60,8 +61,9 @@ http://localhost:8501
 
 
 ## Contato e Feedback
-Para qualquer feedback, sugestão ou relato de problemas, sinta-se à vontade para entrar em contato comigo através do LinkedIn:
-https://www.linkedin.com/in/joão-rodrigo-lemes-5603a6154/.
+Para feedbacks, sugestão de melhorias ou relato de problemas, sinta-se à vontade para entrar em contato comigo através do LinkedIn:
+https://www.linkedin.com/in/joão-rodrigo-lemes-5603a6154/. 
+https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white
 
 
 
