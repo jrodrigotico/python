@@ -4,11 +4,22 @@
 <!-- ![Badge em Desenvolvimento](http://img.shields.io/static/v1?label=STATUS&message=EM%20DESENVOLVIMENTO&color=GREEN&style=for-the-badge) -->
 :office: Projeto em desenvolvimento
 
+
+
 ## Teoria Moderna de Portfólio - Markowitz
 Essa teoria tem como principal objetivo diminuir o 'Risco diversificável', que consiste 
 no risco que pode ser eliminado por meio da diversificação da carteira de investimentos. Diferentemente 
 do 'Risco não-diversificável', que não pode ser eliminado pela diversificação, pois suas flutuações dependem 
 do cenário econômico como um todo.
+
+
+## Acesso ao Aplicativo
+Pode-se acessar do projeto pelo link:...................
+
+
+## Tecnologias utilizadas
+- ``Python``
+- ``Streamlit``
 
 
 ## Estrutura do repositório
