@@ -24,19 +24,19 @@ gif, falar brevemente da utilidade e funcionalidades
 ## Acesso ao Aplicativo (Usage)
 Pode-se acessar do projeto pelo link:...................
 
-1. Clone do repositório:
+Clone do repositório:
 
 ```
 git clone https://github.com/jrodrigotico/python.git
 ```
 
-2. Instalação das depedências:
+Instalação das depedências:
 
 ```
 pip install -r requirements.txt
 ```
 
-3. Rodar o aplicativo Streamlit pelo terminal:
+Rodar o aplicativo Streamlit pelo terminal:
 ```
 streamlit run mark_st.py.py
 ```
@@ -60,8 +60,9 @@ http://localhost:8501
 
 
 ## Contato e Feedback
-Your feedback is valuable! If you encounter any issues, have suggestions for improvements, or would like to contribute to this project, please post an issue in the project repository.
-colocar linkedin 
+Para qualquer feedback, sugestão ou relato de problemas, sinta-se à vontade para entrar em contato comigo através do LinkedIn:
+https://www.linkedin.com/in/joão-rodrigo-lemes-5603a6154/.
+
 
 
 
