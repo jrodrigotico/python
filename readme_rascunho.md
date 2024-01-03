@@ -5,6 +5,7 @@ https://github.com/tdenzl/bulian - exemplo de estrutura do diretório
 https://github.com/chrieke/prettymapp?tab=readme-ov-file - exemplo de bom gif que ja esta linkado com o app
 https://github.com/m-ballabio1/mehedi-app - exemplo de boa organização
 https://github.com/m-ballabio1/mehedi-app - exemplo de instalação de requirements pacotes python
+https://github.com/Hamagistral/de-zoomcamp-ui/tree/master/streamlit - exemplo multipage - exemplo bom de usage
 https://shields.io - badges
 https://blog.rocketseat.com.br/como-fazer-um-bom-readme/ - blog importante e que explica tudo
 https://www.alura.com.br/artigos/escrever-bom-readme - geral e bom
