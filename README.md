@@ -1,7 +1,7 @@
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://streamlit.io)
 [![Python Version](https://img.shields.io/badge/python-3.11.6-blue.svg)](https://www.python.org/downloads/)
 ![GitHub License](https://img.shields.io/github/license/jrodrigotico/python)
- 
+
 :construction_worker: Projeto em desenvolvimento
 
 
@@ -17,11 +17,11 @@ Falar da selic, dos tickers retirados, de quais tickers foram colocados no subse
 em que há tratamento de dados como a inclusão do '.SA' (citar a api yfinance)...
 
 
-## Funcionalidades e Demonstração da Aplicação
+## Demonstração da aplicação
 gif, falar brevemente da utilidade e funcionalidades
 
 
-## Acesso ao Aplicativo
+## Acesso ao aplicativo
 Pode-se acessar do projeto pelo link:...................
 
 Clone do repositório:
