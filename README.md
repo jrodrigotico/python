@@ -1,6 +1,7 @@
-![GitHub License](https://img.shields.io/github/license/jrodrigotico/python)
 ![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)
 ![Python Version](https://img.shields.io/badge/python-3.11.6-blue.svg)
+![GitHub License](https://img.shields.io/github/license/jrodrigotico/python)
+<img src="http://img.shields.io/static/v1?label=STATUS&message=EM%20DESENVOLVIMENTO&color=RED&style=for-the-badge"/>
 
 ## Teoria Moderna de Portfólio - Markowitz
 Essa teoria tem como principal objetivo diminuir o 'Risco diversificável', que consiste 
@@ -9,7 +10,7 @@ do 'Risco não-diversificável', que não pode ser eliminado pela diversificaç�
 do cenário econômico como um todo.
 
 
-## Repository Structure
+## Estrutura do repositório
 | Arquivo | Conteúdo |
 | ------------- | ------------- |
 | arquivos | Arquivos no formato '.csv' que são utilizados em 'mark_st.py' |
