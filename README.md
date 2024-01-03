@@ -45,8 +45,8 @@ Access the app in your browser at http://localhost:8501
 ## Estrutura do repositório
 | Arquivo | Conteúdo |
 | ------------- | ------------- |
-| arquivos | Arquivos no formato '.csv' que são utilizados em 'mark_st.py' |
 | mark_st.py | Aplicação web utilizando Streamlit |
+| arquivos | Arquivos no formato '.csv' que são utilizados em 'mark_st.py' |
 | requirements.txt | Dependências do projeto |
 
 
