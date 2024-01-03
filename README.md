@@ -24,24 +24,25 @@ gif, falar brevemente da utilidade e funcionalidades
 ## Acesso ao Aplicativo (Usage)
 Pode-se acessar do projeto pelo link:...................
 
-1. Clone the repository:
+1. Clone do repositório:
 
 ```
-git clone https://github.com/hamagistral/de-zoomcamp-ui.git
+git clone https://github.com/jrodrigotico/python.git
 ```
 
-2. Install the required dependencies:
+2. Instalação das depedências:
 
 ```
 pip install -r requirements.txt
 ```
 
-3. Run in the terminal:
+3. Rodar o aplicativo Streamlit pelo terminal:
 ```
-streamlit run 01_👨‍🔧_DE_Zoomcamp_2023.py
+streamlit run mark_st.py.py
 ```
 
-4. Access the app in your browser at http://localhost:8501
+Alternativamente, pode-se acessar diretamente o aplicativo por qualquer navegador pelo link:
+http://localhost:8501
 
 
 ## Tecnologias utilizadas
