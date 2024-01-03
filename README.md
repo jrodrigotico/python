@@ -12,6 +12,14 @@ do 'Risco não-diversificável', que não pode ser eliminado pela diversificaç�
 do cenário econômico como um todo.
 
 
+## Estrutura do repositório
+| Arquivo | Conteúdo |
+| ------------- | ------------- |
+| mark_st.py | Script da aplicação web utilizando Streamlit |
+| arquivos | Arquivos no formato '.csv' que são utilizados em 'mark_st.py' |
+| requirements.txt | Dependências do projeto |
+
+
 ## Tratamento dos dados
 Falar da selic, dos tickers retirados, de quais tickers foram colocados no subsetor 'Outros' e falar brevemente de alguns trechos do código
 em que há tratamento de dados como a inclusão do '.SA' (citar a api yfinance)...
@@ -48,14 +56,6 @@ http://localhost:8501
 - ``API Yahoo Finance ( yfinance - v0.2.33)``
 - ``Streamlit``
 - ``Visual Studio Code``
-
-
-## Estrutura do repositório
-| Arquivo | Conteúdo |
-| ------------- | ------------- |
-| mark_st.py | Script da aplicação web utilizando Streamlit |
-| arquivos | Arquivos no formato '.csv' que são utilizados em 'mark_st.py' |
-| requirements.txt | Dependências do projeto |
 
 
 ## Contato e Feedback
