@@ -1,5 +1,5 @@
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)] (https://streamlit.io)
-[![Python Version](https://img.shields.io/badge/python-3.11.6-blue.svg)] (https://www.python.org/downloads/)
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://streamlit.io)
+[![Python Version](https://img.shields.io/badge/python-3.11.6-blue.svg)](https://www.python.org/downloads/)
 ![GitHub License](https://img.shields.io/github/license/jrodrigotico/python)
 
 :construction_worker: Projeto em desenvolvimento
