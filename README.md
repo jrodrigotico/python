@@ -22,8 +22,19 @@ em que há tratamento de dados como a inclusão do '.SA' (citar a api yfinance).
 gif, falar brevemente da utilidade
 
 
-## Acesso ao Aplicativo
+## Acesso ao Aplicativo (Usage)
 Pode-se acessar do projeto pelo link:...................
+
+Clone the repository:
+git clone https://github.com/hamagistral/de-zoomcamp-ui.git
+
+Install the required dependencies:
+pip install -r requirements.txt
+
+Run the app:
+streamlit run 01_👨‍🔧_DE_Zoomcamp_2023.py
+
+Access the app in your browser at http://localhost:8501
 
 
 ## Tecnologias utilizadas
