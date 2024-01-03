@@ -18,6 +18,7 @@ import datetime as dt
 # ---------------- Anotações ---------------- # 
 # streamlit run mark_st.py
 # as datas sao agora de 16-01-2013 ate 30-11-2023 que é o período que tem de taxa selic, para ficar tudo igual
+# 'st.experimental_rerun` will be removed after 2024-04-01'. VER ISSO URGENTEMENTE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # https://www.youtube.com/watch?v=Y1E73SQPD1U
 # https://www.youtube.com/watch?v=BchQuTJvRAs
 # https://www.linkedin.com/pulse/modern-portfolio-theory-python-building-optimal-web-app-phuaphan-oyhhc/
@@ -33,6 +34,7 @@ import datetime as dt
 # carteira de maior retorno é a carteira em que 100% do capital está no ativo de maior retorno
 # paper: V = variância da carteira , E = retorno da carteira
 # sigma = σ = covariancia
+# ver caso de acoes que dao retorno '-inf%' e 'inf%', exemplo 'RSUL3.SA'. Dando um desses 2 valores o grafico de fronteira eficiente nao consegue ser plotado
 
 # Textos - rascunho
 #  ****(μi, σij) 
@@ -180,13 +182,21 @@ if not exibir_introducao:
         def media(i):
             return i.mean()
         media_retor = retorno_contiuo.apply(media, axis = 0) # compara os valores das linhas
-
+        
         for i, z in zip(media_retor, selecionar_acoes):
             porcent = i * 100
             if porcent > 0:
                 st.markdown(f'**{z}** &mdash; {round(i*100,4)} % :white_check_mark:  ')
             else:
                 st.markdown(f'**{z}** &mdash; {round(i*100,4)} % :warning:')
+
+        # verificação de '-inf %' e 'inf %'
+        acoes_inf = media_retor[np.isinf(media_retor)]
+        if np.isinf(media_retor).any():
+            st.text('\n')
+            st.warning(f'''Ação(ões) com média de retorno contínuo muito próximo de zero: **{acoes_inf.index[0]}**.
+                    Recomenda-se tirá-la(s) da simulação :heavy_exclamation_mark:''')
+            
 
         matriz_corr = tabela_retorn.corr() # para o modelo de markowitz é bom ter acoes com alta correlação negativa ! ver video: https://www.youtube.com/watch?v=Y1E73SQPD1U
 
@@ -309,22 +319,22 @@ if not exibir_introducao:
             st.markdown(f'Índice de Sharpe Máximo: {round(sharpe_max,4)} :warning:')
         
         if sharpe_max>0:
-            st.write(f'O índice de Sharpe de {round(sharpe_max,4)} diz que para cada 1 ponto de risco,
+            st.write(f'''O índice de Sharpe de {round(sharpe_max,4)} diz que para cada 1 ponto de risco,
                     o investidor obteve um retorno positivo de {round(sharpe_max,4)} pontos de rentabilidade acima da rentabilidade que
                     esse investidor teria caso optasse por investir em um ativo livre de risco.
-                    Com isso o investimento na carteira compensa o risco.')
+                    Com isso o investimento na carteira compensa o risco.''')
         elif sharpe_max<0:
-            st.write(f'O índice de Sharpe de {round(sharpe_max,4)} diz que para cada 1 ponto de risco,
+            st.write(f'''O índice de Sharpe de {round(sharpe_max,4)} diz que para cada 1 ponto de risco,
                     o investidor obteve um retorno negativo de {round(sharpe_max,4)}. Com isso o investimento na carteira não compensa o risco.')
         elif sharpe_max=='nan':
-            st.write('Algum ativo escolhido apresenta média de retorno igual a zero ou nan')
+            st.write('Algum ativo escolhido apresenta média de retorno igual a zero ou nan''')
 
         # grafico interativo
         carteiras_simulacao = go.Scatter(x=tabela_volatilidades_esperadas,y=tabela_retorn_esperados_aritm,mode='markers',
             marker=dict(size=8, color=tabela_sharpe, colorscale='Viridis'), name = 'Carteiras simuladas')
 
         carteira_max_sharpe = go.Scatter(x=[tabela_volatilidades_esperadas[indice_sharpe_max]], y=[tabela_retorn_esperados_aritm[indice_sharpe_max]],
-            mode='markers', marker= dict(size=12, color='red'), name = 'Carteira com o melhor Índice de Sharpe')
+            mode='markers', marker= dict(size=12, color='red'), name = 'Carteira Ótima')
 
         carteira_min_variancia = go.Scatter(x=[tabela_volatilidades_esperadas[menor_risco]], y=[tabela_retorn_esperados_aritm[menor_risco]],
             mode='markers', marker= dict(size=12, color='pink'), name = 'Carteira de mínima variância') # essa carteira é importante lembrar do ponto de 'inflexão'
