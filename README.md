@@ -5,3 +5,5 @@ do 'Risco não-diversificável', que não pode ser eliminado pela diversificaç�
 do cenário econômico como um todo.
 
 ![GitHub License](https://img.shields.io/github/license/jrodrigotico/python)
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://mehedi-framework-patientsatisfaction-form.streamlit.app/)
+[![Python Version](https://img.shields.io/badge/python-3.10-blue.svg)](#supported-python-versions)
