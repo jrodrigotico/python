@@ -35,6 +35,8 @@ import datetime as dt
 # paper: V = variância da carteira , E = retorno da carteira
 # sigma = σ = covariancia
 # ver caso de acoes que dao retorno '-inf%' e 'inf%', exemplo 'RSUL3.SA'. Dando um desses 2 valores o grafico de fronteira eficiente nao consegue ser plotado
+# IS bom é igual ou acima de 0.5. Abaixo disso é ruim !!!!!!!!!!!!!!!!!!!!
+
 
 # Textos - rascunho
 #  ****(μi, σij) 
@@ -205,7 +207,7 @@ if not exibir_introducao:
         st.markdown('''A partir dos retornos de cada ativo, é possível calcular a correlação entre eles. A correlação explica
                     o grau de relação entre os ativos.''')
         st.text('\n')
-        st.markdown('''Deve-se evitar ativos com grau de correlação positiva, pois convergem mais intensamente no mesmo sentido,
+        st.markdown('''Deve-se evitar ativos com grau de correlação próximos de 1 ou -1, pois convergem mais intensamente no mesmo sentido,
                     tanto do lado positivo como do lado negativo.''')
         st.text('\n')
         st.markdown('''Portanto, quanto menor a correlação entre os ativos ou até mesmo quanto mais negativa,
@@ -258,7 +260,7 @@ if not exibir_introducao:
         carteira_min_variancia= tabela_pesos[menor_risco]
 
         st.write('---')
-        st.header('Carteira de mínima variância:')
+        st.header('Carteira de Mínima Variância:')
         st.markdown('''Para uma determinada combinação de pesos de ativos em uma carteira, há um ponto que representa o risco  mínimo.
                     Esse ponto representa a carteira de mínimo risco ou carteira de mínima variância.''')
         
@@ -267,7 +269,7 @@ if not exibir_introducao:
         graph_pizza2 = go.Figure(data=[go.Pie(labels=legenda, values =valores_cart_min_var )])
         st.plotly_chart(graph_pizza2)
 
-        st.header('Carteira ótima:')
+        st.header('Carteira Ótima:')
         st.markdown('''Para a determinação da carteira ótima foi utilizado o 'Índice de Sharpe'.''')
         st.text('\n')            
         st.markdown('''O ponto que representa a carteira ótima
@@ -318,26 +320,31 @@ if not exibir_introducao:
         else:
             st.markdown(f'Índice de Sharpe Máximo: {round(sharpe_max,4)} :warning:')
         
-        if sharpe_max>0:
-            st.write(f'''O índice de Sharpe de {round(sharpe_max,4)} diz que para cada 1 ponto de risco,
-                    o investidor obteve um retorno positivo de {round(sharpe_max,4)} pontos de rentabilidade acima da rentabilidade que
-                    esse investidor teria caso optasse por investir em um ativo livre de risco.
-                    Com isso o investimento na carteira compensa o risco.''')
+        if 0.5>sharpe_max>0:
+            st.warning(f'''O índice de Sharpe de {round(sharpe_max,4)} diz que para cada 1 ponto de risco,
+                    o investidor obtém um retorno positivo de {round(sharpe_max,4)} pontos de rentabilidade acima da rentabilidade que
+                    esse investidor teria caso optasse por investir em um ativo livre de risco, porém ainda é menor do que 0.5, com isso
+                    o investimento na carteira não é bom!''')
+        if sharpe_max>0.5:
+            st.warning(f'''O índice de Sharpe de {round(sharpe_max,4)} diz que para cada 1 ponto de risco,
+                    o investidor obtém um retorno positivo de {round(sharpe_max,4)} pontos de rentabilidade acima da rentabilidade que
+                    esse investidor teria caso optasse por investir em um ativo livre de risco. Além disso, o Índice de Sharpe é superior
+                    a 0.5, com isso o investimento na carteira é bom e compensa o risco.''')
         elif sharpe_max<0:
-            st.write(f'''O índice de Sharpe de {round(sharpe_max,4)} diz que para cada 1 ponto de risco,
-                    o investidor obteve um retorno negativo de {round(sharpe_max,4)}. Com isso o investimento na carteira não compensa o risco.')
+            st.warning(f'''O índice de Sharpe de {round(sharpe_max,4)} diz que para cada 1 ponto de risco,
+                    o investidor obtém um retorno negativo de {round(sharpe_max,4)}. Com isso o investimento na carteira não compensa o risco.''')
         elif sharpe_max=='nan':
-            st.write('Algum ativo escolhido apresenta média de retorno igual a zero ou nan''')
+            st.warning('Algum ativo escolhido apresenta média de retorno igual a zero ou nan''')
 
         # grafico interativo
         carteiras_simulacao = go.Scatter(x=tabela_volatilidades_esperadas,y=tabela_retorn_esperados_aritm,mode='markers',
-            marker=dict(size=8, color=tabela_sharpe, colorscale='Viridis'), name = 'Carteiras simuladas')
+            marker=dict(size=8, color=tabela_sharpe, colorscale='Viridis'), name = 'Carteiras Simuladas')
 
         carteira_max_sharpe = go.Scatter(x=[tabela_volatilidades_esperadas[indice_sharpe_max]], y=[tabela_retorn_esperados_aritm[indice_sharpe_max]],
             mode='markers', marker= dict(size=12, color='red'), name = 'Carteira Ótima')
 
         carteira_min_variancia = go.Scatter(x=[tabela_volatilidades_esperadas[menor_risco]], y=[tabela_retorn_esperados_aritm[menor_risco]],
-            mode='markers', marker= dict(size=12, color='pink'), name = 'Carteira de mínima variância') # essa carteira é importante lembrar do ponto de 'inflexão'
+            mode='markers', marker= dict(size=12, color='pink'), name = 'Carteira de Mínima Variância') # essa carteira é importante lembrar do ponto de 'inflexão'
 
         fronteira_eficiente = go.Scatter(x=eixo_x_fronteira_eficiente, y=fronteira_eficiente_y,
                                     mode='lines', line=dict(color='green', width=2),
