@@ -31,11 +31,13 @@ https://clipchamp.com/pt-br/ - gerador de gifs
 # Descrição do Projeto
 O projeto RocketMusic é um e-commerce que foi criado dentro do curso Bootcamp GoStack com o intuito de colocarmos em prática todo conteúdo estudado durante o curso.
 
+
 # Tecnologias utilizadas
 O projeto foi desenvolvido utilizando as seguintes tecnologias:
 ReactJS
 Redux
 Axios
+
 
 # Acesso ao Projeto
     # Clonar o repositório
@@ -50,12 +52,15 @@ Axios
     # Iniciar o projeto
     $ yarn start
 
+
 # Versioning (posso colocar uma badge ao invés de um tópico)
 Based on Streamlit 1.25.0
 Made with Python 3.11.6
 
+
 # Requirements
 A clean venv with just pip and then Streamlit
+
 
 # How to install/use
 No installation is required. You can access it by clicking here Streamlit App.
