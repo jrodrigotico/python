@@ -12,16 +12,16 @@ https://clipchamp.com/pt-br/ - gerador de gifs
 
 
 # ------------------- estrutura rascunho ------------------- #
-Título e Imagem de capa;
-Badges (data da ultima versão, licença, status do projeto );
-Descrição do Projeto;
-Índice;
-Data Scrapping (citar os arquivos e como foi editado, posso usar outro código demonstrando o tratamento dos dados, nao esquecer das fontes e datas);
-Funcionalidades e Demonstração da Aplicação; (aqui vai o gif, print ou vídeo e uma descrição);
-Acesso ao Projeto; (como foi pelo streamlit, só indicar o link e colocar a cora e 'open streamlit');
-Tecnologias utilizadas;
-Estrutura do repositório; (fazer uma tabela e organizar);
-Contact me (colocar linkedin e me apresentar);
+- Título e Imagem de capa;
+- Badges (data da ultima versão, licença, status do projeto );
+- Descrição do Projeto;
+- Índice;
+- Data Scrapping (citar os arquivos e como foi editado, posso usar outro código demonstrando o tratamento dos dados, nao esquecer das fontes e  datas);
+- Funcionalidades e Demonstração da Aplicação; (aqui vai o gif, print ou vídeo e uma descrição);
+- Acesso ao Projeto; (como foi pelo streamlit, só indicar o link e colocar a cora e 'open streamlit');
+- Tecnologias utilizadas;
+- Estrutura do repositório; (fazer uma tabela e organizar);
+- Contact me (colocar linkedin e me apresentar);
 
 * 'Don't forget to ⭐️ the repo 👆 so you can find it easily later.'
 
