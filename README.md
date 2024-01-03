@@ -1,7 +1,7 @@
 ![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)
 ![Python Version](https://img.shields.io/badge/python-3.11.6-blue.svg)
 ![GitHub License](https://img.shields.io/github/license/jrodrigotico/python)
-<img src="http://img.shields.io/static/v1?label=STATUS&message=EM%20DESENVOLVIMENTO&color=RED&style=for-the-badge"/>
+![Badge em Desenvolvimento](http://img.shields.io/static/v1?label=STATUS&message=EM%20DESENVOLVIMENTO&color=GREEN&style=for-the-badge)
 
 ## Teoria Moderna de Portfólio - Markowitz
 Essa teoria tem como principal objetivo diminuir o 'Risco diversificável', que consiste 
