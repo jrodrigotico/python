@@ -26,6 +26,7 @@ import datetime as dt
 # https://analisemacro.com.br/mercado-financeiro/selecao-de-carteira-e-teoria-de-markowitz/ - riskfolio
 # https://medium.com/@rodrigobercinimartins/como-extrair-dados-da-bovespa-sem-gastar-nada-com-python-14a03454a720 - yahoo query
 # https://streamlit-emoji-shortcodes-streamlit-app-gwckff.streamlit.app - emojis
+# https://github.com/Hamagistral/de-zoomcamp-ui/tree/master/streamlit - exemplo multipage
 # https://lume.ufrgs.br/bitstream/handle/10183/60625/000863146.pdf?sequence=1 - tcc ufrgs
 # https://investidorsardinha.r7.com/aprender/fronteira-eficiente/ - importancia da fronteira eficiente
 # fonte dos tickers e segmento = Economática 14/12/2023, a empresa Allos foi classificado como 'Outros' no Subsetor Bovespa
