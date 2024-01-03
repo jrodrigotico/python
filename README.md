@@ -1,7 +1,7 @@
-![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)
-![Python Version](https://img.shields.io/badge/python-3.11.6-blue.svg)
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)] (https://streamlit.io)
+[![Python Version](https://img.shields.io/badge/python-3.11.6-blue.svg)] (https://www.python.org/downloads/)
 ![GitHub License](https://img.shields.io/github/license/jrodrigotico/python)
-<!-- ![Badge em Desenvolvimento](http://img.shields.io/static/v1?label=STATUS&message=EM%20DESENVOLVIMENTO&color=GREEN&style=for-the-badge) -->
+
 :construction_worker: Projeto em desenvolvimento
 
 
@@ -21,7 +21,7 @@ em que há tratamento de dados como a inclusão do '.SA' (citar a api yfinance).
 gif, falar brevemente da utilidade e funcionalidades
 
 
-## Acesso ao Aplicativo (Usage)
+## Acesso ao Aplicativo
 Pode-se acessar do projeto pelo link:...................
 
 Clone do repositório:
@@ -38,7 +38,7 @@ pip install -r requirements.txt
 
 Rodar o aplicativo Streamlit pelo terminal:
 ```
-streamlit run mark_st.py.py
+streamlit run mark_st.py
 ```
 
 Alternativamente, pode-se acessar diretamente o aplicativo por qualquer navegador pelo link:
@@ -52,11 +52,10 @@ http://localhost:8501
 - ``Visual Studio Code``
 
 
-
 ## Estrutura do repositório
 | Arquivo | Conteúdo |
 | ------------- | ------------- |
-| mark_st.py | Aplicação web utilizando Streamlit |
+| mark_st.py | Script da aplicação web utilizando Streamlit |
 | arquivos | Arquivos no formato '.csv' que são utilizados em 'mark_st.py' |
 | requirements.txt | Dependências do projeto |
 
