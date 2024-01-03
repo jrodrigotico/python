@@ -15,7 +15,7 @@ do cenário econômico como um todo.
 ## Estrutura do repositório
 | Arquivo | Conteúdo |
 | ------------- | ------------- |
-| mark_st.py | Script da aplicação web utilizando Streamlit |
+| mark_st.py | Script da aplicação web |
 | arquivos | Arquivos no formato '.csv' que são utilizados em 'mark_st.py' |
 | requirements.txt | Dependências do projeto |
 
