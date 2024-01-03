@@ -12,8 +12,8 @@ https://clipchamp.com/pt-br/ - gerador de gifs
 
 
 # ------------------- estrutura rascunho ------------------- #
-- Título e Imagem de capa;
 - Badges (data da ultima versão, licença, status do projeto );
+- Título e Imagem de capa;
 - Descrição do Projeto;
 - Índice;
 - Data Scrapping (citar os arquivos e como foi editado, posso usar outro código demonstrando o tratamento dos dados, nao esquecer das fontes e  datas);
