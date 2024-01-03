@@ -2,7 +2,7 @@
 ![Python Version](https://img.shields.io/badge/python-3.11.6-blue.svg)
 ![GitHub License](https://img.shields.io/github/license/jrodrigotico/python)
 <!-- ![Badge em Desenvolvimento](http://img.shields.io/static/v1?label=STATUS&message=EM%20DESENVOLVIMENTO&color=GREEN&style=for-the-badge) -->
-:construction: Projeto em desenvolvimento :construction:
+:office: Projeto em desenvolvimento
 
 ## Teoria Moderna de Portfólio - Markowitz
 Essa teoria tem como principal objetivo diminuir o 'Risco diversificável', que consiste 
