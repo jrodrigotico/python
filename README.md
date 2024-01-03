@@ -46,7 +46,7 @@ http://localhost:8501
 
 
 ## Tecnologias utilizadas
-- ``Python``
+- ``Python - 3.11.6``
 - ``API Yahoo Finance ( yfinance - v0.2.33)``
 - ``Streamlit``
 
