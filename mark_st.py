@@ -50,10 +50,10 @@ import datetime as dt
 # tickers acoes existentes (o ideal seria fazer um web scrapping na B3 ou consumir uma api da B3, pq com um arquivo fica muito travado)
 # https://www.dadosdemercado.com.br/bolsa/acoes , att: Cotações atualizadas no fechamento de 24/11/2023.
 # yf.pdr_override() #corrige problemas da bibliotece do pandas_datareader
-acoes = pd.read_csv('https://raw.githubusercontent.com/jrodrigotico/python/projeto_acoes/base_completa_acoes_subsetor.csv?token=GHSAT0AAAAAACFYHJO2XD7NEKFNCPVYXRQQZMWVCAQ', sep=';')[['Código','Subsetor Bovespa']]
+acoes = pd.read_csv('https://raw.githubusercontent.com/jrodrigotico/python/projeto_acoes/base_completa_acoes_subsetor.csv?token=GHSAT0AAAAAACFYHJO3WJCI5X6KUJHL2EOEZMWZYZA', sep=';')[['Código','Subsetor Bovespa']]
 acoes = acoes[acoes['Código'].apply(lambda x: len(str(x))==5)]
 
-selic = pd.read_csv('https://raw.githubusercontent.com/jrodrigotico/python/projeto_acoes/selic.csv?token=GHSAT0AAAAAACFYHJO2PGCJCVF5ZOSV5TBOZMWVCZQ', sep=';')
+selic = pd.read_csv('https://raw.githubusercontent.com/jrodrigotico/python/projeto_acoes/selic.csv?token=GHSAT0AAAAAACFYHJO2PVMIE4VC4542YMWMZMWZZ4A', sep=';')
 selic['Data'] = pd.to_datetime(selic['Data'])
 
 # ---------------- Introducao ---------------- # 
@@ -110,7 +110,7 @@ if not exibir_introducao:
     filtro_subsetor = pd.DataFrame(filtro_subsetor)
 
     # retirar tickers que deram problema com o yahoo finance
-    acoes_erro = pd.read_csv('https://raw.githubusercontent.com/jrodrigotico/python/projeto_acoes/acoes_erro_yahoo.csv?token=GHSAT0AAAAAACFYHJO25766SHQQTVDJW7ROZMWVDRA', sep=';') 
+    acoes_erro = pd.read_csv('https://raw.githubusercontent.com/jrodrigotico/python/projeto_acoes/acoes_erro_yahoo.csv?token=GHSAT0AAAAAACFYHJO2QYS6JMRPYKM2DOQQZMWZ22Q', sep=';') 
     acoes_erro.columns = ['Index', 'Ticker']
 
     def retirar_sa(i):
