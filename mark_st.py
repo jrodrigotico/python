@@ -89,6 +89,7 @@ if exibir_introducao:
 
 # --------- Código geral ---------- #
 if not exibir_introducao:
+    st.write('teste')
     st.sidebar.header('Parâmetros')
 
     data_minima = dt.date(2013,1,16)
