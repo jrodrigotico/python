@@ -33,7 +33,6 @@ Algumas ações apresentaram problemas durante a extração de dados da API do Y
 
 
 ## :bar_chart: Demonstração da aplicação
-Recomenda-se a utilização do aplicativo em um navegador no modo 'Dark'.
 
 gif
 
@@ -62,7 +61,8 @@ streamlit run mark_st.py
 ```
 
 Alternativamente, pode-se acessar o aplicativo por qualquer navegador pelo link:
-http://localhost:8501
+http://localhost:8501.
+:exclamation: Recomenda-se a utilização do aplicativo em um navegador no modo 'Dark'.
 
 
 ## :mag_right: Tecnologias utilizadas
