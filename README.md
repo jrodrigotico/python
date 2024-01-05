@@ -17,6 +17,8 @@ Markowitz é o principal responsável por introduzir conceitos de diversificaç�
 | arquivos | Arquivos no formato '.csv' que são utilizados em 'mark_st.py' |
 | requirements.txt | Dependências do projeto |
 
+:exclamation: O trabalho de Markowitz está anexado em 'arquivos' com o nome de 'Teoria_Markowitz_1952.pdf'.
+
 
 ## Tratamento dos dados
 A taxa **SELIC** foi selecionada como a taxa livre de risco para calcular o **Índice de Sharpe**. Os dados estão disponíveis para o período entre 16/01/2013 e 31/11/2023.
