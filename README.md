@@ -33,7 +33,8 @@ Algumas ações apresentaram problemas durante a extração de dados da API do Y
 ## Demonstração da aplicação
 gif
 
-falar brevemente da utilidade e funcionalidades
+falar brevemente da utilidade e funcionalidades, falar osbre o 'bug' de quando for selecionar as acoes que precisa-se selecionar uma de cada vez , 
+apenas quando aparecer o grafico historico de preços
 
 
 ## Acesso ao aplicativo
