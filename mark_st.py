@@ -62,17 +62,17 @@ def introducao(): # funcao para exibir a introducao e seus componentes
     introducao.header('Teoria Moderna de Portfólio - Markowitz')
     introducao.markdown('''A Teoria Moderna do Portfólio, desenvolvida por Harry Markowitz em meados de 1950, 
                     postula que diferentes ativos podem compor 'n' carteiras de investimentos com o intuito de encontrar
-                    uma relação ótima entre risco (variância) e retorno. Para determinar essa relação, Markowitz não descarta o uso do 
+                    uma relação ótima entre risco e retorno. Para determinar essa relação, Markowitz não descarta o uso do 
                     julgamento profissional na escolha dos ativos, utilizando critérios específicos que não são contemplados nos cálculos 
                     matemáticos formais. Essa abordagem viabiliza o cálculo de combinações de 'retorno' e 'risco'.''')
     st.text('\n')
-    introducao.markdown('''Essa teoria tem como principal objetivo diminuir o 'Risco diversificável', que consiste 
+    introducao.markdown('''A teoria tem como principal objetivo diminuir o 'Risco diversificável', que consiste 
                     no risco que pode ser eliminado por meio da diversificação da carteira de investimentos. Diferentemente 
                     do 'Risco não-diversificável', que não pode ser eliminado pela diversificação, pois suas flutuações dependem 
                     do cenário econômico como um todo.''')
     st.text('\n')
     introducao.markdown('''Markowitz é o principal responsável por introduzir conceitos de diversificação de ativos, 
-                    contribuindo significativamente para o aprimoramento das estratégias de investimentos''')
+                    contribuindo significativamente para o aprimoramento das estratégias de investimentos.''')
     
     # Fonte: The Nobel Prize
     introducao.image('intro_markow.jpg', caption='Fonte: The Nobel Prize')
@@ -85,11 +85,22 @@ if exibir_introducao:
     if st.button('Simulação de Carteiras :bar_chart: '):
         st.session_state['exibir_introducao'] = False # transforma a chave em falsa
         st.experimental_rerun() # recarrega a página
-
+        
 
 # --------- Código geral ---------- #
 if not exibir_introducao:
-    # st.write('teste')
+    st.markdown(''':calendar: O intervalo de tempo considerado está entre 16/01/2013 e 01/11/2023, 
+                sendo possível selecionar a periodicidade dos preços das ações. ''')
+    st.text('\n')
+    st.markdown('''	:flag-br: A taxa livre de risco (*Risk-Free*) escolhida foi a **SELIC**, que será utilizada no cálculo do Índice de Sharpe. Optou-se por 
+            utilizar a média da SELIC durante o intervalo de tempo selecionado.''')
+    st.text('\n')
+    st.markdown(''':grey_question: Optou-se por utilizar o Subsetor em vez do Segmento de cada ação na B3 para simplificar a seleção das ações.''')
+    st.text('\n')
+    st.markdown(''':dollar: No que diz respeito à simulação, não há uma regra definida para o número de portfólios a serem simulados, porém
+                precisa-se de no mínimo duas ações para compor esses portfólios.''')
+    st.write('---')
+
     st.sidebar.header('Parâmetros')
 
     data_minima = dt.date(2013,1,16)
@@ -371,6 +382,9 @@ if not exibir_introducao:
                     e do equilíbrio entre diferentes investimentos para otimizar tanto o potencial de retorno quanto a redução do risco
                     associado a uma carteira de investimentos. ''')
 
+# if not exibir_introducao and st.session_state.get('Simular Carteiras', False):
+#     st.write('teste')
+#     st.session_state['simular_carteiras'] = False
 
     # ---------------- Simulação ativada e principais fórmulas ---------------- #   
     if st.sidebar.button('Simular'):
