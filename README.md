@@ -63,7 +63,7 @@ streamlit run mark_st.py
 Alternativamente, pode-se acessar o aplicativo por qualquer navegador pelo link:
 http://localhost:8501  
 
-:exclamation: Recomenda-se a utilização do aplicativo em um navegador no modo 'Dark'.
+:exclamation: Recomenda-se a utilização do aplicativo em um navegador no modo 'Dark'.  
 
 
 ## :mag_right: Tecnologias utilizadas
