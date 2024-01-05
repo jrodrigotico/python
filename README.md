@@ -33,10 +33,14 @@ Algumas ações apresentaram problemas durante a extração de dados da API do Y
 
 
 ## :bar_chart: Demonstração da aplicação
+Recomenda-se a utilização do aplicativo em um navegador no modo 'Dark'.
+
 gif
 
-falar brevemente da utilidade e funcionalidades, falar osbre o 'bug' de quando for selecionar as acoes que precisa-se selecionar uma de cada vez , 
+falar brevemente da utilidade e funcionalidades, falar sobre o 'bug' de quando for selecionar as acoes que precisa-se selecionar uma de cada vez , 
 apenas quando aparecer o grafico historico de pre
+
+:exclamation: É necessário aguardar a conclusão do plotagem do gráfico histórico de preços antes de escolher uma nova ação na caixa de seleção 'Ações'.
 
 
 ## 	:desktop_computer: Acesso ao aplicativo
@@ -69,7 +73,7 @@ http://localhost:8501
 
 
 ## 	:email: Contato
-Para feedbacks, sugestão de melhorias ou relato de problemas, sinta-se à vontade para entrar em contato comigo através do meu perfil no LinkedIn:
+Para feedbacks, sugestão de melhorias ou relato de problemas, sinta-se à vontade para entrar em contato comigo através do meu perfil no Linkedin:
 
 [![LinkedIn Badge](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/joão-rodrigo-lemes-5603a6154/)
 
