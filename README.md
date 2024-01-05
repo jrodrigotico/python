@@ -6,14 +6,12 @@
 
 
 ## Teoria Moderna de Portfólio - Markowitz
-Essa teoria tem como principal objetivo diminuir o 'Risco diversificável', que consiste 
-no risco que pode ser eliminado por meio da diversificação da carteira de investimentos. Diferentemente 
-do 'Risco não-diversificável', que não pode ser eliminado pela diversificação, pois suas flutuações dependem 
-do cenário econômico como um todo.
+A Teoria Moderna do Portfólio, desenvolvida por Harry Markowitz em meados de 1950, postula que diferentes ativos podem compor 'n' carteiras de investimentos com o intuito de encontrar uma relação ótima entre risco e retorno. 
+Markowitz é o principal responsável por introduzir conceitos de diversificação de ativos, contribuindo significativamente para o aprimoramento das estratégias de investimentos.
 
 
 ## Estrutura do repositório
-| Arquivo | Conteúdo |
+| **Arquivo** | **Conteúdo** |
 | ------------- | ------------- |
 | mark_st.py | Script da aplicação web |
 | arquivos | Arquivos no formato '.csv' que são utilizados em 'mark_st.py' |
@@ -21,12 +19,21 @@ do cenário econômico como um todo.
 
 
 ## Tratamento dos dados
-Falar da selic, dos tickers retirados, de quais tickers foram colocados no subsetor 'Outros' e falar brevemente de alguns trechos do código
-em que há tratamento de dados como a inclusão do '.SA' (citar a api yfinance)...
+A taxa **SELIC** foi selecionada como a taxa livre de risco para calcular o **Índice de Sharpe**. Os dados de preços estão disponíveis para o período entre 16/01/2013 e 31/11/2023.
+
+Ações brasilerias precisam estar com **'.SA'** para servirem como símbolo no 'Yahoo Finance' e assim extrair informações.
+
+A ação da empresa **Allos (ALOS3)** está no subsetor **'Outros'**.
+
+No arquivo **'base_completa_acoes_subsetor.csv'**, localizado na pasta 'arquivos', consta uma lista de todas as ações listadas na B3, conforme a base do **Economática** em 14/12/2023. Ações com tickers de seis caracteres foram retiradas, pois não são acessíveis via API do Yahoo Finance.
+
+Algumas ações apresentaram problemas durante a extração de dados da API do Yahoo Finance, então essas empresas foram excluídas da lista de tickers. Os detalhes dessas ações estão no arquivo **'acoes_erro_yahoo.csv'**, também na pasta 'arquivos'."
 
 
 ## Demonstração da aplicação
-gif, falar brevemente da utilidade e funcionalidades
+gif
+
+falar brevemente da utilidade e funcionalidades
 
 
 ## Acesso ao aplicativo
