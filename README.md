@@ -10,7 +10,7 @@ A Teoria Moderna do Portfólio, desenvolvida por Harry Markowitz em meados de 19
 Markowitz é o principal responsável por introduzir conceitos de diversificação de ativos, contribuindo significativamente para o aprimoramento das estratégias de investimentos.
 
 
-## 	:exclamation: Estrutura do repositório
+## 	:books: Estrutura do repositório
 | **Arquivo** | **Conteúdo** |
 | ------------- | ------------- |
 | mark_st.py | Script da aplicação web |
@@ -39,7 +39,7 @@ falar brevemente da utilidade e funcionalidades, falar osbre o 'bug' de quando f
 apenas quando aparecer o grafico historico de pre
 
 
-## :three_button_mouse: Acesso ao aplicativo
+## 	:desktop_computer: Acesso ao aplicativo
 Clone do repositório:
 
 ```
