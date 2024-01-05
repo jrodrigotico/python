@@ -37,10 +37,6 @@ import datetime as dt
 # ver caso de acoes que dao retorno '-inf%' e 'inf%', exemplo 'RSUL3.SA'. Dando um desses 2 valores o grafico de fronteira eficiente nao consegue ser plotado
 # IS bom é igual ou acima de 0.5. Abaixo disso é ruim !!!!!!!!!!!!!!!!!!!!
 
-# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-# foto na pasta python: 'probelam serio' = ao adicionar a acao soja3, o retorno das outras acoes se modifica, o mesmo acontece com mglu3
-
 # Textos - rascunho
 #  ****(μi, σij) 
 # O símbolo "μi" representa a média ou o valor esperado de uma variável aleatória "i"
