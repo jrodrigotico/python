@@ -68,7 +68,7 @@ http://localhost:8501
 - ``Visual Studio Code``
 
 
-## 	:email: Contato e Feedback
+## 	:email: Contato
 Para feedbacks, sugestão de melhorias ou relato de problemas, sinta-se à vontade para entrar em contato comigo através do meu perfil no LinkedIn:
 
 [![LinkedIn Badge](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/joão-rodrigo-lemes-5603a6154/)
