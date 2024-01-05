@@ -194,9 +194,13 @@ if not exibir_introducao:
         st.header('Médias dos retornos de cada ação:')
         st.markdown('''Foi utilizado o retorno contínuo para o cálculo do retorno de cada ação, em seguida, 
                     foi-se calculada a média para cada ação.\n''')
-        tabela_retorn = tabela_norm.pct_change().dropna() # aqui se faz a formula norma de variacao percentual: 'Valor f/Valor i - 1 '
+        tabela_retorn = tabela_norm.pct_change() # aqui se faz a formula de variacao percentual: 'Valor f/Valor i - 1 '
         retorno_contiuo = np.log(tabela_retorn + 1) # aqui soma-se 1 para ficar apenas a divisao entre 'Valor f/Valor i' e o LN é aplicado nessa divisão
-
+        
+        # st.write(tabela) # !!!!!!!!!!!!!!!!!!!!!
+        # st.write(tabela_retorn) # !!!!!!!!!!!!!!!!!!!!!
+        # st.write(retorno_contiuo) # !!!!!!!!!!!!!!!!!!!!!
+        
         def media(i):
             return i.mean()
         media_retor = retorno_contiuo.apply(media, axis = 0) # compara os valores das linhas
