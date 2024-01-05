@@ -17,7 +17,6 @@ import datetime as dt
 
 # ---------------- Anotações ---------------- # 
 # streamlit run mark_st.py
-# as datas sao agora de 16-01-2013 ate 30-11-2023 que é o período que tem de taxa selic, para ficar tudo igual
 # 'st.experimental_rerun` will be removed after 2024-04-01'. VER ISSO URGENTEMENTE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # https://www.youtube.com/watch?v=Y1E73SQPD1U
 # https://www.youtube.com/watch?v=BchQuTJvRAs
@@ -88,7 +87,7 @@ if exibir_introducao:
     if st.button('Simulação de Carteiras :bar_chart: '):
         st.session_state['exibir_introducao'] = False # transforma a chave em falsa
         st.experimental_rerun() # recarrega a página
-        
+
 
 # --------- Código geral ---------- #
 if not exibir_introducao:
@@ -96,12 +95,12 @@ if not exibir_introducao:
                 sendo possível selecionar a periodicidade dos preços das ações. ''')
     st.text('\n')
     st.markdown('''	:flag-br: A taxa livre de risco (*Risk-Free*) escolhida foi a **SELIC**, que será utilizada no cálculo do Índice de Sharpe. Optou-se por 
-            utilizar a média aritmética da SELIC durante o intervalo de tempo selecionado.''')
+            utilizar a média aritmética da **SELIC** durante o intervalo de tempo selecionado.''')
     st.text('\n')
-    st.markdown(''':grey_question: Optou-se por utilizar o Subsetor em vez do Segmento de cada ação na B3 para simplificar a seleção das ações.''')
+    st.markdown(''':grey_question: Utilizou-se o Subsetor em vez do Segmento de cada ação na B3 para simplificar a seleção das ações.''')
     st.text('\n')
     st.markdown(''':dollar: No que diz respeito à simulação, não há uma regra definida para o número de portfólios a serem simulados, porém
-                precisa-se de no mínimo duas ações para compor esses portfólios.''')
+                precisa-se de no mínimo duas ações para compor um portfólio.''')
     st.write('---')
 
     st.sidebar.header('Parâmetros')
