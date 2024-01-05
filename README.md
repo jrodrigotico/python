@@ -29,7 +29,7 @@ A ação da empresa **Allos (ALOS3)** está no subsetor **'Outros'**.
 
 No arquivo **'base_completa_acoes_subsetor.csv'**, localizado na pasta 'arquivos', consta uma lista de todas as ações listadas na B3, conforme a base do **Economatica** em 14/12/2023. Ações com tickers de seis caracteres foram retiradas, pois não são acessíveis via API do Yahoo Finance.
 
-Algumas ações apresentaram problemas durante a extração de dados da API do Yahoo Finance, então essas empresas foram excluídas da lista de tickers. Os detalhes dessas ações estão no arquivo **'acoes_erro_yahoo.csv'**, também na pasta 'arquivos'."
+Algumas ações apresentaram problemas durante a extração de dados da API do Yahoo Finance, então essas empresas foram excluídas da lista de tickers. Os detalhes dessas ações estão no arquivo **'acoes_erro_yahoo.csv'**, também na pasta 'arquivos'.
 
 
 ## :bar_chart: Demonstração da aplicação
