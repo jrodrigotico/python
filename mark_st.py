@@ -1,18 +1,15 @@
 # ---------------- Anotações ---------------- # 
-import pandas as pd
-import yfinance as yf
-import pandas_datareader as pdr
-import numpy as np
-import matplotlib.pyplot as mplt
-import seaborn as sn
 import streamlit as st
-import os
+import pandas as pd
+import numpy as np
+import datetime as dt
+import yfinance as yf
 import plotly.express as px
 import plotly.colors as pcolors
 import plotly.graph_objects as go
 from scipy.optimize import minimize
+import pandas_datareader as pdr
 import warnings
-import datetime as dt
 
 
 # ---------------- Anotações ---------------- # 
@@ -35,7 +32,6 @@ import datetime as dt
 # paper: V = variância da carteira , E = retorno da carteira
 # sigma = σ = covariancia
 # ver caso de acoes que dao retorno '-inf%' e 'inf%', exemplo 'RSUL3.SA'. Dando um desses 2 valores o grafico de fronteira eficiente nao consegue ser plotado
-# IS bom é igual ou acima de 0.5. Abaixo disso é ruim !!!!!!!!!!!!!!!!!!!!
 
 # Textos - rascunho
 #  ****(μi, σij) 
@@ -43,10 +39,7 @@ import datetime as dt
 # "σij" sugere uma matriz de covariância ou uma medida que captura a variabilidade conjunta entre as variáveis "i" e "j". 
 #   Isso implica que há uma relação ou dependência entre essas variáveis.
 
-
 # ---------------- Arquivos ---------------- # 
-# tickers acoes existentes (o ideal seria fazer um web scrapping na B3 ou consumir uma api da B3, pq com um arquivo fica muito travado)
-# https://www.dadosdemercado.com.br/bolsa/acoes , att: Cotações atualizadas no fechamento de 24/11/2023.
 # yf.pdr_override() #corrige problemas da bibliotece do pandas_datareader
 acoes = pd.read_csv('https://raw.githubusercontent.com/jrodrigotico/python/projeto_acoes/base_completa_acoes_subsetor.csv?token=GHSAT0AAAAAACFYHJO3WJCI5X6KUJHL2EOEZMWZYZA', sep=';')[['Código','Subsetor Bovespa']]
 acoes = acoes[acoes['Código'].apply(lambda x: len(str(x))==5)]
@@ -64,9 +57,9 @@ def introducao(): # funcao para exibir a introducao e seus componentes
                     julgamento profissional na escolha dos ativos, utilizando critérios específicos que não são contemplados nos cálculos 
                     matemáticos formais. Essa abordagem viabiliza o cálculo de combinações de 'retorno' e 'risco'.''')
     st.text('\n')
-    introducao.markdown('''A teoria tem como principal objetivo diminuir o 'Risco diversificável', que consiste 
+    introducao.markdown('''A teoria tem como principal objetivo diminuir o 'Risco Diversificável', que consiste 
                     no risco que pode ser eliminado por meio da diversificação da carteira de investimentos. Diferentemente 
-                    do 'Risco não-diversificável', que não pode ser eliminado pela diversificação, pois suas flutuações dependem 
+                    do 'Risco Não-Diversificável', que não pode ser eliminado pela diversificação, pois suas flutuações dependem 
                     do cenário econômico como um todo.''')
     st.text('\n')
     introducao.markdown('''Markowitz é o principal responsável por introduzir conceitos de diversificação de ativos, 
@@ -81,7 +74,7 @@ if exibir_introducao:
     introducao()
     # remove a introdução
     if st.button('Simulação de Carteiras :bar_chart: '):
-        st.session_state['exibir_introducao'] = False # transforma a chave em falsa
+        st.session_state['exibir_introducao'] = False # transforma a chave que carrega a introducao em falsa
         st.experimental_rerun() # recarrega a página
 
 
@@ -90,12 +83,12 @@ if not exibir_introducao:
     st.markdown(''':calendar: O intervalo de tempo considerado está entre 16/01/2013 e 01/11/2023, 
                 sendo possível selecionar a periodicidade dos preços das ações. ''')
     st.text('\n')
-    st.markdown(''':grey_question: Utilizou-se o Subsetor em vez do Segmento de cada ação na B3 para simplificar a seleção das ações.''')
+    st.markdown(''':grey_question: Utilizou-se o 'Subsetor' em vez do 'Segmento' de cada ação na B3 para simplificar a seleção das ações.''')
     st.text('\n')
     st.markdown('''	:flag-br: A taxa livre de risco (*Risk-Free*) escolhida foi a **SELIC**, que será utilizada no cálculo do Índice de Sharpe. Optou-se por 
             utilizar a média aritmética da **SELIC** durante o intervalo de tempo selecionado.''')
     st.text('\n')
-    st.markdown(''':dollar: No que diz respeito à simulação, não há uma regra definida para o número de portfólios a serem simulados, porém
+    st.markdown(''':dollar: No que diz respeito à simulação, não há uma regra definida para o número de portfolios a serem simulados, porém
                 precisa-se de no mínimo duas ações para compor um portfólio.''')
     st.write('---')
 
@@ -213,7 +206,6 @@ if not exibir_introducao:
             st.text('\n')
             st.warning(f'''Ação(ões) com média de retorno contínuo muito próximo de zero: **{acoes_inf.index[0]}**.
                     Recomenda-se tirá-la(s) da simulação :heavy_exclamation_mark:''')
-            
 
         matriz_corr = round(tabela_retorn.corr(),4) # para o modelo de markowitz é bom ter acoes com alta correlação negativa ! ver video: https://www.youtube.com/watch?v=Y1E73SQPD1U
 
@@ -232,7 +224,7 @@ if not exibir_introducao:
         st.plotly_chart(heatmap_retorn)
 
 
-    # ---------------- SELIC ---------------- #
+    # ---------------- SELIC tratamento ---------------- #
     # Dados cdi (taxa livre de risco)
     # DI - Depósito Interfinanceiro - Taxas - DI PRÉ - Over
     # SELIC
@@ -384,9 +376,6 @@ if not exibir_introducao:
                     e do equilíbrio entre diferentes investimentos para otimizar tanto o potencial de retorno quanto a redução do risco
                     associado a uma carteira de investimentos. ''')
 
-# if not exibir_introducao and st.session_state.get('Simular Carteiras', False):
-#     st.write('teste')
-#     st.session_state['simular_carteiras'] = False
 
     # ---------------- Simulação ativada e principais fórmulas ---------------- #   
     if st.sidebar.button('Simular'):
