@@ -277,7 +277,7 @@ if not exibir_introducao:
         st.write('---')
         st.header('Carteira de Mínima Variância:')
         st.markdown('''Para uma determinada combinação de pesos de ativos em uma carteira, há um ponto que representa o risco  mínimo.
-                    Esse ponto representa a carteira de mínimo risco ou carteira de mínima variância.''')
+                    Esse ponto representa a Carteira de Mínimo Risco ou Carteira de Mínima Variância.''')
         
         legenda = selecionar_acoes
         valores_cart_min_var = carteira_min_variancia
@@ -285,7 +285,7 @@ if not exibir_introducao:
         st.plotly_chart(graph_pizza2)
 
         st.header('Carteira Ótima:')
-        st.markdown('''Para a determinação da carteira ótima foi utilizado o 'Índice de Sharpe'.''')
+        st.markdown('''Para a determinação da Carteira Ótima foi utilizado o 'Índice de Sharpe'.''')
         st.text('\n')            
         st.markdown('''O ponto que representa a carteira ótima
                         mostra a combinação de ativos para ter um ganho a partir de uma taxa livre de risco, ou seja, existe uma carteira
