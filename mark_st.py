@@ -215,7 +215,7 @@ if not exibir_introducao:
                     Recomenda-se tirá-la(s) da simulação :heavy_exclamation_mark:''')
             
 
-        matriz_corr = tabela_retorn.corr() # para o modelo de markowitz é bom ter acoes com alta correlação negativa ! ver video: https://www.youtube.com/watch?v=Y1E73SQPD1U
+        matriz_corr = round(tabela_retorn.corr(),4) # para o modelo de markowitz é bom ter acoes com alta correlação negativa ! ver video: https://www.youtube.com/watch?v=Y1E73SQPD1U
 
         st.write('---')
         st.header('Matriz de correlação:')
