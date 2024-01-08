@@ -33,6 +33,8 @@ Algumas ações apresentaram problemas durante a extração de dados da API do Y
 
 ## :bar_chart: Demonstração da aplicação
 
+<!-- <video src='your URL here' width=180/> -->
+
 gif
 
 falar sobre interação que os graficos plotly possuem 
