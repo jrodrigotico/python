@@ -273,7 +273,7 @@ if not exibir_introducao:
 
         st.write('---')
         st.header('Carteira de Mínima Variância:')
-        st.markdown('''Para uma determinada combinação de pesos de ativos em uma carteira, há um ponto que representa o risco  mínimo.
+        st.markdown('''Para uma determinada combinação de pesos de ativos em uma carteira, há um ponto que representa o risco mínimo.
                     Esse ponto representa a Carteira de Mínimo Risco ou Carteira de Mínima Variância.''')
         
         legenda = selecionar_acoes
@@ -286,7 +286,7 @@ if not exibir_introducao:
         st.text('\n')            
         st.markdown('''O ponto que representa a carteira ótima
                         mostra a combinação de ativos para ter um ganho a partir de uma taxa livre de risco, ou seja, existe uma carteira
-                        de ativos com alta chance de ser preferível às demais combinações de carteiras no mercado.''')    
+                        de ativos com alta chance de ser preferível às demais combinações de carteiras.''')    
         
         legenda = selecionar_acoes
         valores_cart_max_retorno = carteira_max_retorno
