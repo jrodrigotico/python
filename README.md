@@ -33,8 +33,7 @@ Algumas ações apresentaram problemas durante a extração de dados da API do Y
 
 ## :bar_chart: Demonstração da aplicação
 
-[![Now in Android: 55]          // Teoria Moderna de Portfólio - Markowitz
-(https://youtu.be/xDNOIRyIDgw)]    // https://youtu.be/xDNOIRyIDgw
+[![Teoria Moderna de Portfólio - Markowitz](https://i9.ytimg.com/vi/xDNOIRyIDgw/sddefault.jpg?sqp=COju8awG-oaymwEmCIAFEOAD8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGGUgZShlMA8=&rs=AOn4CLApHpMYormZiv8iJi6jgSmQeTNbdA)](https://youtu.be/xDNOIRyIDgw)
 
 gif/video
 
