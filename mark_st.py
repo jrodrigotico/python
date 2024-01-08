@@ -207,6 +207,11 @@ if not exibir_introducao:
             st.warning(f'''Ação(ões) com média de retorno contínuo muito próximo de zero: **{acoes_inf.index[0]}**.
                     Recomenda-se tirá-la(s) da simulação :heavy_exclamation_mark:''')
 
+        # tratamento caso exista apenas uma ação
+        if len(selecionar_acoes)<=1:
+            st.warning('''Para a composição de uma carteira de investimentos 
+                    são necessários no mínimo 2 ativos! :heavy_exclamation_mark:''')
+
         matriz_corr = round(tabela_retorn.corr(),4) # para o modelo de markowitz é bom ter acoes com alta correlação negativa ! ver video: https://www.youtube.com/watch?v=Y1E73SQPD1U
 
         st.write('---')
