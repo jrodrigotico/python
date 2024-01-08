@@ -52,10 +52,10 @@ def introducao(): # funcao para exibir a introducao e seus componentes
     introducao = st.container()
     introducao.header('Teoria Moderna de Portfólio - Markowitz')
     introducao.markdown('''A Teoria Moderna do Portfólio, desenvolvida por Harry Markowitz em meados de 1950, 
-                    postula que diferentes ativos podem compor 'n' carteiras de investimentos com o intuito de encontrar
+                    diz que diferentes ativos podem compor 'n' carteiras de investimentos com o intuito de encontrar
                     uma relação ótima entre risco e retorno. Para determinar essa relação, Markowitz não descarta o uso do 
                     julgamento profissional na escolha dos ativos, utilizando critérios específicos que não são contemplados nos cálculos 
-                    matemáticos formais. Essa abordagem viabiliza o cálculo de combinações de 'retorno' e 'risco'.''')
+                    matemáticos . Essa abordagem viabiliza o cálculo de combinações de 'retorno' e 'risco'.''')
     st.text('\n')
     introducao.markdown('''A teoria tem como principal objetivo diminuir o 'Risco Diversificável', que consiste 
                     no risco que pode ser eliminado por meio da diversificação da carteira de investimentos. Diferentemente 
@@ -89,7 +89,7 @@ if not exibir_introducao:
             utilizar a média aritmética da **SELIC** durante o intervalo de tempo selecionado.''')
     st.text('\n')
     st.markdown(''':dollar: No que diz respeito à simulação, não há uma regra definida para o número de portfolios a serem simulados, porém
-                precisa-se de no mínimo duas ações para compor um portfólio.''')
+                é necessário no mínimo duas ações para compor um portfólio.''')
     st.write('---')
 
     st.sidebar.header('Parâmetros')
@@ -369,7 +369,7 @@ if not exibir_introducao:
         st.plotly_chart(fig)
 
         st.text('\n')
-        st.markdown('''A Hipérbole de Markowitz, ou Fronteira Eficiente, mostra as várias combinações de carteiras considerando
+        st.markdown('''A Hipérbole de Markowitz, ou Fronteira Eficiente, demonstra as várias combinações de carteiras considerando
                     um conjunto de ativos. Matematicamente falando, esse conceito revela a importância da diversificação na construção
                     de uma carteira ao analisar a relação entre retorno e risco.''')
         st.text('\n')
