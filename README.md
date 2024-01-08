@@ -35,9 +35,7 @@ Algumas ações apresentaram problemas durante a extração de dados da API do Y
 
 [![Teoria Moderna de Portfólio - Markowitz](https://i9.ytimg.com/vi/xDNOIRyIDgw/sddefault.jpg?sqp=COju8awG-oaymwEmCIAFEOAD8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGGUgZShlMA8=&rs=AOn4CLApHpMYormZiv8iJi6jgSmQeTNbdA)](https://youtu.be/xDNOIRyIDgw)
 
-gif/video
-
-falar sobre interação que os graficos plotly possuem 
+Para a plotagem dos gráficos foi utilizado o pacote 'Plotly' (https://plotly.com) por possuir recursos interativos que auxiliam na visualização dos dados.
 
 :exclamation: É necessário aguardar a conclusão do plotagem do gráfico histórico de preços antes de escolher uma nova ação na caixa de seleção 'Ações'.
 
