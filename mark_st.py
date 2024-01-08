@@ -52,7 +52,7 @@ acoes = pd.read_csv('https://raw.githubusercontent.com/jrodrigotico/python/proje
 acoes = acoes[acoes['Código'].apply(lambda x: len(str(x))==5)]
 
 selic = pd.read_csv('https://raw.githubusercontent.com/jrodrigotico/python/projeto_acoes/selic.csv?token=GHSAT0AAAAAACFYHJO2PVMIE4VC4542YMWMZMWZZ4A', sep=';')
-selic['Data'] = pd.to_datetime(selic['Data'])
+selic['Data'] = pd.to_datetime(selic['Data'], dayfirst=True)
 
 # ---------------- Introducao ---------------- # 
 def introducao(): # funcao para exibir a introducao e seus componentes
