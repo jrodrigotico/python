@@ -35,6 +35,8 @@ Algumas ações apresentaram problemas durante a extração de dados da API do Y
 
 gif
 
+falar sobre interação que os graficos plotly possuem 
+
 falar brevemente da utilidade e funcionalidades, falar sobre o 'bug' de quando for selecionar as acoes que precisa-se selecionar uma de cada vez , 
 apenas quando aparecer o grafico historico de pre
 
