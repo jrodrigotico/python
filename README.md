@@ -3,8 +3,6 @@
 ![GitHub License](https://img.shields.io/github/license/jrodrigotico/python)
 ![Em desenvolvimento](https://img.shields.io/badge/status%20:%20em%20desenvolvimento%20-8A2BE2)
 
-:construction_worker: Projeto em desenvolvimento
-
 
 ## 	:school: Teoria Moderna de Portfólio - Markowitz
 A Teoria Moderna do Portfólio, desenvolvida por Harry Markowitz em meados de 1950, postula que diferentes ativos podem compor 'n' carteiras de investimentos com o intuito de encontrar uma relação ótima entre risco e retorno. 
