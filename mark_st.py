@@ -50,7 +50,7 @@ selic['Data'] = pd.to_datetime(selic['Data'], dayfirst=True)
 # ---------------- Introducao ---------------- # 
 def introducao(): # funcao para exibir a introducao e seus componentes
     introducao = st.container()
-    introducao.header('Teoria Moderna de Portfólio - Markowitz')
+    introducao.header('Teoria Moderna do Portfólio - Markowitz')
     introducao.markdown('''A Teoria Moderna do Portfólio, desenvolvida por Harry Markowitz em meados de 1950, 
                     diz que diferentes ativos podem compor 'n' carteiras de investimentos com o intuito de encontrar
                     uma relação ótima entre risco e retorno. Para determinar essa relação, Markowitz não descarta o uso do 
@@ -115,6 +115,7 @@ if not exibir_introducao:
     acoes_erro = pd.read_csv('https://raw.githubusercontent.com/jrodrigotico/python/projeto_acoes/acoes_erro_yahoo.csv?token=GHSAT0AAAAAACFYHJO2QYS6JMRPYKM2DOQQZMWZ22Q', sep=';') 
     acoes_erro.columns = ['Index', 'Ticker']
 
+    # funcao para retirar '.SA' mantendo apenas os primeiros 5 caracteres
     def retirar_sa(i):
         return i[:5]
 
@@ -127,6 +128,7 @@ if not exibir_introducao:
     st.set_option('deprecation.showPyplotGlobalUse', False)
 
     # ---------------- Dados das ações selecionadas ---------------- #
+    # objetos vazios a serem populados
     tabelas_acoes = []  
     tabela_norm = pd.DataFrame()
     valores_iniciais = {}
@@ -184,11 +186,8 @@ if not exibir_introducao:
                     foi-se calculada a média para cada ação.\n''')
         tabela_retorn = tabela_norm.pct_change() # aqui se faz a formula de variacao percentual: 'Valor f/Valor i - 1 '
         retorno_contiuo = np.log(tabela_retorn + 1) # aqui soma-se 1 para ficar apenas a divisao entre 'Valor f/Valor i' e o LN é aplicado nessa divisão
-        
-        # st.write(tabela) # !!!!!!!!!!!!!!!!!!!!!
-        # st.write(tabela_retorn) # !!!!!!!!!!!!!!!!!!!!!
-        # st.write(retorno_contiuo) # !!!!!!!!!!!!!!!!!!!!!
-        
+
+        # funcao para média
         def media(i):
             return i.mean()
         media_retor = retorno_contiuo.apply(media, axis = 0) # compara os valores das linhas
@@ -300,9 +299,11 @@ if not exibir_introducao:
             retorno = np.exp(retorno) - 1 # aqui estou passando os retornos para aritmeticos
             return retorno
         
+        # soma dos pesos deve ser igual a 1 (100%)
         def checando_soma_pesos(peso_teste):
             return np.sum(peso_teste)-1
         
+        # multiplicacao de matrizes
         def pegando_vol(peso_teste):
             peso_teste = np.array(peso_teste)
             vol = np.sqrt(np.dot(peso_teste.T, np.dot(matriz_corr * fator_periodicidade, peso_teste)))
@@ -311,7 +312,7 @@ if not exibir_introducao:
         peso_inicial = [1/len(selecionar_acoes)] * len(selecionar_acoes)  # pesos iguais para todas as acoes
         limites = tuple([(0,1) for i in selecionar_acoes])   # aqui nenhuma acao pode ter mais que 100%
         
-        # fronteira eficiente com as restrições
+        # testando as restrições
         eixo_x_fronteira_eficiente = []
         fronteira_eficiente_y = np.linspace(tabela_retorn_esperados_aritm.min(), tabela_retorn_esperados_aritm.max(), 200)
 
